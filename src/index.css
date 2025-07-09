@@ -1,0 +1,78 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+  font-family: "Poppins", sans-serif;
+
+
+} 
+
+:root{
+  --bg-color:#222831;
+  --bg-color2:#06321f;
+  --second-bg-color:#393E46;
+  --text-color:#EEEEEE;
+  --primary-color:#00ADB5;
+}
+
+/* Scroll geçişleri yumuşak olsun */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Temel sıfırlamalar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Gövde ve yazı tipi */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  background-color: #fff;
+  color: #111;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Başlıklar */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+
+/* Linkler */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Menü responsive davranışı */
+.ant-menu-horizontal {
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+/* Scrollbar (isteğe bağlı) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
