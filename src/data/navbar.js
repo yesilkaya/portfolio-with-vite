@@ -23,23 +23,24 @@ export const navbar = [
       type: "scroll",
 
     },
-    {
-      key: "4",
-      id: "projects",
-      label: "Projeler",
-      content: "Projelerimiz burada listelenmiştir. İnceleyebilirsiniz.",
-      type: "route",
-      route: "/projects" ,
-      
 
-    },
     {
-        key: "5",
+        key: "4",
         id: "contact",
         label: "Bana Ulaş",
         content: "Bizimle iletişime geçmek için bu sayfayı kullanabilirsiniz.",
         type: "scroll",
 
+      },
+      {
+        key: "5",
+        id: "projects",
+        label: "Projeler",
+        content: "Projelerimiz burada listelenmiştir. İnceleyebilirsiniz.",
+        type: "route",
+        route: "/projects" ,
+        
+  
       },
     
     {

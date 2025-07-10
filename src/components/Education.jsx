@@ -60,7 +60,7 @@ const TimelineDot = styled.div`
 `;
 
 // Styled Ant Design Card
-const TimelineContent = styled(motion(Card))`
+const TimelineContent = styled(motion.create(Card))`
 background: var(--bg-color);
 `;
 

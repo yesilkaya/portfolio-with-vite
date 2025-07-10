@@ -8,6 +8,8 @@ import ilimsehriImage from "../assets/ilimsehri.webp";
 import munacatImage from "../assets/munacat.webp";
 import Footer from "./Footer.jsx";
 import { Spin } from "antd";
+import axios from "axios"; // axios eklendi
+
 
 const { Meta } = Card;
 
@@ -24,8 +26,10 @@ const ProjectsSection = styled.section`
   text-align: center;
 `;
 
-const MotionCard = motion(Card);
-const ProjectCard = styled(MotionCard)`
+const MotionCard = motion.create(Card);
+const ProjectCard = styled(motion.create(Card)).withConfig({
+  shouldForwardProp: (prop) => prop !== "highlight",
+})`  
   background-color: var(--second-bg-color);
   color: var(--text-color);
   margin: 2rem 10%;
@@ -67,15 +71,14 @@ const GithubProjectsSection = styled.section`
   align-items: center;
   transition: transform 0.3s ease;
   text-align: center;
-  width: 100%;
-  flex: 1;
 
   .ant-card-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    min-height: 180px;
+    min-height: auto;
+
   }
 
   .ant-card-head-title {
@@ -92,9 +95,20 @@ const formatRepoTitle = (name) => {
 };
 
 // Styled Ant Design Card
-const GithubCard = styled(motion(Card))`
+const GithubCard = styled(motion.create(Card))`
   background: var(--bg-color);
   color: var(--text-color);
+  height: 100%; // ✔️ Yükseklik tamamen kullanılacak
+
+  display: flex;
+  flex-direction: column;
+
+  .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1; // ✔️ İçerik alanı büyüyebilir
+  }
 `;
 
 const Projects = () => {
@@ -107,16 +121,18 @@ const Projects = () => {
 
   
   useEffect(() => {
-    fetch("https://api.github.com/users/yesilkaya/repos")
-      .then((res) => res.json())
-      .then((data) => {
-        setGithubRepos(data);
+    const fetchRepos = async () => {
+      try {
+        const response = await axios.get("https://api.github.com/users/yesilkaya/repos");
+        setGithubRepos(response.data);
+      } catch (error) {
+        console.error("GitHub API hatası:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("GitHub API hatası:", err);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchRepos();
   }, []);
 
   const projectData = [

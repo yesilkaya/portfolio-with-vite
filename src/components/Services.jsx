@@ -46,7 +46,7 @@ const ServicesContainer = styled.div`
 `;
 
 // Styled Ant Design Card
-const ServiceCard = styled(motion(Card))`
+const ServiceCard = styled(motion.create(Card))`
   background: var(--bg-color);
 `;
 

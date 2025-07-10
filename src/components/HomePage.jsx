@@ -1,9 +1,12 @@
 import { Button } from "antd";
 import styled, { keyframes } from "styled-components";
-import { InstagramOutlined, FacebookOutlined, TwitterOutlined } from "@ant-design/icons";
-import profileImage from "../assets/seccad.png"; 
+import {
+  InstagramOutlined,
+  FacebookOutlined,
+  TwitterOutlined,
+} from "@ant-design/icons";
+import profileImage from "../assets/seccad.png";
 import React, { useEffect, useState } from "react";
-
 
 const blink = keyframes`
   50% { border-color: transparent; }
@@ -12,7 +15,7 @@ const blink = keyframes`
 const HomeSection = styled.section`
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* sola hizala */
+  justify-content: center; 
   gap: 10rem;
   padding: 10rem 5%;
   flex-wrap: nowrap;
@@ -20,9 +23,6 @@ const HomeSection = styled.section`
 `;
 
 const HomeContent = styled.div`
-  width: 45%;  /* sabit genişlik */
-  max-width: 45%;
-
   h1 {
     font-size: 4rem;
     font-weight: 700;
@@ -38,17 +38,17 @@ const HomeContent = styled.div`
     display: -webkit-box; /* Flexbox benzeri bir kutu modeli */
     -webkit-box-orient: vertical; /* Dikey eksende hizalama */
     text-overflow: ellipsis; /* Taşan metni "..." ile göster */
-  
+
     span {
-        border-right: 2px solid var(--primary-color);
-        animation: ${blink} 0.7s step-end infinite;
-        display: inline-block;
-        white-space: nowrap;
-        font-family: 'Courier New', Courier, monospace;
-        color: var(--primary-color);
-        font-size: 2rem;
+      border-right: 2px solid var(--primary-color);
+      animation: ${blink} 0.7s step-end infinite;
+      display: inline-block;
+      white-space: nowrap;
+      font-family: "Courier New", Courier, monospace;
+      color: var(--primary-color);
+      font-size: 2rem;
     }
-}
+  }
 
   p {
     font-size: 1.3rem;
@@ -57,12 +57,11 @@ const HomeContent = styled.div`
     line-height: 1.8;
     max-width: 1000px;
     color: var(--text-color);
-
   }
 `;
 
 const ProfileImageWrapper = styled.div`
-  width: 30%;  /* sabit genişlik */
+  width: 30%; /* sabit genişlik */
   max-width: 30%;
   border-radius: 50%;
 
@@ -73,8 +72,7 @@ const ProfileImageWrapper = styled.div`
     transition: 0.3s ease-in-out;
 
     &:hover {
-      box-shadow: 0 0 25px var(--primary-color),
-        0 0 50px var(--primary-color),
+      box-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--primary-color),
         0 0 100px var(--primary-color);
       transform: scale(1.01);
     }
@@ -124,22 +122,21 @@ const StyledButton = styled(Button)`
 `;
 
 const Home = () => {
+  const texts = ["Full-Stack Geliştiriciyim", "Mobil Uygulama Geliştiriciyim"];
 
-    const texts = ["Full-Stack Geliştiriciyim", "Mobil Uygulama Geliştiriciyim"];
+  const [displayedText, setDisplayedText] = useState("");
+  const [textIndex, setTextIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-const [displayedText, setDisplayedText] = useState("");
-const [textIndex, setTextIndex] = useState(0);
-const [charIndex, setCharIndex] = useState(0);
-const [isDeleting, setIsDeleting] = useState(false);
-
-useEffect(() => {
+  useEffect(() => {
     const currentText = texts[textIndex];
-  
+
     if (!isDeleting && charIndex === currentText.length) {
       const pause = setTimeout(() => setIsDeleting(true), 2000);
       return () => clearTimeout(pause);
     }
-  
+
     if (isDeleting && charIndex === 0) {
       const pause = setTimeout(() => {
         setIsDeleting(false);
@@ -147,47 +144,60 @@ useEffect(() => {
       }, 200);
       return () => clearTimeout(pause);
     }
-  
-    const timeout = setTimeout(() => {
-      if (isDeleting) {
-        setDisplayedText(currentText.substring(0, Math.max(charIndex - 1, 0)));
-        setCharIndex((prev) => Math.max(prev - 1, 0));
-      } else {
-        setDisplayedText(currentText.substring(0, Math.min(charIndex + 1, currentText.length)));
-        setCharIndex((prev) => Math.min(prev + 1, currentText.length));
-      }
-    }, isDeleting ? 50 : 100);
-  
+
+    const timeout = setTimeout(
+      () => {
+        if (isDeleting) {
+          setDisplayedText(
+            currentText.substring(0, Math.max(charIndex - 1, 0))
+          );
+          setCharIndex((prev) => Math.max(prev - 1, 0));
+        } else {
+          setDisplayedText(
+            currentText.substring(
+              0,
+              Math.min(charIndex + 1, currentText.length)
+            )
+          );
+          setCharIndex((prev) => Math.min(prev + 1, currentText.length));
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, textIndex]);
-  
-  
-    
+
+  const socialLinks = [
+    { icon: <InstagramOutlined />, url: "https://instagram.com" },
+    { icon: <FacebookOutlined />, url: "https://facebook.com" },
+    { icon: <TwitterOutlined />, url: "https://twitter.com" },
+  ];
+
   return (
     <HomeSection id="home">
       <HomeContent>
         <h1>Merhaba, ben Seccad</h1>
-        <h3 className="text-animation">
-  Ben, <span id="animated-text">{displayedText}</span>
-</h3>
+        <h3>
+          Ben,{" "}
+          <span aria-live="polite" className="animated-text">
+            {displayedText}
+          </span>
+        </h3>
 
         <p>
-          Flutter ile mobil uygulama geliştirmenin yanı sıra son dönemde Node.js ve
-          TypeScript ile backend geliştirmeye odaklanarak full-stack alanda kendimi
-          geliştiriyorum. Kullanıcı odaklı, hızlı ve modern uygulamalar üretmeyi
-          seviyorum. Hem mobilde hem sunucu tarafında daha iyi çözümler sunabilmek
-          için öğrenmeye ve üretmeye devam ediyorum.
+          Flutter ile mobil uygulama geliştirmenin yanı sıra son dönemde Node.js
+          ve TypeScript ile backend geliştirmeye odaklanarak full-stack alanda
+          kendimi geliştiriyorum. Kullanıcı odaklı, hızlı ve modern uygulamalar
+          üretmeyi seviyorum. Hem mobilde hem sunucu tarafında daha iyi çözümler
+          sunabilmek için öğrenmeye ve üretmeye devam ediyorum.
         </p>
         <SocialIcons>
-          <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">
-            <InstagramOutlined />
-          </a>
-          <a href="https://facebook.com/" target="_blank" rel="noreferrer">
-            <FacebookOutlined />
-          </a>
-          <a href="https://twitter.com/" target="_blank" rel="noreferrer">
-            <TwitterOutlined />
-          </a>
+          {socialLinks.map(({ icon, url }, i) => (
+            <a key={i} href={url} target="_blank" rel="noreferrer">
+              {icon}
+            </a>
+          ))}
         </SocialIcons>
         <a href="/files/seccadCv.pdf" download="SeccadYesilkayaCV.pdf">
           <StyledButton>CV İndir</StyledButton>

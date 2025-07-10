@@ -72,8 +72,10 @@ function MainSections() {
         return <Education />;
       case navbar[2].id:
         return <Services />;
-      case navbar[4].id:
+      case navbar[3].id:
         return <ContactForm />;
+        default:
+          return null;
 
     }
   };
@@ -82,7 +84,7 @@ function MainSections() {
   return (
     <>
       {navbar
-  .filter((section) => section.id !== "projects" || section.id !== "fullstack")
+  .filter((section) => section.id !== navbar[4].id && section.id !== navbar[5].id)
   .map((section, index) => (
         <section
           id={section.id}
@@ -90,13 +92,13 @@ function MainSections() {
           ref={(el) => (sectionRefs.current[index] = el)}
           style={{
             minHeight: "100vh",
-            paddingTop: index === 0 ? 64 : 128,
-            marginTop: index === 0 ? 0 : -64,
+            paddingTop: index === 0 ? "0px" : "128px",
+            marginTop: index === 0 ? "0px" : "-64px",
+            scrollMarginTop: "64px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            scrollMarginTop: 64,
           }}
         >
           {renderSectionContent(section)}
