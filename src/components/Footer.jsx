@@ -1,7 +1,13 @@
 import React from "react";
 import { Layout } from "antd";
-import { InstagramOutlined, FacebookOutlined, TwitterOutlined } from "@ant-design/icons";
+import {
+  InstagramOutlined,
+  FacebookOutlined,
+  TwitterOutlined,
+} from "@ant-design/icons";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { navbar } from "../data/navbar";
 
 const { Footer: AntFooter } = Layout;
 
@@ -26,14 +32,13 @@ const SocialContainer = styled.div`
     border-radius: 50%;
     margin: 0 10px;
     transition: 0.3s ease-in-out;
-  
+
     &:hover {
       background-color: var(--primary-color);
       color: var(--bg-color);
       transform: scale(1.2) translateY(-5px);
     }
   }
-  
 `;
 
 const LinkList = styled.ul`
@@ -65,27 +70,46 @@ const Copyright = styled.p`
   font-size: 13px;
   margin-top: 10px;
 `;
-
 const Footer = () => {
   return (
     <FooterContainer>
       <SocialContainer>
-        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://www.instagram.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <InstagramOutlined />
         </a>
-        <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://facebook.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FacebookOutlined />
         </a>
-        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://twitter.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <TwitterOutlined />
         </a>
       </SocialContainer>
+
       <LinkList>
-        <li><a href="#home">Anasayfa</a></li>
-        <li><a href="#education">Eğitim</a></li>
-        <li><a href="#services">Hizmetler</a></li>
-        <li><a href="#projects">Projeler</a></li>
+        {navbar.slice(0, -1).map((section) => (
+          <li key={section.id}>
+            <Link
+              to={section.type === "route" ? section.route : `/#${section.id}`}
+              style={{ color: "var(--text-color)", textDecoration: "none" }}
+            >
+              {section.label}
+            </Link>
+          </li>
+        ))}
       </LinkList>
+
       <Copyright>
         &copy; Created by <span>Seccad YEŞİLKAYA</span>
       </Copyright>

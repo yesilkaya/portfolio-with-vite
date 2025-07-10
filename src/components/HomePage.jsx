@@ -1,14 +1,9 @@
-import { Row, Col, Button } from "antd";
+import { Button } from "antd";
 import styled, { keyframes } from "styled-components";
 import { InstagramOutlined, FacebookOutlined, TwitterOutlined } from "@ant-design/icons";
 import profileImage from "../assets/seccad.png"; 
 import React, { useEffect, useState } from "react";
 
-
-const typing = keyframes`
-  from { width: 0 }
-  to { width: 100% }
-`;
 
 const blink = keyframes`
   50% { border-color: transparent; }
@@ -89,15 +84,15 @@ const ProfileImageWrapper = styled.div`
 const SocialIcons = styled.div`
   display: flex;
   gap: 2rem;
-  margin: 3rem 0;
+  margin: 1.5rem 0;
 
   a {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 4rem;
-    height: 4rem;
-    font-size: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
     border: 2px solid var(--primary-color);
     border-radius: 30%;
     color: var(--primary-color);
@@ -112,10 +107,9 @@ const SocialIcons = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight: 500;
-  padding: 1.2rem 3rem;
-  border-radius: 30px;
+  padding: 1.2rem 2rem;
   background-color: var(--primary-color);
   color: var(--text-color);
   border: none;

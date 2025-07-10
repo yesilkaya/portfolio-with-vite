@@ -1,69 +1,42 @@
-import { Layout, Menu } from "antd";
+import { Layout, Timeline } from "antd";
 import "antd/dist/reset.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
+
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import "./index.css";
-import Footer from "./components/footer/Footer.jsx";
-import Home from "./components/HomePage.jsx"; // doğru yoldan emin ol
 
-const { Header, Content } = Layout;
+// Components
+import HeaderBar from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
+import Home from "./components/HomePage.jsx";
+import Education from "./components/Education.jsx";
+import Services from "./components/Services.jsx";
+import Projects from "./components/Projects.jsx";
+import ContactForm from "./components/Contact.jsx";
 
-const navbar = [
-  {
-    key: "1",
-    id: "home",
-    label: "Anasayfa",
-    content: "Burası Anasayfa. Hoş geldiniz!",
-  },
-  {
-    key: "2",
-    id: "education",
-    label: "Eğitim",
-    content:
-      "Eğitim sayfasına hoş geldiniz. Burada eğitimler hakkında bilgi bulabilirsiniz.",
-  },
-  {
-    key: "3",
-    id: "services",
-    label: "Hizmetler",
-    content: "Hizmetlerimiz hakkında detaylı bilgiye buradan ulaşabilirsiniz.",
-  },
-  {
-    key: "4",
-    id: "projects",
-    label: "Projeler",
-    content: "Projelerimiz burada listelenmiştir. İnceleyebilirsiniz.",
-  },
-  {
-    key: "5",
-    id: "contact",
-    label: "Bana Ulaş",
-    content: "Bizimle iletişime geçmek için bu sayfayı kullanabilirsiniz.",
-  },
-];
+// Navbar verileri
+import { navbar } from "./data/navbar";
+import TimelineCom from "./components/Timeline.jsx";
 
-function App() {
-  const [activeKey, setActiveKey] = useState("1");
+const { Content } = Layout;
+
+function MainSections() {
   const sectionRefs = useRef([]);
+  const location = useLocation(); // 👈 URL'den hash'i okuyabilmek için
 
+  // 🔁 Scroll ile aktif section tespiti
   useEffect(() => {
-    // Sayfa yüklenince en üste git
-    window.scrollTo(0, 0);
-
-    // IntersectionObserver ile scroll takip
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = sectionRefs.current.findIndex(
-              (ref) => ref === entry.target
-            );
-            if (index !== -1) {
-              setActiveKey(navbar[index].key);
-            }
-          }
-        });
+        const visibleEntry = entries.find((entry) => entry.isIntersecting);
+        if (visibleEntry) {
+          const index = sectionRefs.current.findIndex(
+            (ref) => ref === visibleEntry.target
+          );
+          // scroll-based active menu logic burada kalabilir
+        }
       },
-      { threshold: 0.6 }
+      { threshold: 0.5 }
     );
 
     sectionRefs.current.forEach((ref) => {
@@ -77,94 +50,77 @@ function App() {
     };
   }, []);
 
+  // ✅ URL'deki hash varsa otomatik scroll
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100); // layout otursun diye geciktirme
+      }
+    }
+  }, [location]);
+
+  // Section render mantığı
+  const renderSectionContent = (section) => {
+    switch (section.id) {
+      case navbar[0].id:
+        return <Home />;
+      case navbar[1].id:
+        return <Education />;
+      case navbar[2].id:
+        return <Services />;
+      case navbar[4].id:
+        return <ContactForm />;
+
+    }
+  };
+  
+
   return (
-    <Layout style={{ minHeight: "100vh", width: "100vw" }}>
-<Header
-  style={{
-    position: "fixed",
-    top: 0,
-    width: "100%",
-    zIndex: 1000,
-    height: 64,
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // kırmızı + opacity
-    backdropFilter: "blur(4px)", // opsiyonel: hafif blur efekti verir
-  }}
->
-  {/* Site İkonu */}
-  <a
-    href="#home"
-    className="logo"
-    style={{
-      fontSize: "20px",
-      fontWeight: "bold",
-      color: "white",
-      textDecoration: "none",
-      marginRight: "auto",
-    }}
-  >
-    Seccad <span style={{ color: "var(--primary-color)" }}>YEŞİLKAYA</span>
-  </a>
-
-  <Menu
-    theme="dark"
-    mode="horizontal"
-    selectedKeys={[activeKey]}
-    style={{
-      flex: 1,
-      justifyContent: "flex-end",
-      display: "flex",
-      flexWrap: "wrap",
-      backgroundColor: "transparent", // Menü arka planı görünmesin
-    }}
-    items={navbar.map((section) => ({
-      key: section.key,
-      label: (
-        <a
-          href={`#${section.id}`}
-          style={{ color: "inherit", textDecoration: "none" }}
+    <>
+      {navbar
+  .filter((section) => section.id !== "projects" || section.id !== "fullstack")
+  .map((section, index) => (
+        <section
+          id={section.id}
+          key={section.key}
+          ref={(el) => (sectionRefs.current[index] = el)}
+          style={{
+            minHeight: "100vh",
+            paddingTop: index === 0 ? 64 : 128,
+            marginTop: index === 0 ? 0 : -64,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            scrollMarginTop: 64,
+          }}
         >
-          {section.label}
-        </a>
-      ),
-    }))}
-  />
-</Header>
+          {renderSectionContent(section)}
+        </section>
+      ))}
+      <Footer />
+    </>
+  );
+}
 
-
-      <Content style={{ backgroundColor: "var(--bg-color)" }}>
-        {navbar.map((section, index) => (
-          <section
-            id={section.id}
-            key={section.key}
-            ref={(el) => (sectionRefs.current[index] = el)}
-            style={{
-              minHeight: "100vh",
-              paddingTop: index === 0 ? 64 : 128,
-              marginTop: index === 0 ? 0 : -64,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              scrollMarginTop: 64,
-            }}
-          >
-            {section.key === "1" ? (
-              <Home />
-            ) : (
-              <>
-                <h1>{section.label}</h1>
-                <p style={{ maxWidth: "600px", textAlign: "center" }}>
-                  {section.content}
-                </p>
-              </>
-            )}
-          </section>
-        ))}
-        <Footer />
-      </Content>
-    </Layout>
+function App() {
+  return (
+    <Router>
+      <Layout style={{ minHeight: "100vh", width: "100vw" }}>
+        <HeaderBar />
+        <Content style={{ backgroundColor: "var(--second-bg-color)" }}>
+          <Routes>
+            <Route path="/" element={<MainSections />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/fullstack" element={<TimelineCom />} />
+          </Routes>
+        </Content>
+      </Layout>
+    </Router>
   );
 }
 

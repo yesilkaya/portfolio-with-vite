@@ -14,10 +14,16 @@
 
 :root{
   --bg-color:#222831;
-  --bg-color2:#06321f;
   --second-bg-color:#393E46;
   --text-color:#EEEEEE;
   --primary-color:#00ADB5;
+  --menu-selected-bg: #00ADB5; /* İstediğin rengi tanımla */
+  
+
+}
+
+.ant-menu-item-selected {
+  background-color: var(--menu-selected-bg) !important;
 }
 
 /* Scroll geçişleri yumuşak olsun */
@@ -36,8 +42,8 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
-  background-color: #fff;
-  color: #111;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -61,18 +67,14 @@ a {
 
 /* Scrollbar (isteğe bağlı) */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--second-bg-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--primary-color);
   border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
