@@ -101,9 +101,7 @@ const TimelineCom = () => {
       />
     </CustomTimelineWrapper>
     </ProjectsSection>
-    <Footer />
     </>
-
   );
 };
 

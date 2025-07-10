@@ -1,0 +1,43 @@
+✅ Node.js Nedir?
+
+Node.js, JavaScript'i sadece tarayıcıda değil, sunucu tarafında da çalıştırmamızı sağlayan açık kaynaklı bir runtime envirement (çalışma zamanı ortamıdır).
+
+
+
+
+
+
+✅ Uygulama İlk Olarak Nereden Başlar?
+Vite, React uygulamasını başlatmak için şu sıralamayı izler:
+
+index.html
+
+Uygulamanın temel HTML yapısını barındırır.
+div id="root" burada yer alır.
+
+
+<script type="module" src="/src/main.jsx"></script> ile JavaScript başlatılır.
+
+src/main.jsx
+
+React uygulamasının giriş noktasıdır.
+
+App.jsx
+
+Tüm uygulamanın merkezidir.
+
+🎨 Stil Dosyaları
+Dosya	Açıklama
+App.css	Uygulamanın genel stilini tanımlar.
+index.css	Genelde global CSS (reset, root değişkenleri, fontlar) burada tanımlanır.
+
+⚙️ Konfigürasyon Dosyaları
+Dosya	Açıklama
+.gitignore	Git'e dahil edilmeyecek dosyaları belirtir (örneğin node_modules).
+eslint.config.js	Kod kalitesini sağlamak için lint kuralları.
+index.html	HTML giriş noktası, sadece Vite için özel bir yapı.
+
+📦 node_modules/
+Projede kullanılan tüm paketlerin bulunduğu klasör.
+
+Otomatik olarak npm install veya yarn ile oluşur.

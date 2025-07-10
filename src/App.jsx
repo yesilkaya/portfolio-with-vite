@@ -104,7 +104,7 @@ function MainSections() {
           {renderSectionContent(section)}
         </section>
       ))}
-      <Footer />
+      
     </>
   );
 }
@@ -119,8 +119,10 @@ function App() {
             <Route path="/" element={<MainSections />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/fullstack" element={<TimelineCom />} />
+            
           </Routes>
         </Content>
+        <Footer />
       </Layout>
     </Router>
   );

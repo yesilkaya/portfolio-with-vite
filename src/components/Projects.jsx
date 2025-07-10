@@ -238,7 +238,7 @@ const Projects = () => {
         )}
       </GithubProjectsSection>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
