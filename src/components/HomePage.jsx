@@ -20,6 +20,7 @@ const HomeSection = styled.section`
   padding: 10rem 5%;
   flex-wrap: nowrap;
   background: var(--bg-color);
+  min-height: 100vh; 
 `;
 
 const HomeContent = styled.div`

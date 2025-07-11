@@ -3,29 +3,24 @@ import { Typography } from "antd";
 import styled from "styled-components";
 import { Card } from "antd";
 import { motion } from "framer-motion";
-import { timelineData } from "../data/timelineData";
-
+import { educationData } from "../data/educationData";
 
 const { Title, Paragraph, Text } = Typography;
 
-// CSS-in-JS styled component for the timeline container
 const EducationSection = styled.section`
-  background-color: var(--second-bg-color);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+background-color: var(--second-bg-color);
+padding: 5rem 2rem;
+display: flex;
+flex-direction: column;
+align-items: center;
 `;
 
-const TimelineDotTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-direction: ${({ isLeft }) => (isLeft ? "row-reverse" : "")};
-  gap: 20px;
+const TimelineWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
 `;
 
-// Timeline vertical line center
 const TimelineLine = styled.div`
   position: absolute;
   left: 50%;
@@ -33,23 +28,39 @@ const TimelineLine = styled.div`
   width: 2px;
   height: 100%;
   background-color: var(--primary-color);
+
 `;
 
 const TimelineItemWrapper = styled.div`
   width: 50%;
   margin-bottom: 60px;
-  margin-left: ${({ isLeft }) => (isLeft ? "-2.8%" : "53%")};
-  margin-right: ${({ isLeft }) => (isLeft ? "0" : "0")};
   display: flex;
   flex-direction: column;
-  justify-content: center;
   text-align: ${({ isLeft }) => (isLeft ? "right" : "left")};
-  padding-top: 20px;
+  margin-left: ${({ isLeft }) => (isLeft ? "-30px" : "auto")};
+  margin-right: ${({ isLeft }) => (isLeft ? "auto" : "-30px")};
+  align-items: ${({ isLeft }) => (isLeft ? "flex-end" : "flex-start")};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+    align-items: flex-start;
+  }
+`;
+
+const TimelineDotTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: ${({ isLeft }) => (isLeft ? "0" : "-40px")};
+  margin-right: ${({ isLeft }) => (isLeft ? "-40px" : "0")};
+  gap: 20px;
+  flex-direction: ${({ isLeft }) => (isLeft ? "row-reverse" : "row")};
 `;
 
 const TimelineDot = styled.div`
-  margin-left: ${({ isLeft }) => (isLeft ? "20px" : "-7.5%")};
-  margin-right: ${({ isLeft }) => (isLeft ? "-7.5%" : "20px")};
   height: 20px;
   width: 20px;
   background-color: var(--primary-color);
@@ -57,23 +68,38 @@ const TimelineDot = styled.div`
   box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color),
     0 0 30px var(--primary-color);
   z-index: 2;
+
+  @media (max-width: 768px) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 `;
 
-// Styled Ant Design Card
-const TimelineContent = styled(motion.create(Card))`
-background: var(--bg-color);
+const TimelineContent = styled(motion(Card))`
+  background: var(--bg-color);
+  width: 100%;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
 `;
+
+const iconMap = ["🎓", "📚", "👨‍💻", "🏢"];
 
 export default function Education() {
   return (
     <EducationSection id="education">
-      <Title level={1} style={{ fontSize: "4rem", marginBottom: "4rem" ,color:"var(--text-color)"}}>
+      <Title
+        level={1}
+        style={{
+          fontSize: "clamp(2.5rem, 5vw, 4rem)",
+          marginBottom: "4rem",
+          color: "var(--text-color)",
+        }}
+      >
         Eğitim
       </Title>
-      <div style={{ position: "relative", width: "100%", maxWidth: 1200 }}>
+      <TimelineWrapper>
         <TimelineLine />
-
-        {timelineData.map((item, i) => {
+        {educationData.map((item, i) => {
           const isLeft = i % 2 === 0;
           return (
             <TimelineItemWrapper key={i} isLeft={isLeft}>
@@ -90,7 +116,12 @@ export default function Education() {
                 </Text>
               </TimelineDotTitle>
 
-              <TimelineContent>
+              <TimelineContent
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+              >
                 <Text
                   style={{
                     fontSize: "1.6rem",
@@ -98,7 +129,7 @@ export default function Education() {
                     color: "var(--text-color)",
                   }}
                 >
-                  {item.title}
+                  {iconMap[i] || "📌"} {item.title}
                 </Text>
                 <Paragraph
                   style={{
@@ -113,7 +144,7 @@ export default function Education() {
             </TimelineItemWrapper>
           );
         })}
-      </div>
+      </TimelineWrapper>
     </EducationSection>
   );
 }
