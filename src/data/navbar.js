@@ -52,5 +52,15 @@ export const navbar = [
         route: "/fullstack" ,
 
       },
+    
+    {
+        key: "7",
+        id: "crud",
+        label: "Crud",
+        content: "",
+        type: "route",
+        route: "/crud" ,
+
+      },
 ];
   

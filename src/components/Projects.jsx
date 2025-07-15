@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import cocukImage from "../assets/cocuk.webp";
 import ilimsehriImage from "../assets/ilimsehri.webp";
 import munacatImage from "../assets/munacat.webp";
-import Footer from "./Footer.jsx";
 import { Spin } from "antd";
 import axios from "axios"; // axios eklendi
 
@@ -26,7 +25,6 @@ const ProjectsSection = styled.section`
   text-align: center;
 `;
 
-const MotionCard = motion.create(Card);
 const ProjectCard = styled(motion.create(Card)).withConfig({
   shouldForwardProp: (prop) => prop !== "highlight",
 })`  
@@ -98,7 +96,7 @@ const formatRepoTitle = (name) => {
 const GithubCard = styled(motion.create(Card))`
   background: var(--bg-color);
   color: var(--text-color);
-  height: 100%; // ✔️ Yükseklik tamamen kullanılacak
+  height: 100%; 
 
   display: flex;
   flex-direction: column;
@@ -107,7 +105,7 @@ const GithubCard = styled(motion.create(Card))`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 1; // ✔️ İçerik alanı büyüyebilir
+    flex: 1; 
   }
 `;
 
@@ -137,18 +135,18 @@ const Projects = () => {
 
   const projectData = [
     {
-      title: "Project 1",
-      description: "Description of project 1",
+      title: "Dualar",
+      description: "Dualar uygulaması, günlük duaları ve ibadetleri takip etmenizi sağlar.",
       image: munacatImage,
     },
     {
-      title: "Project 2",
-      description: "Description of project 2",
+      title: "İlim Şehri",
+      description: "ilim Şehri uygulaması, çeşitli dini içerikler ve bilgiler sunar.",
       image: ilimsehriImage,
     },
     {
-      title: "Project 3",
-      description: "Description of project 3",
+      title: "Çocuk Kitapları",
+      description: "Çocuk Kitapları uygulaması, çocuklar için eğitici ve eğlenceli kitaplar sunar.",
       image: cocukImage, // Yerel resim yolu
     },
   ];

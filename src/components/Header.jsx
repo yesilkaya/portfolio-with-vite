@@ -19,7 +19,6 @@ const HeaderBar = () => {
         backdropFilter: "blur(4px)",
       }}
     >
-      {/* Logo */}
       <Link
         to={`/#${"home"}`}
         className="logo"
@@ -27,8 +26,7 @@ const HeaderBar = () => {
           fontSize: "20px",
           fontWeight: "bold",
           color: "white",
-          textDecoration: "none",
-          marginRight: "auto",
+
         }}
       >
         Seccad <span style={{ color: "var(--primary-color)" }}>YEŞİLKAYA</span>

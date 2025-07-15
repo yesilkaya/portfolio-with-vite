@@ -1,0 +1,261 @@
+🔄 Tarayıcı ve Sunucu Arasındaki İletişim Süreci
+Kullanıcı bir web sitesini ziyaret etmek için tarayıcının adres çubuğuna bir URL yazdığında, tarayıcı bu adrese varsayılan olarak bir HTTP GET isteği gönderir. Bu istek, sunucudan ilgili sayfanın içeriğini talep eder.
+
+Tarayıcı bu istekle birlikte, kabul ettiği veri türlerini ve dilleri de çeşitli HTTP başlıklarıyla bildirir. Örneğin:
+
+Accept: Hangi içerik türlerinin kabul edildiğini (örneğin text/html, application/json).
+
+Accept-Encoding: Gzip gibi sıkıştırma türlerinin desteklenip desteklenmediği.
+
+Accept-Language: Kullanıcının tercih ettiği diller (örn. tr-TR, en-US).
+
+Sunucu, gelen bu isteğe bir yanıt (response) döner. Bu yanıtta hem içerik hem de bu içeriği açıklayan bazı başlıklar bulunur. Örnek başlıklar şunlardır:
+
+Status Code: İsteğin sonucunu belirten durum kodu (örneğin 200 OK, 404 Not Found).
+
+Content-Type: Gönderilen verinin tipi (örneğin text/html, application/json).
+
+Set-Cookie: Tarayıcıya cookie tanımlamak için.
+
+Date: Yanıtın gönderildiği tarih ve saat.
+
+HTML belgesi geldikten sonra tarayıcı bu belgeyi analiz eder. Eğer içinde <link>, <script>, <img>, <audio> gibi dış kaynaklara (CSS, JavaScript, resim, simge vs.) işaret eden etiketler varsa, tarayıcı bu kaynaklar için ek GET istekleri gönderir.
+
+Tüm bu içerikler geldikten sonra tarayıcı:
+
+DOM (Document Object Model) ağacını oluşturur,
+
+CSS ile stil bilgilerini uygular,
+
+JavaScript dosyalarını indirir, analiz eder ve çalıştırır,
+
+Son olarak tüm bu işlemlerin sonucunda kullanıcıya sayfa arayüzünü render eder (çizer ve gösterir).
+
+🧩 Ek Teknik Aşamalar
+Bu sürecin görünmeyen ama önemli bazı teknik adımları da vardır:
+
+Tarayıcı, isteği göndermeden önce URL’deki alan adı için DNS çözümlemesi yapar ve bu alan adının IP adresini bulur.
+
+Ardından, sunucuya bağlanmak için bir TCP bağlantısı kurar.
+
+Eğer bağlantı HTTPS ile yapılacaksa, bir TLS/SSL el sıkışması (handshake) süreci gerçekleşir.
+
+Sunucudan gelen içerik sıkıştırılmışsa (örneğin Content-Encoding: gzip), tarayıcı bunu decompress (sıkıştırmayı açma) işlemine tabi tutar.
+
+Gelen içerik JavaScript dosyasıysa, tarayıcı bu dosyayı sadece görüntülemez, onu analiz edip çalıştırır.
+
+
+*******************************************
+
+🔁 HTTP Mesaj Yapısı Nasıldır?
+İki ana mesaj tipi vardır:
+
+HTTP Request (İstek) → Tarayıcıdan sunucuya gider
+
+HTTP Response (Yanıt) → Sunucudan tarayıcıya döner
+
+Her ikisinin de yapısı şu üç bölümden oluşur:
+    
+1. Başlık (Headers)
+2. Boş satır
+3. Gövde (Body) [isteğe bağlı]
+📨 1. HTTP Request (İstemci → Sunucu)
+👇 Örnek (GET isteği):
+
+GET /index.html HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0
+Accept: text/html
+Accept-Language: tr-TR
+Connection: keep-alive
+
+🧩 Açıklaması:
+GET /index.html HTTP/1.1 → İstek satırı (ne istendiği)
+
+Host: → Hangi domain'e istek gönderildi
+
+User-Agent: → Tarayıcı bilgisi
+
+Accept: → Hangi içerikleri kabul ediyor
+
+Connection: → TCP bağlantısı açık kalsın mı?
+
+Bu örnekte gövde (body) yok çünkü GET isteği veri göndermez, sadece veri ister.
+
+📤 Örnek (POST isteği):
+
+POST /login HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Content-Length: 37
+
+{
+  "username": "seccad",
+  "password": "123456"
+}
+Bu POST isteğinde alt kısımda bir body var: Kullanıcı adı ve şifre gönderiliyor.
+
+📩 2. HTTP Response (Sunucu → İstemci)
+👇 Örnek Yanıt:
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1234
+Set-Cookie: sessionId=abc123
+
+<!DOCTYPE html>
+<html>
+  <head>...</head>
+  <body>Merhaba Seccad!</body>
+</html>
+🧩 Açıklaması:
+HTTP/1.1 200 OK → Sunucunun yanıt durumu (200 başarılı)
+
+Content-Type: → Dönen verinin türü (HTML)
+
+Set-Cookie: → Tarayıcıya çerez ayarlanıyor
+
+Alt kısımda: body yani HTML sayfa içeriği
+
+🧠 Önemli Notlar
+Her HTTP mesajı, bir başlıklar kümesi (headers) ile başlar.
+
+POST, PUT, PATCH gibi isteklerde body (gövde) vardır.
+
+Yanıtlarda da genellikle body yer alır (HTML, JSON, dosya vb.).
+
+Content-Length → Gövde boyutunu belirler.
+
+Content-Type → İçerik türünü tanımlar (text/html, application/json, vs.).
+
+🎯 Özet
+Tür	                Yön	                İçerik
+HTTP Request	Tarayıcı → Sunucu	GET/POST satırı, headers, body
+HTTP Response	Sunucu → Tarayıcı	Status code, headers, body
+
+
+***********************************************
+
+✅ 1. Content-Type
+Tarayıcıya gönderilen içeriğin türünü belirtir. Örneğin, HTML mi JSON mu olduğunu bildirir.
+Kullanım:
+res.setHeader('Content-Type', 'application/json')
+
+✅ 2. Content-Length
+Yanıt gövdesinin uzunluğunu (byte cinsinden) belirtir.
+Kullanım:
+res.setHeader('Content-Length', Buffer.byteLength(body))
+
+✅ 3. Set-Cookie
+Tarayıcıya çerez tanımlamak için kullanılır.
+Kullanım:
+res.setHeader('Set-Cookie', 'sessionId=abc123; HttpOnly')
+
+✅ 4. Cache-Control
+Verinin önbelleğe alınıp alınmayacağını ve ne kadar süre saklanacağını belirtir.
+Kullanım:
+res.setHeader('Cache-Control', 'no-store')
+
+✅ 5. Location
+Tarayıcıyı başka bir adrese yönlendirmek için kullanılır.
+Kullanım:
+res.setHeader('Location', '/login')
+
+✅ 6. Access-Control-Allow-Origin
+Farklı domain'lerden gelen isteklere izin verir (CORS).
+Kullanım:
+res.setHeader('Access-Control-Allow-Origin', '*')
+
+✅ 7. Content-Disposition
+Tarayıcı içeriği indirilsin mi, yoksa görüntülensin mi karar verir.
+Kullanım:
+res.setHeader('Content-Disposition', 'attachment; filename="dosya.pdf"')
+
+✅ 8. X-Powered-By
+Sunucunun hangi teknolojiyle çalıştığını belirtir (güvenlik nedeniyle genelde kaldırılır).
+Kullanım:
+res.setHeader('X-Powered-By', 'Node.js')
+
+✅ 9. ETag
+İçeriğin eşsiz versiyon kimliğini belirtir (önbellekleme için).
+Kullanım:
+res.setHeader('ETag', 'abc123')
+
+✅ 10. Last-Modified
+İçeriğin en son ne zaman değiştiğini belirtir.
+Kullanım:
+res.setHeader('Last-Modified', 'Mon, 12 Jul 2025 19:00:00 GMT')
+
+***********************************************
+
+🍪 Çerez (Cookie) Nedir?
+Çerez, sunucunun tarayıcıya gönderdiği küçük bir metin bilgisidir.
+Tarayıcı bu çerezi saklar ve aynı siteye yapılan sonraki isteklerde otomatik olarak sunucuya gönderir.
+
+🧠 Ne İşe Yarar?
+1. Oturum Yönetimi (Session Management)
+Kullanıcı giriş yaptıktan sonra kim olduğunu hatırlamak için:
+
+Sunucu giriş yapan kullanıcıya bir sessionId=abc123 gibi çerez verir.
+
+Kullanıcı her sayfa yenilediğinde, bu çerez otomatik olarak gönderilir.
+
+Sunucu bu çerez sayesinde "Bu Seccad" diyebilir.
+
+2. Kullanıcı Tercihlerini Hatırlamak
+Tema (karanlık mod), dil ayarı gibi şeyleri hatırlamak için:
+
+Örn: theme=dark, lang=tr
+
+***********************************************
+
+🔍 Gözlemin Özeti
+Tarayıcı /assets/index-B4kBxADS.js ve /assets/index-DVf2a6Ad.css isteklerini art arda (hatta neredeyse aynı anda) göndermiş. Ve senin sunucun önce ikinci dosyayı (.css) göndermiş, sonra birincisini (.js).
+
+Yani:
+
+🔗 İstek alındı: GET /assets/index-B4kBxADS.js      ← 1. İstek
+🔗 İstek alındı: GET /assets/index-DVf2a6Ad.css     ← 2. İstek
+📄 Dosya gönderildi: .../index-DVf2a6Ad.css         ← 2. Cevap
+📄 Dosya gönderildi: .../index-B4kBxADS.js          ← 1. Cevap
+⚙️ Bu Nasıl Mümkün Oluyor?
+1. Tarayıcı, Bağlantıları Paralel Kurar
+Tarayıcı modern bir HTTP istemcisidir. İlk HTML dosyasında <link> ve <script> etiketlerini gördüğü an, bu dosyaları eş zamanlı (asenkron) olarak istemeye başlar.
+
+Yani aynı anda birden fazla TCP bağlantısı açabilir.
+
+Hatta HTTP/1.1'de tarayıcı başına genellikle 6 bağlantıya kadar izin verilir.
+
+HTTP/2 varsa, aynı TCP bağlantısı üzerinden birden fazla istek bile gönderebilir (multiplexing).
+
+2. Sunucu, İstekleri Bağımsız İşler
+Senin http.createServer((req, res) => { ... }) yapın şunu sağlar:
+
+Her gelen istek için bağımsız bir işlem başlatılır.
+
+Bu yüzden req1, req2, req3 gibi istekler sıralı değil, eş zamanlı işlenir.
+
+Yani sunucu şu şekilde davranır:
+
+
+1. İstek A geldi → dosya sisteminden .js dosyası okunuyor...
+2. İstek B geldi → dosya sisteminden .css dosyası okunuyor...
+3. CSS dosyası daha küçük veya diskten daha hızlı okundu → hemen gönderildi
+4. JS dosyası biraz daha geç okundu → sonra gönderildi
+3. Disk Okuma Süresi + Dosya Boyutu Farkı
+.css dosyası küçük ve hızlı okunmuş olabilir.
+
+.js dosyası büyükse veya dosya sisteminden daha yavaş geldiyse geç gönderilmiş olabilir.
+
+fs.readFile gibi fonksiyonlar asenkron olduğundan önce hangisi hazır olursa onu gönderir.
+
+***********************************************
+
+
+***********************************************
+
+
+***********************************************
+
+
+***********************************************

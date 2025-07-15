@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 import styled, { keyframes } from "styled-components";
 import {
@@ -5,13 +6,15 @@ import {
   FacebookOutlined,
   TwitterOutlined,
 } from "@ant-design/icons";
-import profileImage from "../assets/seccad.png";
-import React, { useEffect, useState } from "react";
 
+import profileImage from "../assets/seccad.png";
+
+// ----- Animasyon -----
 const blink = keyframes`
   50% { border-color: transparent; }
 `;
 
+// ----- Stil Bileşenleri -----
 const HomeSection = styled.section`
   display: flex;
   align-items: center;
@@ -33,12 +36,13 @@ const HomeContent = styled.div`
   }
   h3 {
     font-size: 2rem;
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
+    margin: 1rem 0 1.5rem 0;
     color: var(--text-color);
-    display: -webkit-box; /* Flexbox benzeri bir kutu modeli */
-    -webkit-box-orient: vertical; /* Dikey eksende hizalama */
-    text-overflow: ellipsis; /* Taşan metni "..." ile göster */
+
+    /* Yazı animasyonu ve görünümü için */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
 
     span {
       border-right: 2px solid var(--primary-color);
@@ -50,7 +54,6 @@ const HomeContent = styled.div`
       font-size: 2rem;
     }
   }
-
   p {
     font-size: 1.3rem;
     font-weight: 500;
@@ -62,7 +65,7 @@ const HomeContent = styled.div`
 `;
 
 const ProfileImageWrapper = styled.div`
-  width: 30%; /* sabit genişlik */
+  width: 30%;
   max-width: 30%;
   border-radius: 50%;
 
@@ -73,7 +76,9 @@ const ProfileImageWrapper = styled.div`
     transition: 0.3s ease-in-out;
 
     &:hover {
-      box-shadow: 0 0 25px var(--primary-color), 0 0 50px var(--primary-color),
+      box-shadow:
+        0 0 25px var(--primary-color),
+        0 0 50px var(--primary-color),
         0 0 100px var(--primary-color);
       transform: scale(1.01);
     }
@@ -122,53 +127,54 @@ const StyledButton = styled(Button)`
   }
 `;
 
+// ----- Ana Bileşen -----
 const Home = () => {
-  const texts = ["Full-Stack Geliştiriciyim", "Mobil Uygulama Geliştiriciyim"];
+  // Yazılacak metinler listesi
+  const texts = ["bir fullstack geliştiriciyim", "bir mobil geliştiriciyim"];
 
+  // Yazı animasyonu için state'ler
   const [displayedText, setDisplayedText] = useState("");
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Yazı yazma ve silme animasyonu için efekt
   useEffect(() => {
     const currentText = texts[textIndex];
 
+    // Metin tamamlandıysa 2 saniye bekle ve silmeye başla
     if (!isDeleting && charIndex === currentText.length) {
       const pause = setTimeout(() => setIsDeleting(true), 2000);
       return () => clearTimeout(pause);
     }
 
+    // Silme tamamlandıysa 0.1 saniye bekle, sonra diğer metne geç
     if (isDeleting && charIndex === 0) {
       const pause = setTimeout(() => {
         setIsDeleting(false);
         setTextIndex((prev) => (prev + 1) % texts.length);
-      }, 200);
+      }, 100);
       return () => clearTimeout(pause);
     }
 
-    const timeout = setTimeout(
-      () => {
-        if (isDeleting) {
-          setDisplayedText(
-            currentText.substring(0, Math.max(charIndex - 1, 0))
-          );
-          setCharIndex((prev) => Math.max(prev - 1, 0));
-        } else {
-          setDisplayedText(
-            currentText.substring(
-              0,
-              Math.min(charIndex + 1, currentText.length)
-            )
-          );
-          setCharIndex((prev) => Math.min(prev + 1, currentText.length));
-        }
-      },
-      isDeleting ? 50 : 100
-    );
+    // Yazma veya silme işlemi
+    const timeout = setTimeout(() => {
+      if (isDeleting) {
+        // Silme işlemi: metni 1 karakter kısalt
+        setDisplayedText(currentText.substring(0, Math.max(charIndex - 1, 0)));
+        setCharIndex((prev) => Math.max(prev - 1, 0));
+      } else {
+        // Yazma işlemi: metni 1 karakter uzat
+        setDisplayedText(currentText.substring(0, charIndex + 1));
+        setCharIndex((prev) => Math.min(prev + 1, currentText.length));
+      }
+    }, isDeleting ? 50 : 100);
 
+    // Cleanup timeout
     return () => clearTimeout(timeout);
-  }, [charIndex, isDeleting, textIndex]);
+  }, [charIndex, isDeleting, textIndex, texts]);
 
+  // Sosyal medya linkleri ve ikonları
   const socialLinks = [
     { icon: <InstagramOutlined />, url: "https://instagram.com" },
     { icon: <FacebookOutlined />, url: "https://facebook.com" },
@@ -193,13 +199,15 @@ const Home = () => {
           üretmeyi seviyorum. Hem mobilde hem sunucu tarafında daha iyi çözümler
           sunabilmek için öğrenmeye ve üretmeye devam ediyorum.
         </p>
+
         <SocialIcons>
           {socialLinks.map(({ icon, url }, i) => (
-            <a key={i} href={url} target="_blank" rel="noreferrer">
+            <a key={i} href={url} target="_blank" rel="noreferrer" aria-label={url}>
               {icon}
             </a>
           ))}
         </SocialIcons>
+
         <a href="/files/seccadCv.pdf" download="SeccadYesilkayaCV.pdf">
           <StyledButton>CV İndir</StyledButton>
         </a>

@@ -1,19 +1,32 @@
 import React from "react";
-import { Form, Input, Button, Typography, Row, Col } from "antd";
 
+import { Form, Input, Button, Typography, Row, Col } from "antd";
 
 
 const ContactForm = () => {
   const [form] = Form.useForm();
   const { Title } = Typography;
 
-  const onFinish = (values) => {
-    const subject = encodeURIComponent("İletişim Formu Mesajı");
-    const body = encodeURIComponent(
-      `Ad: ${values.firstName} ${values.lastName}\nEmail: ${values.email}\nMesaj:\n${values.message}`
-    );
-    const mailtoLink = `mailto:seninemailin@example.com?subject=${subject}&body=${body}`;
-    window.open(mailtoLink, "_blank");
+  const onFinish = async (values) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (response.ok) {
+        form.resetFields();
+        alert("Mesajınız başarıyla gönderildi!");
+      } else {
+        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error("İstek gönderilirken hata oluştu:", error);
+      alert("Sunucuya bağlanılamadı.");
+    }
   };
 
   return (

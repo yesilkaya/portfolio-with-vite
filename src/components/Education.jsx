@@ -8,11 +8,11 @@ import { educationData } from "../data/educationData";
 const { Title, Paragraph, Text } = Typography;
 
 const EducationSection = styled.section`
-background-color: var(--second-bg-color);
-padding: 5rem 2rem;
-display: flex;
-flex-direction: column;
-align-items: center;
+  background-color: var(--second-bg-color);
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const TimelineWrapper = styled.div`
@@ -28,7 +28,12 @@ const TimelineLine = styled.div`
   width: 2px;
   height: 100%;
   background-color: var(--primary-color);
+`;
 
+const ItemDescription = styled(Paragraph)`
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color);
 `;
 
 const TimelineItemWrapper = styled.div`
@@ -131,15 +136,7 @@ export default function Education() {
                 >
                   {iconMap[i] || "📌"} {item.title}
                 </Text>
-                <Paragraph
-                  style={{
-                    fontSize: "1.1rem",
-                    lineHeight: 1.6,
-                    color: "var(--text-color)",
-                  }}
-                >
-                  {item.description}
-                </Paragraph>
+                <ItemDescription>{item.description}</ItemDescription>
               </TimelineContent>
             </TimelineItemWrapper>
           );

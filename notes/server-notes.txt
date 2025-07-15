@@ -1,0 +1,117 @@
+
+***********************************************
+✅ NodeJs Tümleşik modüller
+
+🗂️ 1. fs (File System)
+Dosya okuma, yazma, silme, dizin işlemleri için kullanılır.
+const fs = require("fs");
+fs.readFile("dosya.txt", "utf8", (err, data) => { ... });"
+
+🌐 2. http / https
+Web sunucusu kurmak ve HTTP/HTTPS isteklerini dinlemek için.
+const http = require("http");
+http.createServer((req, res) => { ... });
+
+📁 3. path
+Dosya yollarını yönetmek ve sistem bağımsız hale getirmek için.
+const path = require("path");
+const fullPath = path.join(__dirname, "folder", "file.txt");
+
+🔧 4. os
+İşletim sistemi bilgilerine erişim (RAM, CPU, platform, hostname vs.).
+const os = require("os");
+console.log(os.platform(), os.totalmem());
+
+⏱️ 5. timers
+setTimeout, setInterval gibi zamanlayıcı fonksiyonları sağlar.
+setTimeout(() => { console.log("Merhaba!"); }, 1000);
+
+🔄 6. events
+Event Emitter ile olay tabanlı programlama.
+const EventEmitter = require("events");
+const emitter = new EventEmitter();
+emitter.on("olay", () => console.log("Olay yakalandı"));
+emitter.emit("olay");
+
+📦 7. util
+Yardımcı işlevler içerir: promisify, inherits, format, types gibi.
+const util = require("util");
+const sleep = util.promisify(setTimeout);
+
+📡 8. url
+URL’leri ayrıştırmak ve yönetmek için.
+const url = require("url");
+const parsed = url.parse("http://localhost:3000/page?name=test");
+
+🔐 9. crypto
+Şifreleme, hash, HMAC, UUID gibi güvenlik işlemleri.
+const crypto = require("crypto");
+const hash = crypto.createHash("sha256").update("veri").digest("hex");
+
+🧵 10. stream
+Büyük veri akışlarıyla çalışmak için (örneğin dosya yükleme/indirme).
+const fs = require("fs");
+const stream = fs.createReadStream("dosya.txt");
+
+🎯 Özet
+Node.js şunları yerleşik olarak sağlar:
+Dosya sistemi
+Sunucu kurma
+Şifreleme
+Olay tabanlı programlama
+Sistem bilgisi
+Zamanlayıcılar
+TCP/UDP destekleri
+Stream & Buffer yönetimi
+Bunlar sayesinde ekstra kütüphane yüklemeden birçok temel işlemi gerçekleştirebilirsin.
+İstersen bir tablo halinde PDF olarak da sunabilirim veya terminalde test etmen için küçük örnekler sağlayabilirim.
+
+*************************************
+
+HTTP Nedir?
+HTTP (Hypertext Transfer Protocol), web tarayıcıları (istemci) ile sunucular arasında iletişim kurmak için kullanılan bir protokoldür. Web üzerindeki sayfaların, görsellerin, verilerin taşınmasında temel rol oynar.
+
+HTTP Nasıl Çalışır?
+Kullanıcı tarayıcıya bir URL yazar (örneğin: http://example.com).
+
+Tarayıcı, domain adının IP adresini DNS aracılığıyla çözümler.
+
+Tarayıcı bu IP’ye bir HTTP isteği (request) gönderir.
+
+Sunucu isteği alır, işler ve HTTP yanıtı (response) döner.
+
+Tarayıcı gelen cevabı alır ve kullanıcıya içerik olarak gösterir.
+
+HTTP İstek (Request) Yöntemleri
+GET: Sunucudan veri istemek için kullanılır.
+POST: Sunucuya veri göndermek için (örneğin form verisi).
+PUT: Var olan veriyi tamamen güncellemek için.
+PATCH: Verinin sadece bir kısmını güncellemek için.
+DELETE: Veriyi silmek için.
+HEAD: Sayfanın sadece başlık bilgilerini almak için, veri içeriği gönderilmez.
+
+HTTP Yanıt (Response) Kodları
+200 OK: İstek başarıyla sonuçlandı.
+301 / 302: Sayfa kalıcı/geçici olarak başka bir yere yönlendirildi.
+400 Bad Request: Geçersiz istek yapıldı.
+401 Unauthorized: Kimlik doğrulama gerekli.
+403 Forbidden: Erişim izni yok.
+404 Not Found: İstenen sayfa ya da dosya bulunamadı.
+
+500 Internal Server Error: Sunucuda beklenmeyen bir hata oluştu.
+
+HTTP ve HTTPS Arasındaki Fark
+HTTP şifreleme içermez, veri düz metin olarak gönderilir.
+
+HTTPS (Secure HTTP), SSL/TLS şifrelemesi ile veri güvenliğini sağlar.
+
+HTTPS özellikle form verileri, kullanıcı girişleri gibi hassas bilgiler için kullanılır.
+
+Özet
+HTTP, istemci ile sunucu arasında veri alışverişi yapılmasını sağlar.
+
+Tüm istek ve yanıtlar metin tabanlıdır.
+
+Modern web uygulamalarında güvenlik nedeniyle çoğunlukla HTTPS tercih edilir.
+
+*************************************

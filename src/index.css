@@ -31,12 +31,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Temel sıfırlamalar */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 /* Gövde ve yazı tipi */
 body {
