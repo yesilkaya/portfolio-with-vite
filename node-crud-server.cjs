@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
 
   /* Bir web sayfası, kendi yüklendiği origin dışında bir yere HTTP isteği yapmaya çalıştığında bu bir "cross-origin request", yani "başka kaynaktan istek" olur. Bu isteğin gittiği kaynak(restfull api servis) CORS ayarlarıyla  sitenin yüklendiği kaynağa izin vermişse(gönderilen cevapta bu bilgi yer alır) cevap tarayıcı tarafından kabul edilir aksi durumda cevap gelir ama tarayıcıda işlenmez. */
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
