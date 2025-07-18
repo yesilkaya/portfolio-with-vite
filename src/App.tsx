@@ -1,13 +1,13 @@
-// src/App.jsx
+import React from "react";
 import { Layout } from "antd";
 import "antd/dist/reset.css";
 import "./index.css";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
-import HeaderBar from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
-import AppRoutes from "./routes/AppRoutes.jsx";
+import HeaderBar from "./components/Header";
+import Footer from "./components/Footer";
+import AppRoutes from "./routes/AppRoutes";
 
 const { Content } = Layout;
 

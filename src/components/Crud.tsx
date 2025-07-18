@@ -1,5 +1,4 @@
-// src/CrudScreen.jsx
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   Form,
@@ -22,10 +21,23 @@ const Container = styled.div`
   padding: 24px;
 `;
 
+// Kullanıcı tipi
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+// Form verisi tipi
+interface UserFormValues {
+  name: string;
+  email: string;
+}
+
 function CrudScreen() {
-  const [users, setUsers] = useState([]);
-  const [form] = Form.useForm();
-  const [editId, setEditId] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
+  const [form] = Form.useForm<UserFormValues>();
+  const [editId, setEditId] = useState<string>('');
 
   useEffect(() => {
     handleGet();
@@ -35,16 +47,16 @@ function CrudScreen() {
   const handleGet = async () => {
     try {
       const response = await fetch(API_URL);
-      const data = await response.json();
+      const data: User[] = await response.json();
       setUsers(data);
       message.success(`GET başarılı (${response.status})`);
-    } catch (error) {
+    } catch (error: any) {
       message.error('GET hatası: ' + error.message);
     }
   };
 
   // POST
-  const handlePost = async (values) => {
+  const handlePost = async (values: UserFormValues) => {
     if (!values.name || !values.email) {
       return message.warning('İsim ve e-posta boş olamaz');
     }
@@ -57,13 +69,13 @@ function CrudScreen() {
       message.success(`POST başarılı (${response.status})`);
       form.resetFields();
       handleGet();
-    } catch (error) {
+    } catch (error: any) {
       message.error('POST hatası: ' + error.message);
     }
   };
 
   // PUT
-  const handlePut = async (values) => {
+  const handlePut = async (values: UserFormValues) => {
     if (!editId || !values.name || !values.email) {
       return message.warning('PUT için ID, isim ve e-posta gerekli');
     }
@@ -77,20 +89,20 @@ function CrudScreen() {
       setEditId('');
       form.resetFields();
       handleGet();
-    } catch (error) {
+    } catch (error: any) {
       message.error('PUT hatası: ' + error.message);
     }
   };
 
   // DELETE
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
       });
       message.success(`DELETE başarılı (${response.status})`);
       handleGet();
-    } catch (error) {
+    } catch (error: any) {
       message.error('DELETE hatası: ' + error.message);
     }
   };
@@ -100,7 +112,7 @@ function CrudScreen() {
       <Card bordered>
         <Title level={3}>🧾 CRUD Kullanıcı Formu</Title>
 
-        <Form
+        <Form<UserFormValues>
           form={form}
           layout="vertical"
           onFinish={(values) => {
@@ -146,7 +158,7 @@ function CrudScreen() {
 
       <Title level={4} style={{ color: 'white' }}>👥 Kullanıcı Listesi</Title>
       <List
-      style={{ backgroundColor: '#F0F0F0', color: 'white' }}
+        style={{ backgroundColor: '#F0F0F0', color: 'white' }}
         bordered
         dataSource={users}
         renderItem={(user) => (
@@ -156,6 +168,7 @@ function CrudScreen() {
                 danger
                 size="small"
                 onClick={() => handleDelete(user.id)}
+                key="delete"
               >
                 Sil
               </Button>,
@@ -165,10 +178,12 @@ function CrudScreen() {
                   setEditId(user.id);
                   form.setFieldsValue({ name: user.name, email: user.email });
                 }}
+                key="edit"
               >
                 Düzenle
               </Button>,
             ]}
+            key={user.id}
           >
             <Text>
               #{user.id} - {user.name} ({user.email})

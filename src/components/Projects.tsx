@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from "react";
-
-import { Row, Col, Card, Button } from "antd";
+import { Row, Col, Card, Button, Spin } from "antd";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import axios from "axios";
+
 import cocukImage from "../assets/cocuk.webp";
 import ilimsehriImage from "../assets/ilimsehri.webp";
 import munacatImage from "../assets/munacat.webp";
-import { Spin } from "antd";
-import axios from "axios"; // axios eklendi
-
 
 const { Meta } = Card;
 
-// Styled component for the Projects section
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+}
+
+interface GithubRepo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+}
+
+// Styled Components
 const ProjectsSection = styled.section`
   background-color: var(--second-bg-color);
   padding: 5rem 2rem;
@@ -20,14 +31,13 @@ const ProjectsSection = styled.section`
   margin: 4rem auto;
   display: flex;
   flex-direction: column;
-  align-items: center;  
-  transition: transform 0.3s ease;
+  align-items: center;
   text-align: center;
 `;
 
-const ProjectCard = styled(motion.create(Card)).withConfig({
+const ProjectCard = styled(motion(Card)).withConfig({
   shouldForwardProp: (prop) => prop !== "highlight",
-})`  
+})<{ highlight?: boolean }>`
   background-color: var(--second-bg-color);
   color: var(--text-color);
   margin: 2rem 10%;
@@ -49,14 +59,14 @@ const ProjectCard = styled(motion.create(Card)).withConfig({
   }
 
   .ant-card-cover img {
-    border-radius: 50%; /* Tam yuvarlak */
-    object-fit: cover; /* Taşmayı engelle */
+    border-radius: 50%;
+    object-fit: cover;
     box-shadow: 0 0 30px var(--primary-color);
   }
 
   .ant-card-meta-title,
   .ant-card-meta-description {
-    color: white; /* Metin rengini beyaz yapar */
+    color: white;
   }
 `;
 
@@ -67,37 +77,13 @@ const GithubProjectsSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.3s ease;
   text-align: center;
-
-  .ant-card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-    min-height: auto;
-
-  }
-
-  .ant-card-head-title {
-    color: var(--text-color);
-    font-size: 1.5rem;
-  }
 `;
 
-const formatRepoTitle = (name) => {
-  return name
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-};
-
-// Styled Ant Design Card
-const GithubCard = styled(motion.create(Card))`
+const GithubCard = styled(motion(Card))`
   background: var(--bg-color);
   color: var(--text-color);
-  height: 100%; 
-
+  height: 100%;
   display: flex;
   flex-direction: column;
 
@@ -105,23 +91,31 @@ const GithubCard = styled(motion.create(Card))`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 1; 
+    flex: 1;
   }
 `;
 
-const Projects = () => {
-  const [githubRepos, setGithubRepos] = useState([]);
-  const [loading, setLoading] = useState(true);
+// Yardımcı fonksiyon
+const formatRepoTitle = (name: string) =>
+  name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+const Projects: React.FC = () => {
+  const [githubRepos, setGithubRepos] = useState<GithubRepo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await axios.get("https://api.github.com/users/yesilkaya/repos");
+        const response = await axios.get<GithubRepo[]>(
+          "https://api.github.com/users/yesilkaya/repos"
+        );
         setGithubRepos(response.data);
       } catch (error) {
         console.error("GitHub API hatası:", error);
@@ -133,7 +127,7 @@ const Projects = () => {
     fetchRepos();
   }, []);
 
-  const projectData = [
+  const projectData: Project[] = [
     {
       title: "Dualar",
       description: "Dualar uygulaması, günlük duaları ve ibadetleri takip etmenizi sağlar.",
@@ -141,13 +135,13 @@ const Projects = () => {
     },
     {
       title: "İlim Şehri",
-      description: "ilim Şehri uygulaması, çeşitli dini içerikler ve bilgiler sunar.",
+      description: "İlim Şehri uygulaması, çeşitli dini içerikler ve bilgiler sunar.",
       image: ilimsehriImage,
     },
     {
       title: "Çocuk Kitapları",
-      description: "Çocuk Kitapları uygulaması, çocuklar için eğitici ve eğlenceli kitaplar sunar.",
-      image: cocukImage, // Yerel resim yolu
+      description: "Çocuklar için eğitici ve eğlenceli kitaplar sunar.",
+      image: cocukImage,
     },
   ];
 
@@ -197,20 +191,21 @@ const Projects = () => {
         ) : (
           <Row gutter={[24, 24]} justify="center" align="stretch">
             {githubRepos.map((repo) => (
-              <Col
-                xs={24}
-                sm={12}
-                md={12}
-                key={repo.id}
-                style={{ display: "block" }}
-              >
-                <GithubCard title={<span style={{ 
-      fontSize: "1.5rem", 
-      fontWeight: "bold", 
-      color: "var(--primary-color)" 
-    }}>
-      {formatRepoTitle(repo.name)}
-    </span>} bordered={false} >
+              <Col xs={24} sm={12} md={12} key={repo.id}>
+                <GithubCard
+                  title={
+                    <span
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "bold",
+                        color: "var(--primary-color)",
+                      }}
+                    >
+                      {formatRepoTitle(repo.name)}
+                    </span>
+                  }
+                  bordered={false}
+                >
                   <div style={{ flex: 1 }}>
                     <p style={{ color: "var(--text-color)" }}>
                       {repo.description || "Açıklama yok"}
@@ -218,13 +213,13 @@ const Projects = () => {
                   </div>
                   <Button
                     type="primary"
-                    style={{ width: "fit-content", alignSelf: "center" ,backgroundColor: "var(--primary-color)"}}
+                    style={{
+                      width: "fit-content",
+                      alignSelf: "center",
+                      backgroundColor: "var(--primary-color)",
+                    }}
                     onClick={() =>
-                      window.open(
-                        repo.html_url,
-                        "_blank",
-                        "noopener,noreferrer"
-                      )
+                      window.open(repo.html_url, "_blank", "noopener,noreferrer")
                     }
                   >
                     GitHub'da Gör
@@ -235,8 +230,6 @@ const Projects = () => {
           </Row>
         )}
       </GithubProjectsSection>
-
-      {/* <Footer /> */}
     </>
   );
 };

@@ -1,4 +1,10 @@
-export const timelineData = [
+export interface TimelineEntry {
+  date: string;
+  title: string;
+  description: string;
+}
+
+export const timelineData: TimelineEntry[] = [
   {
     date: "4 Temmuz",
     title: "Linkle Tıklanarak Gidilen Başka Bir Sayfa",

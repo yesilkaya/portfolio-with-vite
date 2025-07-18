@@ -70,7 +70,18 @@ const Copyright = styled.p`
   font-size: 13px;
   margin-top: 10px;
 `;
-const Footer = () => {
+
+// NavbarItem tipini kullanmak istersen:
+// interface NavbarItem {
+//   key: string;
+//   id: string;
+//   label: string;
+//   content: string;
+//   type: "scroll" | "route";
+//   route?: string;
+// }
+
+const Footer: React.FC = () => {
   return (
     <FooterContainer>
       <SocialContainer>
@@ -101,7 +112,7 @@ const Footer = () => {
         {navbar.slice(0, -1).map((section) => (
           <li key={section.id}>
             <Link
-              to={section.type === "route" ? section.route : `/#${section.id}`}
+              to={section.type === "route" ? section.route ?? "/" : `/#${section.id}`}
               style={{ color: "var(--text-color)", textDecoration: "none" }}
             >
               {section.label}

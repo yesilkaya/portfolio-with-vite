@@ -1,11 +1,19 @@
 import React, { useEffect } from "react";
-
 import { Timeline, Card } from "antd";
 import styled from "styled-components";
-import { timelineData } from "../data/timelineData"; // yolu senin yapına göre ayarla
-import Footer from "./Footer.jsx";
+import { timelineData } from "../data/timelineData"; // JS yerine TS dosyan olacak
+import Footer from "./Footer";
 
-// Styled Card with hover & dark theme support
+const { Item } = Timeline;
+
+// Tip tanımı (timelineData dizisinin öğeleri için)
+interface TimelineItem {
+  title: string;
+  date: string;
+  description: string;
+}
+
+// Styled Components
 const ProjectsSection = styled.section`
   background-color: var(--second-bg-color);
   padding: 5rem 0;
@@ -43,25 +51,24 @@ const CustomTimelineWrapper = styled.div`
   .ant-timeline-item-head {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
-    width: 20px !important; /* Varsayılan genelde 14px civarıdır */
+    width: 20px !important;
     height: 20px !important;
-    margin-left: -10px !important; /* Ortalamak için genişliğin yarısının negatif margin'i */
-    margin-top: -8px !important; /* Dikey hizalama için */
-    box-shadow: 0 0 8px var(--primary-color); /* İstersen hafif glow efekti */
+    margin-left: -10px !important;
+    margin-top: -8px !important;
+    box-shadow: 0 0 8px var(--primary-color);
   }
 
-  /* Sadece sol taraftaki item içeriklerine soldan margin */
   .ant-timeline-item:nth-child(odd) .ant-timeline-item-content {
     padding: 0 0 0 25px;
   }
 
-  /* Sağdaki item içeriklerine sağdan margin */
   .ant-timeline-item:nth-child(even) .ant-timeline-item-content {
     padding: 0 30px 0 0;
   }
 `;
 
-const TimelineCom = () => {
+// Ana bileşen
+const TimelineCom: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -73,9 +80,9 @@ const TimelineCom = () => {
         <CustomTimelineWrapper>
           <Timeline
             mode="alternate"
-            items={timelineData.map((item) => ({
+            items={timelineData.map((item: TimelineItem) => ({
               children: (
-                <StyledCard title={item.title + " (" + item.date + ")"}>
+                <StyledCard title={`${item.title} (${item.date})`}>
                   {item.description}
                 </StyledCard>
               ),

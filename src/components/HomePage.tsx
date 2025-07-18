@@ -18,12 +18,12 @@ const blink = keyframes`
 const HomeSection = styled.section`
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   gap: 10rem;
   padding: 10rem 5%;
   flex-wrap: nowrap;
   background: var(--bg-color);
-  min-height: 100vh; 
+  min-height: 100vh;
 `;
 
 const HomeContent = styled.div`
@@ -38,8 +38,6 @@ const HomeContent = styled.div`
     font-size: 2rem;
     margin: 1rem 0 1.5rem 0;
     color: var(--text-color);
-
-    /* Yazı animasyonu ve görünümü için */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
@@ -127,28 +125,27 @@ const StyledButton = styled(Button)`
   }
 `;
 
-// ----- Ana Bileşen -----
-const Home = () => {
-  // Yazılacak metinler listesi
-  const texts = ["bir fullstack geliştiriciyim", "bir mobil geliştiriciyim"];
+interface SocialLink {
+  icon: React.ReactNode;
+  url: string;
+}
 
-  // Yazı animasyonu için state'ler
-  const [displayedText, setDisplayedText] = useState("");
-  const [textIndex, setTextIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+const Home: React.FC = () => {
+  const texts: string[] = ["bir fullstack geliştiriciyim", "bir mobil geliştiriciyim"];
 
-  // Yazı yazma ve silme animasyonu için efekt
+  const [displayedText, setDisplayedText] = useState<string>("");
+  const [textIndex, setTextIndex] = useState<number>(0);
+  const [charIndex, setCharIndex] = useState<number>(0);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
   useEffect(() => {
     const currentText = texts[textIndex];
 
-    // Metin tamamlandıysa 2 saniye bekle ve silmeye başla
     if (!isDeleting && charIndex === currentText.length) {
       const pause = setTimeout(() => setIsDeleting(true), 2000);
       return () => clearTimeout(pause);
     }
 
-    // Silme tamamlandıysa 0.1 saniye bekle, sonra diğer metne geç
     if (isDeleting && charIndex === 0) {
       const pause = setTimeout(() => {
         setIsDeleting(false);
@@ -157,25 +154,20 @@ const Home = () => {
       return () => clearTimeout(pause);
     }
 
-    // Yazma veya silme işlemi
     const timeout = setTimeout(() => {
       if (isDeleting) {
-        // Silme işlemi: metni 1 karakter kısalt
         setDisplayedText(currentText.substring(0, Math.max(charIndex - 1, 0)));
         setCharIndex((prev) => Math.max(prev - 1, 0));
       } else {
-        // Yazma işlemi: metni 1 karakter uzat
         setDisplayedText(currentText.substring(0, charIndex + 1));
         setCharIndex((prev) => Math.min(prev + 1, currentText.length));
       }
     }, isDeleting ? 50 : 100);
 
-    // Cleanup timeout
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, textIndex, texts]);
 
-  // Sosyal medya linkleri ve ikonları
-  const socialLinks = [
+  const socialLinks: SocialLink[] = [
     { icon: <InstagramOutlined />, url: "https://instagram.com" },
     { icon: <FacebookOutlined />, url: "https://facebook.com" },
     { icon: <TwitterOutlined />, url: "https://twitter.com" },

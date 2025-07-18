@@ -1,20 +1,21 @@
-// src/routes/AppRoutes.jsx
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import React from "react"; // Bu satır JSX türleri için gerekli
 
-import Home from "../components/HomePage.jsx";
-import Education from "../components/Education.jsx";
-import Services from "../components/Services.jsx";
-import Projects from "../components/Projects.jsx";
-import ContactForm from "../components/Contact.jsx";
-import TimelineCom from "../components/Timeline.jsx";
+import Home from "../components/HomePage";
+import Education from "../components/Education";
+import Services from "../components/Services";
+import Projects from "../components/Projects";
+import ContactForm from "../components/Contact";
+import TimelineCom from "../components/Timeline";
+import CrudScreen from "../components/Crud";
+import type { JSX } from "react";
+
+
 import { navbar } from "../data/navbar";
 
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import CrudScreen from "../components/Crud.jsx";
-
-function MainSections() {
-  const sectionRefs = useRef({});
+function MainSections(): JSX.Element {
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const location = useLocation();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function MainSections() {
     }
   }, [location]);
 
-  const sectionComponents = {
+  const sectionComponents: Record<string, JSX.Element | null> = {
     [navbar[0].id]: <Home />,
     [navbar[1].id]: <Education />,
     [navbar[2].id]: <Services />,
@@ -42,7 +43,9 @@ function MainSections() {
           <section
             id={section.id}
             key={section.key}
-            ref={(el) => (sectionRefs.current[section.id] = el)}
+            ref={(el) => {
+              sectionRefs.current[section.id] = el;
+            }}
             style={{
               minHeight: "100vh",
               scrollMarginTop: "64px",
@@ -59,7 +62,7 @@ function MainSections() {
   );
 }
 
-export default function AppRoutes() {
+export default function AppRoutes(): JSX.Element {
   return (
     <Routes>
       <Route path="/" element={<MainSections />} />

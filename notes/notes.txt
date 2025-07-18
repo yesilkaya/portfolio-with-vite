@@ -21,27 +21,19 @@ Modül Sistemi: require ile modül içeri aktarılır. Her dosya kendi kapsülü
 Node.js birçok hazır modülle gelir. Örnekler:
 
 fs: Dosya sistemi işlemleri (okuma, yazma, silme)
-
 http: HTTP sunucusu oluşturmak için
-
 path: Dosya yollarıyla çalışma (uzantı, klasör, vs.)
-
 os: İşletim sistemi bilgilerine erişim
-
 events: EventEmitter sınıfı üzerinden olayları yönetme
 
 🌍 Nerelerde Kullanılır?
 
 Web sunucuları (Express.js ile)
-
 API sunucuları (REST, GraphQL)
 
 CLI araçları (örn: Vite, ESLint, Webpack)
-
 Gerçek zamanlı uygulamalar (Chat, WebSocket)
-
 Dosya/dizin işlemleri (otomasyon, build tool)
-
 Mikroservisler
 
 ⚠️ Dezavantajları
@@ -75,14 +67,11 @@ V8, Google tarafından geliştirilen yüksek performanslı bir JavaScript motoru
 V8'in Temel Özellikleri
 
 Just-In-Time (JIT) Compiler: JavaScript kodunu anında makine koduna dönüştürerek yüksek performans sağlar.
-
 Garbage Collector: Kullanılmayan bellek alanlarını otomatik olarak temizler.
-
 Optimizasyon: Sık kullanılan kodları analiz ederek daha verimli hale getirir.
-
 ECMAScript Desteği: Yeni JavaScript standartlarını destekler (ES6 ve sonrası).
 
-Node.js ile V8 Arasındaki İlişki
+Node.js ile V8 Arasındaki İlişki :
 
 Node.js, V8 motorunu kullanarak JavaScript'i tarayıcı dışında çalıştırmayı sağlar. Normalde JavaScript tarayıcı ortamında çalışırken, Node.js sayesinde sunucu tarafında da çalıştırılabilir.
 
@@ -127,15 +116,15 @@ App.jsx
 Tüm uygulamanın merkezidir.
 
 🎨 Stil Dosyaları
-Dosya	Açıklama
-App.css	Uygulamanın genel stilini tanımlar.
-index.css	Genelde global CSS (reset, root değişkenleri, fontlar) burada tanımlanır.
+Dosya	        Açıklama
+App.css	        Uygulamanın genel stilini tanımlar.
+index.css	    Genelde global CSS (reset, root değişkenleri, fontlar) burada tanımlanır.
 
 ⚙️ Konfigürasyon Dosyaları
-Dosya	Açıklama
-.gitignore	Git'e dahil edilmeyecek dosyaları belirtir (örneğin node_modules).
+Dosya	            Açıklama
+.gitignore	        Git'e dahil edilmeyecek dosyaları belirtir (örneğin node_modules).
 eslint.config.js	Kod kalitesini sağlamak için lint kuralları.
-index.html	HTML giriş noktası, sadece Vite için özel bir yapı.
+index.html	        HTML giriş noktası, sadece Vite için özel bir yapı.
 
 📦 node_modules/
 Projede kullanılan tüm paketlerin bulunduğu klasör.
@@ -226,452 +215,5 @@ NPM, modern JavaScript geliştirmenin temel taşlarından biridir ve profesyonel
 
 /******************************************/
 
-✅ REACT NEDİR?
-
-React, kullanıcı arayüzleri oluşturmak için kullanılan popüler bir JavaScript kütüphanesidir. Facebook (şimdi Meta) ekibi tarafından 2013 yılında geliştirilmiştir ve günümüzde hala aktif olarak geliştirilmeye devam etmektedir.
-
-🔧 TEMEL ÖZELLİKLERİ
-
-⚛️ Bileşen Tabanlı Yapı
-React uygulamaları bileşenlerden oluşur. Her bileşen kendi içinde bağımsız çalışan, tekrar kullanılabilir yapıdadır. Bu modüler yaklaşım kodun yönetilebilirliğini artırır.
-
-🔄 SPA Desteği
-React genellikle Tek Sayfa Uygulamaları (SPA) geliştirmek için kullanılır. Kullanıcı etkileşimlerinde sayfa yeniden yüklenmez, sadece ilgili kısımlar dinamik olarak güncellenir.
-
-⚡ Sanal DOM
-React, performansı artırmak için Sanal DOM kullanır. Değişiklikler önce sanal ortamda hesaplanır, ardından gerçek DOM'a sadece gerekli güncellemeler yansıtılır.
-
-📌 Deklaratif Yaklaşım
-React'te "nasıl" değil, "ne" yapılacağını tanımlarsınız. UI, uygulama durumuna göre otomatik olarak güncellenir.
-
-🛠️ TEKNİK DETAYLAR
-
-React tamamen JavaScript ile yazılmıştır. JSX adı verilen HTML benzeri bir sözdizimi kullanır, ancak bu aslında JavaScript'in bir uzantısıdır.
-
-🌐 REACT VE NODE.JS İLİŞKİSİ
-
-React bir frontend kütüphanesi olarak tarayıcıda çalışır. Node.js ise React projelerinde şu amaçlarla kullanılır:
-
-Paket yönetimi (npm/yarn)
-
-Build işlemleri (Webpack, Vite)
-
-Geliştirme sunucusu
-
-Backend API'leri
-
-🌟 POPÜLERLİK SEBEPLERİ
-
-Kolay öğrenme eğrisi
-
-Geniş topluluk desteği
-
-Yüksek performans
-
-Yeniden kullanılabilir bileşenler
-
-Facebook gibi büyük şirketler tarafından kullanım
-
-React Native ile mobil uygulama geliştirme imkanı
-
-📚 REACT KÜTÜPHANE Mİ, FRAMEWORK MÜ?
-
-React teknik olarak bir kütüphanedir çünkü:
-
-Sadece view (görünüm) katmanını yönetir
-
-Routing, state yönetimi gibi özellikler için ek kütüphanelere ihtiyaç duyulur
-
-Esnek bir yapı sunar, geliştirici istediği araçlarla entegre edebilir
-
-Framework'ler (Angular gibi) ise daha kapsamlı çözümler sunar ve uygulama mimarisini büyük ölçüde belirler.
-
-💡 ÖZET
-
-React modern web uygulamaları geliştirmek için vazgeçilmez bir araçtır. Bileşen tabanlı yapısı, yüksek performansı ve geniş ekosistemi sayesinde frontend geliştiricilerin en çok tercih ettiği teknolojilerden biridir. Öğrenmesi nispeten kolay olmakla birlikte, derinlemesine uzmanlaşmak zaman ve pratik gerektirir.
-
-/******************************************/
-
-✅ GELİŞTİRME SUNUCUSU NEDİR?
-
-Geliştirme sunucusu, frontend projelerinizi (React, Vue gibi) yerel bilgisayarınızda çalıştırmanızı sağlayan geçici bir sunucudur. Bu sunucu sayesinde yazdığınız kodları anında tarayıcıda görüntüleyebilir ve test edebilirsiniz.
-
-🔧 TEMEL ÖZELLİKLERİ
-
-⚡ Anında Güncelleme (Hot Reload)
-Kodunuzda yaptığınız değişiklikler otomatik olarak tarayıcıya yansır. Sayfayı manuel yenilemenize gerek kalmaz.
-
-🛠️ Otomatik Derleme
-Modern JavaScript (ES6+), JSX veya TypeScript gibi tarayıcıların doğrudan anlayamadığı kodları dönüştürür.
-
-🌐 Yerel Sunucu
-Genellikle localhost:3000 veya localhost:5173 gibi bir adres üzerinden projenizi çalıştırır.
-
-📌 ÖNEMLİ NOT
-Bu sunucu sadece geliştirme aşamasında kullanılır. Gerçek kullanıcılar için hazırlanan üretim (production) ortamından farklıdır.
-
-🚀 NEDEN İHTİYAÇ DUYARIZ?
-
-Tarayıcılar modern JavaScript özelliklerini doğrudan çalıştıramaz
-
-Modüler yapıdaki dosyaların birleştirilmesi gerekir
-
-Canlı önizleme yapabilmek için
-
-Hızlı prototipleme ve test imkanı sunması için
-
-🔧 ÇALIŞTIRMA YÖNTEMİ
-
-Genellikle proje kök dizininde şu komutla başlatılır:
-npm run dev veya yarn dev
-
-✨ FAYDALARI
-
-Kod değişikliklerini anında görme
-
-Hata ayıklama kolaylığı
-
-Otomatik derleme ve paketleme
-
-Geliştirme sürecini hızlandırma
-
-🔄 ÜRETİM SUNUCUSUNDAN FARKI
-
-Geliştirme sunucusu:
-
-Optimize edilmemiştir
-
-Hata ayıklama bilgileri içerir
-
-Canlı yenileme özelliği vardır
-
-Üretim sunucusu:
-
-Kod sıkıştırılmıştır
-
-Optimizasyonlar yapılmıştır
-
-Statik dosyalar sunar
-
-💡 KULLANIM TÜYOLARI
-
-Canlı yenileme bazen beklenmedik sonuçlar verebilir, sayfayı manuel yenilemeyi deneyin
-
-Farklı portlarda çalıştırmak için ayarları değiştirebilirsiniz
-
-Network üzerinden erişim sağlamak için güvenlik ayarlarını kontrol edin
-
-🎯 ÖZET
-
-Geliştirme sunucusu, modern frontend geliştiricilerinin vazgeçilmez araçlarından biridir. Kod yazma deneyiminizi kolaylaştırır ve verimliliğinizi artırır. React, Vue gibi framework'lerle çalışırken bu sunucu olmadan etkili bir geliştirme süreci yürütmek neredeyse imkansızdır.
-
-/******************************************/
-
-✅ VITE NEDİR?
-
-Vite, modern web uygulamaları geliştirmek için kullanılan yeni nesil bir geliştirme aracı ve build sistemidir. Geleneksel araçlara göre çok daha hızlı ve verimli çalışmasıyla öne çıkar.
-
-⚡ TEMEL ÖZELLİKLERİ
-
-🚀 Anında Sunucu Başlatma
-Vite, projenizi geleneksel araçlardan çok daha hızlı başlatır. Büyük projelerde bile neredeyse anında çalışmaya hazır hale gelir.
-
-🔥 Süper Hızlı Yenileme
-Kodunuzda yaptığınız değişiklikler anında tarayıcıya yansır. Hot Module Replacement (HMR) özelliği sayesinde sayfa tamamen yenilenmeden değişiklikleri görürsünüz.
-
-📦 Modern Modül Sistemi
-Vite, tarayıcıların yerel ES Modülleri (ESM) desteğini kullanır. Bu da gereksiz derleme işlemlerini ortadan kaldırarak performansı artırır.
-
-🛠️ REACT İLE VITE
-
-Vite, React projeleri için mükemmel bir seçimdir:
-
-React bileşenlerinin hızlı yüklenmesi
-
-JSX desteği
-
-Sıcak yenileme özelliği
-
-Kolay kurulum ve yapılandırma
-
-⚖️ VITE VS CRA (CREATE REACT APP)
-
-Vite Avantajları:
-✔️ Çok daha hızlı başlangıç
-✔️ Daha hızlı yenileme
-✔️ Daha küçük boyutlu üretim build'leri
-✔️ Daha kolay yapılandırma
-✔️ Modern modül sistemi desteği
-
-🎯 KULLANIM ALANLARI
-
-React, Vue, Svelte gibi modern framework'lerle
-
-Hızlı prototipleme için
-
-Büyük ölçekli uygulamalarda
-
-Performans odaklı projelerde
-
-💡 ÖZET
-
-Vite, modern web geliştirme deneyimini yeniden tanımlayan bir araçtır. Hızı, esnekliği ve kolay kullanımı sayesinde giderek daha popüler hale gelmektedir. Özellikle React geliştiricileri için Create React App'e göre çok daha iyi bir alternatiftir.
-
-/******************************************/
-
-✅ VERİTABANI TÜRLERİ VE KARŞILAŞTIRMASI
-
-🧩 1. ŞEMALI VERİTABANLARI (SQL / RELATIONAL)
-
-📌 TEMEL ÖZELLİKLER
-
-Tablo tabanlı yapı (satırlar ve sütunlar)
-
-Kesin şema gereksinimi (önceden tanımlı yapı)
-
-Güçlü ilişkisel özellikler (foreign key vb.)
-
-ACID uyumlu (Atomicity, Consistency, Isolation, Durability)
-
-Katı veri yapısı ve kurallar
-
-🔎 ÖRNEK KULLANIM ALANLARI
-
-Bankacılık sistemleri
-
-E-ticaret platformları
-
-Kurumsal kaynak planlama (ERP)
-
-Müşteri ilişkileri yönetimi (CRM)
-
-🔧 POPÜLER SQL VERİTABANLARI
-
-MySQL
-
-PostgreSQL
-
-Microsoft SQL Server
-
-Oracle Database
-
-💡 AVANTAJLAR
-
-Veri tutarlılığı ve güvenliği
-
-Karmaşık sorgulama yetenekleri
-
-Olgun ve kanıtlanmış teknoloji
-
-🧩 2. ŞEMASIZ VERİTABANLARI (NOSQL)
-
-📌 TEMEL ÖZELLİKLER
-
-Esnek şema yapısı
-
-JSON benzeri belge tabanlı depolama
-
-Dinamik veri yapıları
-
-Yüksek ölçeklenebilirlik
-
-Dağıtık sistem desteği
-
-🔎 ÖRNEK KULLANIM ALANLARI
-
-Sosyal medya uygulamaları
-
-IoT veri depolama
-
-İçerik yönetim sistemleri
-
-Gerçek zamanlı uygulamalar
-
-🔧 POPÜLER NOSQL VERİTABANLARI
-
-MongoDB
-
-Firebase Firestore
-
-CouchDB
-
-AWS DynamoDB
-
-💡 AVANTAJLAR
-
-Hızlı geliştirme süreci
-
-Büyük veri desteği
-
-Esnek veri modelleme
-
-Yatay ölçeklenebilirlik
-
-🔄 SQL vs NOSQL KARŞILAŞTIRMASI
-
-YAPI
-
-SQL: Sabit tablo yapısı
-
-NoSQL: Esnek belge yapısı
-
-VERİ İLİŞKİLERİ
-
-SQL: Güçlü ilişkisel özellikler
-
-NoSQL: Daha basit ilişkiler
-
-ÖLÇEKLENEBİLİRLİK
-
-SQL: Dikey ölçeklenme
-
-NoSQL: Yatay ölçeklenme
-
-PERFORMANS
-
-SQL: Karmaşık sorgularda güçlü
-
-NoSQL: Büyük veri ve hızlı erişimde güçlü
-
-KULLANIM SENARYOLARI
-
-SQL: Finans, ERP, stok yönetimi
-
-NoSQL: Chat uygulamaları, bloglar, analitik
-
-🔍 HANGİSİNİ SEÇMELİ?
-
-SQL TERCİH EDİN EĞER:
-
-Veri tutarlılığı kritik önemdeyse
-
-Karmaşık ilişkisel verileriniz varsa
-
-Kurumsal düzeyde güvenlik gerekiyorsa
-
-NOSQL TERCİH EDİN EĞER:
-
-Hızlı prototipleme yapmanız gerekiyorsa
-
-Veri yapınız sık değişiyorsa
-
-Büyük ölçekli dağıtık sistem kuruyorsanız
-
-🌉 HİBRİT YAKLAŞIMLAR
-
-Modern uygulamalarda her iki veritabanı türü birlikte kullanılabilir:
-
-Kullanıcı bilgileri için SQL
-
-Log kayıtları ve bildirimler için NoSQL
-
-Analitik veriler için NoSQL
-
-Ödeme işlemleri için SQL
-
-🎯 ÖZET
-
-SQL: Yapısal ve ilişkisel veriler için ideal
-
-NoSQL: Esnek ve ölçeklenebilir çözümler sunar
-
-Her ikisinin de güçlü ve zayıf yönleri var
-
-Proje ihtiyaçlarına göre seçim yapılmalı
-
-Büyük sistemlerde hibrit yaklaşım uygulanabilir
-
-/******************************************/
-🌐 TCP ve HTTP Nedir?
-1. TCP (Transmission Control Protocol)
-Ne Yapar?
-
-Verilerin güvenli ve sıralı bir şekilde iletilmesini sağlar.
-
-Bağlantı temellidir (connection-oriented).
-
-Paket kaybını tespit edip yeniden gönderir.
-
-Nasıl Çalışır?
-
-3-Way Handshake ile bağlantı kurar:
-
-text
-1. Client → SYN → Server  
-2. Server → SYN-ACK → Client  
-3. Client → ACK → Server  
-Veri transferi sonrası bağlantıyı sonlandırır (4-Way Handshake).
-
-Kullanım Alanları:
-
-Web tarayıcıları (HTTP üzerinden),
-
-E-posta (SMTP),
-
-Dosya transferi (FTP).
-
-2. HTTP (Hypertext Transfer Protocol)
-Ne Yapar?
-
-Web sunucuları ve istemciler (tarayıcılar) arasında hipermetin (HTML) transferi sağlar.
-
-Stateless (her istek bağımsızdır, önceki istek hatırlanmaz).
-
-Metin tabanlı bir protokoldür (örneğin: GET /index.html HTTP/1.1).
-
-Nasıl Çalışır?
-
-TCP üzerinden çalışır (HTTP → TCP → IP → Donanım).
-
-İstemci bir HTTP isteği gönderir, sunucu HTTP yanıtı döner.
-
-Örnek bir istek:
-
-http
-GET /urunler HTTP/1.1
-Host: www.example.com
-User-Agent: Chrome
-Kullanım Alanları:
-
-Web siteleri,
-
-API’lar (REST),
-
-Web uygulamaları.
-
-🔍 TCP vs HTTP Arasındaki Farklar
-Özellik	TCP	HTTP
-Katman	Taşıma Katmanı (Layer 4)	Uygulama Katmanı (Layer 7)
-Amaç	Veri iletiminin güvenliğini sağlar	Web içeriğinin transferini yönetir
-Bağlantı Türü	Bağlantı temelli (connection-oriented)	Bağlantısız (stateless)
-Veri Formatı	Binary (ham veri)	Metin tabanlı (HTML, JSON, XML)
-Port Numarası	80 (HTTP), 443 (HTTPS) gibi üst katman protokolleri kullanır	TCP’nin üzerinde çalışır
-Hız vs. Güvenlik	Daha yavaş (güvenlik öncelikli)	Daha hızlı (doğrudan içerik odaklı)
-Örnek Kullanım	VPN, SSH, VoIP	Web tarayıcıları, REST API’lar
-🛠️ Örnekle Açıklama
-Bir Web Sitesi Ziyareti:
-
-Tarayıcı http://example.com yazdığında:
-
-TCP bağlantısı kurulur (3-Way Handshake).
-
-HTTP isteği gönderilir: GET / HTTP/1.1.
-
-Sunucu HTTP yanıtı döner (örneğin: 200 OK + HTML içerik).
-
-TCP bağlantısı kapatılır.
-
-🌟 Özet
-TCP = "Posta kutusuna güvenli bir tünel kurar."
-
-HTTP = "Postacının tünelden geçirerek ilettiği mektuptur."
-
-HTTPS = HTTP + Şifreleme (SSL/TLS).
-
-💡 Not: HTTP/3 artık TCP yerine QUIC (UDP tabanlı) kullanır. Bu, daha hızlı ve güvenli bir alternatiftir
-
-/******************************************/
-
-
-JavaScript web uygulamaları geliştirmek için kullanılan bir programlama dilidir. Google'ın V8 motoru üzerindeçalışır. V8 moturu JavaScript kodlarını derleyerek makine diline çevirir. Node.js JavaScript kodlarını sunucu taraında çalıştıran V8 motoru üzerine inşa edilmiş bir runtime envirement(Çalışma zamanı ortamı) dır. Node.js JavaScript kodlarını sunucu tarafında çalıştırmak için çeşitli modüler sunar. Örg: dosya sistemi v.b. React modern UI tasarımları oluşturmak için kullanılan bir JavaScript kütüphanesidir. Virtual Dom kullanır, bu sayede hızlı render işlemleri gerçekleştirebilir. SPA için çok elverişlidir. Bir component değiştiğinde tüm sayfa render edilmez sadece ilgili bileşen yeniden çizilir. Vite bir geliştirme sunucusu ve derleme aracıdır. React web uygulamalarının geliştirilebilmesi için geliştirme sunucusu oluşturur ve tüm projeyi derleyip bir dosyada tutarak dağıtıma hazır hale getirir. JSX in JS JavaScript kodları içinde HTML etiketleri kullanılmasını sağlayan bir yapıdır. Bu yapıda JavaScript kodları içinde css özellikleri kullanılabilir. Ant Design modern ve responsive UI componentleri sağlayan bir JavaScript kütüphanesidir. NPM node.js için bir paket yöneticisidir. React, Vite gibi kütüphaneler NPM ile yüklenip bağımlılıkları yönetilir. 
+JavaScript web uygulamaları geliştirmek için kullanılan bir programlama dilidir. Google'ın V8 motoru üzerinde çalışır. V8 moturu JavaScript kodlarını derleyerek makine diline çevirir. Node.js JavaScript kodlarını sunucu taraında çalıştıran V8 motoru üzerine inşa edilmiş bir runtime envirement(Çalışma zamanı ortamı) dır. Node.js JavaScript kodlarını sunucu tarafında çalıştırmak için çeşitli modüller sunar. Örg: fs, http, path, os v.b. React modern UI tasarımları oluşturmak için kullanılan bir JavaScript kütüphanesidir. Virtual Dom kullanır, bu sayede hızlı render işlemleri gerçekleştirebilir. SPA için çok elverişlidir. Bir component değiştiğinde tüm sayfa render edilmez sadece ilgili bileşen yeniden çizilir. Vite bir geliştirme sunucusu ve derleme aracıdır. React web uygulamalarının geliştirilebilmesi için geliştirme sunucusu oluşturur ve tüm projeyi derleyip bir dosyada tutarak dağıtıma hazır hale getirir. JSX JavaScript kodları içinde HTML etiketleri kullanılmasını sağlayan bir yapıdır. Bu yapıda JavaScript kodları içinde css özellikleri kullanılabilir. Ant Design modern ve responsive UI componentleri sağlayan bir JavaScript kütüphanesidir. NPM node.js için bir paket yöneticisidir. React, Vite gibi kütüphaneler NPM ile yüklenip bağımlılıkları yönetilir. 
 /******************************************/

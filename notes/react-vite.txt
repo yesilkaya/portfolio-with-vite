@@ -1,0 +1,118 @@
+✅ REACT NEDİR?
+React, kullanıcı arayüzleri (UI) oluşturmak için kullanılan, Facebook (Meta) tarafından geliştirilen popüler bir JavaScript kütüphanesidir.
+
+🔧 Temel Özellikleri
+⚛️ Bileşen Tabanlı Yapı: Her şey yeniden kullanılabilir bileşenlerden oluşur.
+
+🔄 SPA Desteği: Sayfa yenilenmeden yalnızca gerekli alanlar güncellenir.
+
+⚡ Sanal DOM: Performans için değişiklikler önce sanal DOM’da hesaplanır.
+
+📌 Deklaratif Yaklaşım: Ne yapılacağını söylersin, nasıl yapılacağını React çözer.
+
+🛠️ Teknik Detaylar
+JSX kullanır (HTML benzeri sözdizimi).
+
+Yalnızca görünüm katmanına odaklanır.
+
+🌐 React ve Node.js İlişkisi
+React, tarayıcıda çalışır. Node.js ise:
+
+Paket yönetimi (npm/yarn),
+
+Geliştirme sunucusu (vite, webpack),
+
+Build işlemleri ve API sunucuları için kullanılır.
+
+🌟 Neden Bu Kadar Popüler?
+Kolay öğrenilir, güçlüdür.
+
+Geniş topluluk ve kaynak desteği vardır.
+
+Yüksek performanslıdır.
+
+React Native ile mobil uygulama geliştirilebilir.
+
+❓ Kütüphane mi, Framework mü?
+React bir kütüphanedir:
+
+Sadece UI katmanını yönetir.
+
+Routing, state yönetimi gibi konularda ek kütüphanelere ihtiyaç duyar.
+Framework’ler (örneğin Angular) ise her şeyi kapsayan yapılar sunar.
+
+💡 Özet
+React, modern web uygulamaları geliştirmek için vazgeçilmez bir araçtır. Öğrenmesi kolay, ustalaşması zaman alır.
+
+✅ GELİŞTİRME SUNUCUSU NEDİR?
+Geliştirme sunucusu, React ve benzeri projeleri yerel olarak çalıştırmanı ve test etmeni sağlayan geçici bir araçtır.
+
+🔧 Temel Özellikleri
+⚡ Anında Güncelleme (Hot Reload): Kod değişiklikleri anında tarayıcıya yansır.
+
+🛠️ Otomatik Derleme: JSX, ES6, TypeScript gibi dilleri tarayıcıya uygun hale getirir.
+
+🌐 Yerel Sunucu: Genellikle localhost:3000 veya localhost:5173 üzerinden çalışır.
+
+🚀 Neden Kullanılır?
+Tarayıcıların anlayamadığı modern JS/JSX’i dönüştürmek için.
+
+Modüler dosyaları birleştirmek için.
+
+Hızlı önizleme ve hata ayıklama için.
+
+🔄 Üretim Sunucusundan Farkı
+Özellik	        Geliştirme Sunucusu	            Üretim Sunucusu
+Performans	    Optimize edilmemiş	            Kod sıkıştırılmış, optimize edilmiş
+Hata Ayıklama	Detaylı bilgi sunar	            Gizlenmiştir
+Yenileme	    Canlı yenileme (hot reload)	    Yok
+
+✨ Kullanım
+
+npm run dev
+# veya
+yarn dev
+💡 Özet
+Geliştirme sunucusu, React gibi modern projelerde anlık geri bildirim sağlayarak geliştirme sürecini kolaylaştırır.
+
+✅ VITE NEDİR?
+Vite, modern web uygulamaları için geliştirilmiş hızlı ve hafif bir geliştirme sunucusu + build aracıdır. Eski sistemlere göre çok daha hızlıdır.
+
+⚡ Temel Özellikleri
+🚀 Anında Başlangıç: Projeyi hemen başlatır, bekleme yoktur.
+
+🔥 Hot Module Replacement (HMR): Sadece değişen modül yenilenir.
+
+📦 ESM Tabanlı: Tarayıcıların yerel modül desteğini kullanır, derleme süresi azalır.
+
+🛠️ React ile Vite Kullanımı
+Hızlı bileşen yükleme
+
+JSX ve HMR desteği
+
+Kolay kurulum (npm create vite@latest)
+
+⚖️ Vite vs. Create React App (CRA)
+Özellik	Vite	CRA
+Başlangıç Hızı	Çok hızlı	Daha yavaş
+Build Boyutu	Daha küçük	Daha büyük
+Yapılandırma Kolaylığı	Kolay	Görece daha karmaşık
+Teknoloji	Modern (ESM tabanlı)	Webpack tabanlı
+
+🎯 Kullanım Alanları
+React, Vue, Svelte gibi framework’lerde
+
+Büyük ölçekli uygulamalarda
+
+Prototipleme ve hızlı geliştirme
+
+💡 Özet
+Vite, modern frontend geliştirmeyi daha hızlı ve kolay hale getirir. React için CRA'ya kıyasla çok daha iyi bir alternatiftir.
+
+🧠 GENEL ÖZET
+Teknoloji	Tanım	Ne İşe Yarar
+React	UI kütüphanesi	Bileşen tabanlı kullanıcı arayüzleri oluşturur
+Geliştirme Sunucusu	Yerel sunucu aracı	Kodları anında test etmeye yarar
+Vite	Geliştirme + Build aracı	React projelerinde süper hızlı geliştirme sağlar
+
+İstersen bu içeriği PDF, sunum slaytı veya blog yazısı formatında da sana hazırlayabilirim. Nasıl kullanmak istersin?

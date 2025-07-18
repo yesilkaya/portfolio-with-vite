@@ -1,0 +1,88 @@
+1- require yerine import kullanılır
+2- interface kullanılır
+3- 
+
+
+⚙️ 1. Modül Sistemi (Import/Require)
+JavaScript	                    TypeScript
+const http = require("http");	import http from "http";
+CommonJS kullanır	            ESModules kullanır (modern, standart uyumlu)
+
+✅ Avantajı:
+
+TypeScript'in import sözdizimi daha modern ve geleceğe yöneliktir.
+
+Otomatik tamamlama ve modül bağımlılıklarının doğru çözülmesi kolaylaşır.
+
+Tarayıcıda (ESM destekleyen ortamda) doğrudan çalıştırmak daha kolaydır.
+
+🧾 2. Tip Güvenliği (Types vs. No Types)
+JavaScript	    TypeScript
+Dinamik tipler	IncomingMessage, ServerResponse, Record<string, string> gibi tipler kullanır
+
+✅ Avantajı:
+
+Hataları yazım anında yakalar (örneğin yanlış veri tipi ile işlem yapıldığında).
+
+Otomatik tamamlama (IntelliSense) sağlar.
+
+Kodun kendisi bir belge gibidir: hangi yapı ne bekliyor açıkça bellidir.
+
+Büyük ekiplerle çalışırken anlaşılır ve güvenilir kod üretimi sağlar.
+
+📁 3. Kök Dizin Tanımı: __dirname vs process.cwd()
+JavaScript	TypeScript
+__dirname	process.cwd()
+
+✅ Avantajı:
+
+process.cwd() çalışma dizinine göre yol çözer. Özellikle TypeScript'te .ts derleme sonrası dosya yapısı değiştiğinde daha güvenlidir.
+
+Dosya yolları daha kolay yönetilir, karmaşa azalır.
+
+📥 4. JSON Verisini Tipli Kullanmak
+JavaScript	TypeScript
+const data = JSON.parse(body);	const data = JSON.parse(body) as { firstName: string; lastName: string; email: string; message: string };
+
+✅ Avantajı:
+
+TypeScript’te JSON yapısına özel tip tanımlamak, hataları engeller.
+
+Geliştirici olarak hangi alanların geldiğini görürsün.
+
+Daha sürdürülebilir ve okunabilir hale gelir.
+
+📚 5. Tipli Koleksiyon Kullanımı
+JavaScript	TypeScript
+let jsonArray = [];	let jsonArray: Array<Record<string, string>> = [];
+
+✅ Avantajı:
+
+Dizide hangi veri yapısının bulunduğu bellidir.
+
+Dizi üzerinde işlem yaparken (map, filter vb.) otomatik tamamlama ve tip denetimi yapılır.
+
+📜 6. Kod Hatalarını Önleme (Compile-Time Checks)
+✅ TypeScript’in en önemli avantajı burada:
+
+Derleme (compile) sırasında yazım ve mantık hatalarını yakalayabilir.
+
+Örneğin: message.toUppercase() (yanlış yazım) gibi hataları JavaScript runtime’da fark edersin ama TypeScript derlemede seni uyarır.
+
+🔒 7. Daha Güçlü Editör Desteği
+✅ TypeScript ile avantajlısın çünkü:
+
+VS Code gibi editörlerde hatalar anında görünür.
+
+Otomatik tamamlama, belgeleme (hover docs), yönlendirme (go to definition) gibi araçlar daha etkili çalışır.
+
+
+| Özellik                            | JavaScript           | TypeScript                       | Avantaj (TypeScript)        |
+| ---------------------------------- | -------------------- | -------------------------------- | --------------------------- |
+| Modül sistemi                      | CommonJS (`require`) | ESModules (`import`)             | Modern ve taşınabilir       |
+| Tip tanımı                         | Yok                  | Var (`interface`, `Record`, vs.) | Güvenli, belgeli kod        |
+| Derleme öncesi hata kontrolü       | Yok                  | Var                              | Hatalar erkenden yakalanır  |
+| Otomatik tamamlama ve IntelliSense | Sınırlı              | Tam destek                       | Verimlilik artar            |
+| JSON verisiyle çalışma             | Tip kontrolsüz       | Tip güvenli                      | Yanlış veri formatı önlenir |
+| Kod okunabilirliği                 | Orta                 | Yüksek                           | Anlaşılır yapı              |
+| Refactoring kolaylığı              | Zor                  | Kolay                            | Daha az hata riski          |

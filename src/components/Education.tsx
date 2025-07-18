@@ -1,7 +1,6 @@
 import React from "react";
-import { Typography } from "antd";
+import { Typography, Card } from "antd";
 import styled from "styled-components";
-import { Card } from "antd";
 import { motion } from "framer-motion";
 import { educationData } from "../data/educationData";
 
@@ -36,7 +35,7 @@ const ItemDescription = styled(Paragraph)`
   color: var(--text-color);
 `;
 
-const TimelineItemWrapper = styled.div`
+const TimelineItemWrapper = styled.div<{ isLeft: boolean }>`
   width: 50%;
   margin-bottom: 60px;
   display: flex;
@@ -54,7 +53,7 @@ const TimelineItemWrapper = styled.div`
   }
 `;
 
-const TimelineDotTitle = styled.div`
+const TimelineDotTitle = styled.div<{ isLeft: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -63,6 +62,11 @@ const TimelineDotTitle = styled.div`
   margin-right: ${({ isLeft }) => (isLeft ? "-40px" : "0")};
   gap: 20px;
   flex-direction: ${({ isLeft }) => (isLeft ? "row-reverse" : "row")};
+
+  @media (max-width: 768px) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 `;
 
 const TimelineDot = styled.div`
@@ -73,11 +77,6 @@ const TimelineDot = styled.div`
   box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color),
     0 0 30px var(--primary-color);
   z-index: 2;
-
-  @media (max-width: 768px) {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
 `;
 
 const TimelineContent = styled(motion(Card))`
@@ -88,6 +87,13 @@ const TimelineContent = styled(motion(Card))`
 `;
 
 const iconMap = ["🎓", "📚", "👨‍💻", "🏢"];
+
+// Eğitim verisi tipi
+interface EducationItem {
+  date: string;
+  title: string;
+  description: string;
+}
 
 export default function Education() {
   return (
@@ -104,12 +110,12 @@ export default function Education() {
       </Title>
       <TimelineWrapper>
         <TimelineLine />
-        {educationData.map((item, i) => {
+        {educationData.map((item: EducationItem, i: number) => {
           const isLeft = i % 2 === 0;
           return (
             <TimelineItemWrapper key={i} isLeft={isLeft}>
               <TimelineDotTitle isLeft={isLeft}>
-                <TimelineDot isLeft={isLeft} />
+                <TimelineDot />
                 <Text
                   style={{
                     fontSize: "1.3rem",

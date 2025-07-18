@@ -1,9 +1,9 @@
-import { Menu } from "antd";
 import React from "react";
+import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { navbar } from "../data/navbar";
 
-const HeaderBar = () => {
+const HeaderBar: React.FC = () => {
   return (
     <header
       style={{
@@ -20,13 +20,12 @@ const HeaderBar = () => {
       }}
     >
       <Link
-        to={`/#${"home"}`}
+        to={`/#home`}
         className="logo"
         style={{
           fontSize: "20px",
           fontWeight: "bold",
           color: "white",
-
         }}
       >
         Seccad <span style={{ color: "var(--primary-color)" }}>YEŞİLKAYA</span>
@@ -47,7 +46,7 @@ const HeaderBar = () => {
           label:
             section.type === "route" ? (
               <Link
-                to={section.route}
+                to={section.route ?? "/"}
                 style={{ color: "inherit", textDecoration: "none" }}
               >
                 {section.label}

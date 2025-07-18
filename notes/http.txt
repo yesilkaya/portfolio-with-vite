@@ -1,22 +1,18 @@
 🔄 Tarayıcı ve Sunucu Arasındaki İletişim Süreci
+
 Kullanıcı bir web sitesini ziyaret etmek için tarayıcının adres çubuğuna bir URL yazdığında, tarayıcı bu adrese varsayılan olarak bir HTTP GET isteği gönderir. Bu istek, sunucudan ilgili sayfanın içeriğini talep eder.
 
 Tarayıcı bu istekle birlikte, kabul ettiği veri türlerini ve dilleri de çeşitli HTTP başlıklarıyla bildirir. Örneğin:
 
 Accept: Hangi içerik türlerinin kabul edildiğini (örneğin text/html, application/json).
-
 Accept-Encoding: Gzip gibi sıkıştırma türlerinin desteklenip desteklenmediği.
-
 Accept-Language: Kullanıcının tercih ettiği diller (örn. tr-TR, en-US).
 
 Sunucu, gelen bu isteğe bir yanıt (response) döner. Bu yanıtta hem içerik hem de bu içeriği açıklayan bazı başlıklar bulunur. Örnek başlıklar şunlardır:
 
 Status Code: İsteğin sonucunu belirten durum kodu (örneğin 200 OK, 404 Not Found).
-
 Content-Type: Gönderilen verinin tipi (örneğin text/html, application/json).
-
 Set-Cookie: Tarayıcıya cookie tanımlamak için.
-
 Date: Yanıtın gönderildiği tarih ve saat.
 
 HTML belgesi geldikten sonra tarayıcı bu belgeyi analiz eder. Eğer içinde <link>, <script>, <img>, <audio> gibi dış kaynaklara (CSS, JavaScript, resim, simge vs.) işaret eden etiketler varsa, tarayıcı bu kaynaklar için ek GET istekleri gönderir.
@@ -24,24 +20,17 @@ HTML belgesi geldikten sonra tarayıcı bu belgeyi analiz eder. Eğer içinde <l
 Tüm bu içerikler geldikten sonra tarayıcı:
 
 DOM (Document Object Model) ağacını oluşturur,
-
 CSS ile stil bilgilerini uygular,
-
 JavaScript dosyalarını indirir, analiz eder ve çalıştırır,
-
 Son olarak tüm bu işlemlerin sonucunda kullanıcıya sayfa arayüzünü render eder (çizer ve gösterir).
 
 🧩 Ek Teknik Aşamalar
 Bu sürecin görünmeyen ama önemli bazı teknik adımları da vardır:
 
 Tarayıcı, isteği göndermeden önce URL’deki alan adı için DNS çözümlemesi yapar ve bu alan adının IP adresini bulur.
-
 Ardından, sunucuya bağlanmak için bir TCP bağlantısı kurar.
-
 Eğer bağlantı HTTPS ile yapılacaksa, bir TLS/SSL el sıkışması (handshake) süreci gerçekleşir.
-
 Sunucudan gelen içerik sıkıştırılmışsa (örneğin Content-Encoding: gzip), tarayıcı bunu decompress (sıkıştırmayı açma) işlemine tabi tutar.
-
 Gelen içerik JavaScript dosyasıysa, tarayıcı bu dosyayı sadece görüntülemez, onu analiz edip çalıştırır.
 
 
@@ -130,8 +119,8 @@ Content-Type → İçerik türünü tanımlar (text/html, application/json, vs.)
 
 🎯 Özet
 Tür	                Yön	                İçerik
-HTTP Request	Tarayıcı → Sunucu	GET/POST satırı, headers, body
-HTTP Response	Sunucu → Tarayıcı	Status code, headers, body
+HTTP Request	  Tarayıcı → Sunucu	    GET/POST satırı, headers, body
+HTTP Response	  Sunucu → Tarayıcı	    Status code, headers, body
 
 
 ***********************************************
@@ -178,7 +167,7 @@ res.setHeader('X-Powered-By', 'Node.js')
 
 ✅ 9. ETag
 İçeriğin eşsiz versiyon kimliğini belirtir (önbellekleme için).
-Kullanım:
+Kullanım: 
 res.setHeader('ETag', 'abc123')
 
 ✅ 10. Last-Modified

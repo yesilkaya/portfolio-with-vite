@@ -1,0 +1,197 @@
+✅ VERİTABANI TÜRLERİ VE KARŞILAŞTIRMASI
+
+🧩 1. ŞEMALI VERİTABANLARI (SQL / RELATIONAL)
+
+📌 TEMEL ÖZELLİKLER
+
+Tablo tabanlı yapı (satırlar ve sütunlar)
+
+Kesin şema gereksinimi (önceden tanımlı yapı)
+
+Güçlü ilişkisel özellikler (foreign key vb.)
+
+ACID uyumlu (Atomicity, Consistency, Isolation, Durability)
+
+Katı veri yapısı ve kurallar
+
+🔎 ÖRNEK KULLANIM ALANLARI
+
+Bankacılık sistemleri
+
+E-ticaret platformları
+
+Kurumsal kaynak planlama (ERP)
+
+Müşteri ilişkileri yönetimi (CRM)
+
+🔧 POPÜLER SQL VERİTABANLARI
+
+MySQL
+
+PostgreSQL
+
+Microsoft SQL Server
+
+Oracle Database
+
+💡 AVANTAJLAR
+
+Veri tutarlılığı ve güvenliği
+
+Karmaşık sorgulama yetenekleri
+
+Olgun ve kanıtlanmış teknoloji
+
+🧩 2. ŞEMASIZ VERİTABANLARI (NOSQL)
+
+📌 TEMEL ÖZELLİKLER
+
+Esnek şema yapısı
+
+JSON benzeri belge tabanlı depolama
+
+Dinamik veri yapıları
+
+Yüksek ölçeklenebilirlik
+
+Dağıtık sistem desteği
+
+🔎 ÖRNEK KULLANIM ALANLARI
+
+Sosyal medya uygulamaları
+
+IoT veri depolama
+
+İçerik yönetim sistemleri
+
+Gerçek zamanlı uygulamalar
+
+🔧 POPÜLER NOSQL VERİTABANLARI
+
+MongoDB
+
+Firebase Firestore
+
+CouchDB
+
+AWS DynamoDB
+
+💡 AVANTAJLAR
+
+Hızlı geliştirme süreci
+
+Büyük veri desteği
+
+Esnek veri modelleme
+
+Yatay ölçeklenebilirlik
+
+🔄 SQL vs NOSQL KARŞILAŞTIRMASI
+
+YAPI
+
+SQL: Sabit tablo yapısı
+
+NoSQL: Esnek belge yapısı
+
+VERİ İLİŞKİLERİ
+
+SQL: Güçlü ilişkisel özellikler
+
+NoSQL: Daha basit ilişkiler
+
+ÖLÇEKLENEBİLİRLİK
+
+SQL: Dikey ölçeklenme
+
+NoSQL: Yatay ölçeklenme
+
+PERFORMANS
+
+SQL: Karmaşık sorgularda güçlü
+
+NoSQL: Büyük veri ve hızlı erişimde güçlü
+
+KULLANIM SENARYOLARI
+
+SQL: Finans, ERP, stok yönetimi
+
+NoSQL: Chat uygulamaları, bloglar, analitik
+
+🔍 HANGİSİNİ SEÇMELİ?
+
+SQL TERCİH EDİN EĞER:
+
+Veri tutarlılığı kritik önemdeyse
+
+Karmaşık ilişkisel verileriniz varsa
+
+Kurumsal düzeyde güvenlik gerekiyorsa
+
+NOSQL TERCİH EDİN EĞER:
+
+Hızlı prototipleme yapmanız gerekiyorsa
+
+Veri yapınız sık değişiyorsa
+
+Büyük ölçekli dağıtık sistem kuruyorsanız
+
+🌉 HİBRİT YAKLAŞIMLAR
+
+Modern uygulamalarda her iki veritabanı türü birlikte kullanılabilir:
+
+Kullanıcı bilgileri için SQL
+
+Log kayıtları ve bildirimler için NoSQL
+
+Analitik veriler için NoSQL
+
+Ödeme işlemleri için SQL
+
+🎯 ÖZET
+
+SQL: Yapısal ve ilişkisel veriler için ideal
+
+NoSQL: Esnek ve ölçeklenebilir çözümler sunar
+
+Her ikisinin de güçlü ve zayıf yönleri var
+
+Proje ihtiyaçlarına göre seçim yapılmalı
+
+Büyük sistemlerde hibrit yaklaşım uygulanabilir
+
+| Kriter                | SQL (Şemalı)                | NoSQL (Şemasız)                  |
+| --------------------- | --------------------------- | -------------------------------- |
+| **Yapı**              | Sabit tablo yapısı          | Esnek belge/veri yapısı          |
+| **Veri İlişkileri**   | Güçlü ilişkisel yapı (JOIN) | Basit veya yok denecek kadar az  |
+| **Ölçeklenebilirlik** | Dikey (vertical)            | Yatay (horizontal)               |
+| **Performans**        | Karmaşık sorgularda iyi     | Büyük veri ve hızlı erişimde iyi |
+| **Esneklik**          | Az                          | Yüksek                           |
+| **Kullanım**          | ERP, finans, stok takibi    | Chat, içerik, analitik, IoT      |
+
+
+🔍 Hangi Tür Ne Zaman Seçilmeli?
+✅ SQL Tercih Edin Eğer:
+Veri tutarlılığı kritik önemdeyse
+
+Karmaşık ilişkisel yapılar içeriyorsa
+
+Kurumsal düzeyde güvenlik ve raporlama gerekiyorsa
+
+✅ NoSQL Tercih Edin Eğer:
+Veri yapısı sık değişiyorsa
+
+Gerçek zamanlı, esnek veya büyük veri gerekiyorsa
+
+Yüksek ölçeklenebilirlik ve hız öncelikliyse
+
+| Veritabanı Türü | Kullanım Senaryosu                   |
+| --------------- | ------------------------------------ |
+| **SQL**         | Kullanıcı hesapları, ödemeler        |
+| **NoSQL**       | Bildirimler, log kayıtları, analitik |
+
+
+| Tür       | Avantajlar                             | Dezavantajlar                    |
+| --------- | -------------------------------------- | -------------------------------- |
+| **SQL**   | Tutarlılık, ilişkiler, olgun teknoloji | Esnek değildir, dikey ölçeklenir |
+| **NoSQL** | Esneklik, hız, yatay ölçeklenme        | Tutarlılık sınırlı olabilir      |

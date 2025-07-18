@@ -1,13 +1,18 @@
 import React from "react";
-
 import { Form, Input, Button, Typography, Row, Col } from "antd";
 
+interface ContactFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+}
 
-const ContactForm = () => {
-  const [form] = Form.useForm();
+const ContactForm: React.FC = () => {
+  const [form] = Form.useForm<ContactFormValues>();
   const { Title } = Typography;
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: ContactFormValues) => {
     try {
       const response = await fetch("http://localhost:3000/api/contact", {
         method: "POST",
@@ -16,7 +21,7 @@ const ContactForm = () => {
         },
         body: JSON.stringify(values),
       });
-  
+
       if (response.ok) {
         form.resetFields();
         alert("Mesajınız başarıyla gönderildi!");
@@ -42,7 +47,6 @@ const ContactForm = () => {
         }}
       >
         Bana <span style={{ color: "var(--primary-color)" }}>Ulaş</span>
-
       </Title>
 
       <Form
@@ -53,7 +57,6 @@ const ContactForm = () => {
         onFinish={onFinish}
       >
         <Row gutter={24}>
-          {/* Genişletilmiş inputlar */}
           <Col span={24}>
             <Form.Item
               label={<span style={{ fontSize: "1.2rem", color: "var(--text-color)" }}>Ad</span>}
@@ -66,7 +69,7 @@ const ContactForm = () => {
 
           <Col span={24}>
             <Form.Item
-              label={<span style={{ fontSize: "1.2rem" , color: "var(--text-color)"}}>Soyad</span>}
+              label={<span style={{ fontSize: "1.2rem", color: "var(--text-color)" }}>Soyad</span>}
               name="lastName"
               rules={[{ required: true, message: "Soyadınızı giriniz!" }]}
             >
@@ -91,11 +94,9 @@ const ContactForm = () => {
         <Row>
           <Col span={24}>
             <Form.Item
-              label={<span style={{ fontSize: "1.2rem" , color: "var(--text-color)"}}>Mesajınız</span>}
+              label={<span style={{ fontSize: "1.2rem", color: "var(--text-color)" }}>Mesajınız</span>}
               name="message"
-              rules={[
-                { required: true, message: "Lütfen mesajınızı yazınız!" },
-              ]}
+              rules={[{ required: true, message: "Lütfen mesajınızı yazınız!" }]}
             >
               <Input.TextArea
                 rows={5}
