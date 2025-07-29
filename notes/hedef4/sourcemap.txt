@@ -1,0 +1,10 @@
+✅ SourceMap
+
+sourcemap true iken build altında tsc ile oluşturulan js yi çalıştırıp debugları ts dosyasından yönetebilmeyi sağlar
+
+
+Uygulama aslında .js üzerinden çalışır ✅
+Ama sen breakpoint’i .ts'e koyarsın ✅
+Call stack, hata mesajları, değişkenler .ts dosyasına göre gösterilir ✅
+
+Bu sayede hem performanslı .js dosyalarını çalıştırırsın hem de TypeScript konforundan kopmazsın.

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/components/projects/Projects.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/components/projects/Projects.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
+    return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Projects = void 0;
+const jsx_runtime_1 = require("react/jsx-runtime");
+/**
+ * @module Projects
+ * @description
+ * Projeler sayfası bileşeni.
+ *
+ * - Statik olarak tanımlanmış mobil uygulama projelerini görsel ve açıklamalarıyla listeler.
+ * - GitHub API üzerinden kullanıcının repo bilgilerini çekerek GitHub projelerini dinamik olarak gösterir.
+ *
+ * @returns {JSX.Element} Projeler sayfası bileşeni
+ *
+ */
+const react_1 = require("react");
+const antd_1 = require("antd");
+const axios_1 = __importDefault(require("axios"));
+const cocuk_webp_1 = __importDefault(require("../../assets/cocuk.webp"));
+const ilimsehri_webp_1 = __importDefault(require("../../assets/ilimsehri.webp"));
+const munacat_webp_1 = __importDefault(require("../../assets/munacat.webp"));
+const Projects_styles_1 = require("./Projects.styles");
+const { Meta } = antd_1.Card;
+// Yardımcı fonksiyon
+const formatRepoTitle = (name) => name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+const Projects = () => {
+    const [githubRepos, setGithubRepos] = (0, react_1.useState)([]);
+    const [loading, setLoading] = (0, react_1.useState)(true);
+    (0, react_1.useEffect)(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    (0, react_1.useEffect)(() => {
+        const fetchRepos = async () => {
+            try {
+                const response = await axios_1.default.get("https://api.github.com/users/yesilkaya/repos");
+                setGithubRepos(response.data);
+            }
+            catch (error) {
+                console.error("GitHub API hatası:", error);
+            }
+            finally {
+                setLoading(false);
+            }
+        };
+        fetchRepos();
+    }, []);
+    const projectData = [
+        {
+            title: "Dualar",
+            description: "Dualar uygulaması, günlük duaları ve ibadetleri takip etmenizi sağlar.",
+            image: munacat_webp_1.default,
+        },
+        {
+            title: "İlim Şehri",
+            description: "İlim Şehri uygulaması, çeşitli dini içerikler ve bilgiler sunar.",
+            image: ilimsehri_webp_1.default,
+        },
+        {
+            title: "Çocuk Kitapları",
+            description: "Çocuklar için eğitici ve eğlenceli kitaplar sunar.",
+            image: cocuk_webp_1.default,
+        },
+    ];
+    return ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsxs)(Projects_styles_1.ProjectsSection, { children: [(0, jsx_runtime_1.jsx)("h1", { style: {
+                            color: "var(--text-color)",
+                            marginBottom: "4rem",
+                            fontSize: "4rem",
+                        }, children: "Mobil Uygulamalar" }), (0, jsx_runtime_1.jsx)(antd_1.Row, { justify: "center", children: projectData.map((project, index) => ((0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, sm: 12, md: 8, children: (0, jsx_runtime_1.jsx)(Projects_styles_1.ProjectCard, { hoverable: true, cover: (0, jsx_runtime_1.jsx)("img", { alt: project.title, src: project.image }), highlight: index === 1, initial: { scale: index === 1 ? 1.2 : 1 }, whileHover: { scale: index === 1 ? 1.3 : 1.1 }, transition: { type: "spring", stiffness: 200 }, children: (0, jsx_runtime_1.jsx)(Meta, { title: project.title, description: project.description }) }) }, index))) })] }), (0, jsx_runtime_1.jsxs)(Projects_styles_1.GithubProjectsSection, { children: [(0, jsx_runtime_1.jsx)("h1", { style: {
+                            color: "var(--text-color)",
+                            marginBottom: "4rem",
+                            fontSize: "4rem",
+                        }, children: "Github Projeleri" }), loading ? ((0, jsx_runtime_1.jsx)(antd_1.Spin, { size: "large" })) : ((0, jsx_runtime_1.jsx)(antd_1.Row, { gutter: [24, 24], justify: "center", align: "stretch", children: githubRepos.map((repo) => ((0, jsx_runtime_1.jsx)(antd_1.Col, { xs: 24, sm: 12, md: 12, children: (0, jsx_runtime_1.jsxs)(Projects_styles_1.GithubCard, { title: (0, jsx_runtime_1.jsx)("span", { style: {
+                                        fontSize: "1.5rem",
+                                        fontWeight: "bold",
+                                        color: "var(--primary-color)",
+                                    }, children: formatRepoTitle(repo.name) }), bordered: false, children: [(0, jsx_runtime_1.jsx)("div", { style: { flex: 1 }, children: (0, jsx_runtime_1.jsx)("p", { style: { color: "var(--text-color)" }, children: repo.description || "Açıklama yok" }) }), (0, jsx_runtime_1.jsx)(antd_1.Button, { type: "primary", style: {
+                                            width: "fit-content",
+                                            alignSelf: "center",
+                                            backgroundColor: "var(--primary-color)",
+                                        }, onClick: () => window.open(repo.html_url, "_blank", "noopener,noreferrer"), children: "GitHub'da G\u00F6r" })] }) }, repo.id))) }))] })] }));
+};
+exports.Projects = Projects;
+exports.default = exports.Projects;
+//# sourceMappingURL=Projects.js.map</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="CrudScreen%250AThis%2520module%2520provides%2520a%2520CRUD%2520interface%2520for%2520managing%2520users.module_.html">CrudScreen
+This module provides a CRUD interface for managing users.</a></li><li><a href="module-HomePage.html">HomePage</a></li><li><a href="module-Projects.html">Projects</a></li><li><a href="module-educationData.html">educationData</a></li><li><a href="module-navbar.html">navbar</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#ContactForm">ContactForm</a></li><li><a href="global.html#MainSections">MainSections</a></li><li><a href="global.html#PORT">PORT</a></li><li><a href="global.html#distDir">distDir</a></li><li><a href="global.html#handlePostRequest">handlePostRequest</a></li><li><a href="global.html#mimeTypes">mimeTypes</a></li><li><a href="global.html#parseRequestBody">parseRequestBody</a></li><li><a href="global.html#saveCSV">saveCSV</a></li><li><a href="global.html#saveNDJSON">saveNDJSON</a></li><li><a href="global.html#server">server</a></li><li><a href="global.html#services">services</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 28 2025 13:24:46 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+| Klasör   | İçeriği                                                                      | Kim üretir?                 | Amaç                                                      |
+| -------- | ---------------------------------------------------------------------------- | --------------------------- | --------------------------------------------------------- |
+| `build/` | TypeScript ile transpile edilen `.ts` / `.tsx` dosyaların `.js` karşılığı    | `tsc` (TypeScript Compiler) | **Backend (Node.js) kodunu çalıştırmak** için             |
+| `dist/`  | Vite tarafından üretilen optimize edilmiş frontend bundle (HTML, JS, CSS vs) | `vite build`                | **Tarayıcıya gönderilecek frontend** kodlarını barındırır |
+
+🔁 Özetle:
+build/: Sadece Node.js backend için var ( http-server.ts, node-crud-server.ts gibi dosyalar burada .js olur).
+
+dist/: Sadece React frontend için var. vite build sonucu tarayıcıya dağıtmak için hazırlanır (index.html + bundled app.js vs).
+
+
+🧠 tsconfig.json Nedir?
+
+tsconfig.json, TypeScript derleyicisinin (tsc) nasıl çalışacağını, hangi dosyaları derleyeceğini ve çıktıyı nereye koyacağını belirleyen yapılandırma dosyasıdır.

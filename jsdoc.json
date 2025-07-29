@@ -1,0 +1,11 @@
+{
+    "source": {
+      "include": ["build/src","build/backend"],
+      "exclude": ["node_modules"]
+    },
+    "opts": {
+      "destination": "./docsJS",
+      "recurse": true
+    }
+  }
+  

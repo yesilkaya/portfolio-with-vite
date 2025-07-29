@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/routes/AppRoutes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/routes/AppRoutes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = AppRoutes;
+const jsx_runtime_1 = require("react/jsx-runtime");
+const react_router_dom_1 = require("react-router-dom");
+const react_1 = require("react");
+const HomePage_1 = require("../components/homepage/HomePage");
+const Education_1 = require("../components/educaiton/Education");
+const Services_1 = require("../components/services/Services");
+const Projects_1 = require("../components/projects/Projects");
+const Contact_1 = require("../components/contact/Contact");
+const Crud_1 = require("../components/crud/Crud");
+const navbar_1 = require("../data/navbar");
+/**
+ * `MainSections` bileşeni, navbar öğelerine göre belirli bölümleri (Home, Education, Services, Contact) oluşturur.
+ *
+ * - `useLocation` ile URL'deki hash'e göre sayfayı ilgili bölüme kaydırır.
+ * - `navbar` verisindeki `type: 'scroll'` olan bölümleri render eder.
+ *
+ * @returns {JSX.Element} Tüm scroll bölümlerini kapsayan React bileşeni
+ */
+function MainSections() {
+    const sectionRefs = (0, react_1.useRef)({});
+    const location = (0, react_router_dom_1.useLocation)();
+    (0, react_1.useEffect)(() => {
+        if (location.hash) {
+            const id = location.hash.slice(1);
+            const el = document.getElementById(id);
+            if (el) {
+                setTimeout(() => el.scrollIntoView(), 100);
+            }
+        }
+    }, [location]);
+    const sectionComponents = {
+        [navbar_1.navbar[0].id]: (0, jsx_runtime_1.jsx)(HomePage_1.Home, {}),
+        [navbar_1.navbar[1].id]: (0, jsx_runtime_1.jsx)(Education_1.Education, {}),
+        [navbar_1.navbar[2].id]: (0, jsx_runtime_1.jsx)(Services_1.Services, {}),
+        [navbar_1.navbar[3].id]: (0, jsx_runtime_1.jsx)(Contact_1.ContactForm, {}),
+    };
+    return ((0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: navbar_1.navbar
+            .filter((section) => section.type === "scroll")
+            .map((section) => ((0, jsx_runtime_1.jsx)("section", { id: section.id, ref: (el) => {
+                sectionRefs.current[section.id] = el;
+            }, style: {
+                minHeight: "100vh",
+                scrollMarginTop: "64px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            }, children: sectionComponents[section.id] || null }, section.key))) }));
+}
+/**
+ * `AppRoutes` bileşeni uygulamanın tüm rotalarını tanımlar.
+ *
+ * - `/`: Ana sayfa scrollable bölümlerle (`MainSections`) gösterilir.
+ * - `/projects`: Projeler sayfası (`Projects`) gösterilir.
+ * - `/crud`: CRUD işlemleri için özel sayfa (`CrudScreen`) gösterilir.
+ *
+ * @returns {JSX.Element} React Router tarafından yönetilen rota bileşenleri
+ */
+function AppRoutes() {
+    return ((0, jsx_runtime_1.jsxs)(react_router_dom_1.Routes, { children: [(0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/", element: (0, jsx_runtime_1.jsx)(MainSections, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/projects", element: (0, jsx_runtime_1.jsx)(Projects_1.Projects, {}) }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Route, { path: "/crud", element: (0, jsx_runtime_1.jsx)(Crud_1.CrudScreen, {}) })] }));
+}
+//# sourceMappingURL=AppRoutes.js.map</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="CrudScreen%250AThis%2520module%2520provides%2520a%2520CRUD%2520interface%2520for%2520managing%2520users.module_.html">CrudScreen
+This module provides a CRUD interface for managing users.</a></li><li><a href="module-HomePage.html">HomePage</a></li><li><a href="module-Projects.html">Projects</a></li><li><a href="module-educationData.html">educationData</a></li><li><a href="module-navbar.html">navbar</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#ContactForm">ContactForm</a></li><li><a href="global.html#MainSections">MainSections</a></li><li><a href="global.html#PORT">PORT</a></li><li><a href="global.html#distDir">distDir</a></li><li><a href="global.html#handlePostRequest">handlePostRequest</a></li><li><a href="global.html#mimeTypes">mimeTypes</a></li><li><a href="global.html#parseRequestBody">parseRequestBody</a></li><li><a href="global.html#saveCSV">saveCSV</a></li><li><a href="global.html#saveNDJSON">saveNDJSON</a></li><li><a href="global.html#server">server</a></li><li><a href="global.html#services">services</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 28 2025 13:24:46 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

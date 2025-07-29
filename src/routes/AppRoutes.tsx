@@ -1,18 +1,25 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import React from "react"; // Bu satır JSX türleri için gerekli
+import React from "react";
 
-import Home from "../components/HomePage";
-import Education from "../components/Education";
-import Services from "../components/Services";
-import Projects from "../components/Projects";
-import ContactForm from "../components/Contact";
-import TimelineCom from "../components/Timeline";
-import CrudScreen from "../components/Crud";
+import {Home} from "../components/homepage/HomePage";
+import {Education} from "../components/educaiton/Education";
+import {Services} from "../components/services/Services";
+import {Projects} from "../components/projects/Projects";
+import {ContactForm} from "../components/contact/Contact";
+import {CrudScreen} from "../components/crud/Crud";
 import type { JSX } from "react";
 
-
 import { navbar } from "../data/navbar";
+
+/**
+ * `MainSections` bileşeni, navbar öğelerine göre belirli bölümleri (Home, Education, Services, Contact) oluşturur.
+ * 
+ * - `useLocation` ile URL'deki hash'e göre sayfayı ilgili bölüme kaydırır.
+ * - `navbar` verisindeki `type: 'scroll'` olan bölümleri render eder.
+ * 
+ * @returns {JSX.Element} Tüm scroll bölümlerini kapsayan React bileşeni
+ */
 
 function MainSections(): JSX.Element {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
@@ -62,12 +69,20 @@ function MainSections(): JSX.Element {
   );
 }
 
+/**
+ * `AppRoutes` bileşeni uygulamanın tüm rotalarını tanımlar.
+ *
+ * - `/`: Ana sayfa scrollable bölümlerle (`MainSections`) gösterilir.
+ * - `/projects`: Projeler sayfası (`Projects`) gösterilir.
+ * - `/crud`: CRUD işlemleri için özel sayfa (`CrudScreen`) gösterilir.
+ *
+ * @returns {JSX.Element} React Router tarafından yönetilen rota bileşenleri
+ */
 export default function AppRoutes(): JSX.Element {
   return (
     <Routes>
       <Route path="/" element={<MainSections />} />
       <Route path="/projects" element={<Projects />} />
-      <Route path="/fullstack" element={<TimelineCom />} />
       <Route path="/crud" element={<CrudScreen />} />
     </Routes>
   );

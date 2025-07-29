@@ -1,15 +1,28 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
+    "module": "ESNext", 
+    // Hedef JavaScript sürümü (en güncel ES çıktısı üretir)
     "target": "ESNext",
-    "module": "CommonJS",
+    // import path çözümleme sistemi, Node kurallarına göre çalışır
     "moduleResolution": "node",
-    "esModuleInterop": true,
+    // TypeScript’in tüm katı kurallarını aktif eder (null check, tip uyuşmazlığı vs.)
     "strict": true,
+    //type definations
+    "declaration": true,
+    // CommonJS modüllerini ES6 gibi import etmeye izin verir (import fs from "fs")
+    "esModuleInterop": true,
+    "sourceMap": true,
+    // Global ortam tanımlamaları: "node" tipi sayesinde `require`, `process`, `__dirname` gibi kavramlar tanınır
+    "types": ["node"],
+
+    // node_modules içindeki .d.ts dosyaları taranırken hataları atla
     "skipLibCheck": true,
+    // Dosya adlarında büyük/küçük harf duyarlılığı zorunlu kılınır (Linux'ta önemlidir)
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react-jsx",
-    "types": ["node"]
+
+    "jsx": "react-jsx"
   },
-  "include": ["backend/**/*", "env.d.ts", "node_modules/@types"]
+
+  // Derlenecek dosyalar ( backend klasöründeki her şey + env.d.ts gibi özel tanımlar)
+  "include": ["src/**/*", "backend/**/*", "images.d.ts"]
 }

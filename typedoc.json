@@ -1,0 +1,10 @@
+{
+  "entryPoints": ["src", "backend"],
+  "entryPointStrategy": "expand",
+  "out": "docsTS",
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "excludeNotDocumented": false,
+  "excludeInternal": false
+}

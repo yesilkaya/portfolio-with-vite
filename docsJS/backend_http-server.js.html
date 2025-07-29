@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: backend/http-server.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: backend/http-server.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
+    return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const http_1 = require("http");
+const fs_1 = require("fs");
+const path_1 = __importDefault(require("path"));
+const requestUtils_1 = require("../src/utils/requestUtils");
+/**
+ * Sunucunun çalışacağı port numarası.
+ * @constant {number}
+ */
+const PORT = 3000;
+/**
+ * Dağıtım dizini, statik dosyaların bulunduğu klasör.
+ * @constant {string}
+ */
+const distDir = path_1.default.join(__dirname, "../..", "dist");
+/**
+ * MIME türleri, dosya uzantılarına göre içerik türlerini belirler.
+ * @property {string} .html - HTML dosyaları için MIME türü.
+ * @property {string} .js - JavaScript dosyaları için MIME türü.
+ * @property {string} .css - CSS dosyaları için MIME türü.
+ * @property {string} .json - JSON dosyaları için MIME türü.
+ * @property {string} .png - PNG resimleri için MIME türü.
+ * @property {string} .pdf - PDF dosyaları için MIME türü.
+ */
+const mimeTypes = {
+    ".html": "text/html",
+    ".js": "text/javascript",
+    ".css": "text/css",
+    ".json": "application/json",
+    ".png": "image/png",
+    ".pdf": "application/pdf",
+};
+/**
+ * @description HTTP sunucusu, gelen istekleri dinler ve uygun yanıtları gönderir.
+ * @function
+ * @param {IncomingMessage} req - Gelen HTTP isteği.
+ * @param {ServerResponse} res - Sunucunun vereceği yanıt.
+ */
+const server = (0, http_1.createServer)((req, res) => {
+    console.log(`${req.method} ${req.url}`);
+    if (req.method === "GET") {
+        let filePath = path_1.default.join(distDir, req.url === "/" ? "index.html" : decodeURIComponent(req.url || ""));
+        const ext = path_1.default.extname(filePath);
+        (0, fs_1.access)(filePath, fs_1.constants.F_OK | fs_1.constants.R_OK, (err) => {
+            if (err &amp;&amp; !(ext === ".html" || ext === "")) {
+                res.writeHead(404, { "Content-Type": "text/plain" });
+                res.end("404 Not Found");
+                return;
+            }
+            if (err)
+                filePath = path_1.default.join(distDir, "index.html");
+            (0, fs_1.readFile)(filePath, (readErr, data) => {
+                if (readErr) {
+                    res.writeHead(500);
+                    res.end("Internal Server Error");
+                    return;
+                }
+                const contentType = mimeTypes[ext] || "text/html";
+                res.writeHead(200, { "Content-Type": contentType });
+                res.end(data);
+                console.log(`Gönderilen dosya: ${filePath}`);
+            });
+        });
+    }
+    else if (req.method === "POST" &amp;&amp; req.url === "/api/contact") {
+        (0, requestUtils_1.handlePostRequest)(req, res, req.url);
+    }
+    else {
+        res.writeHead(405, { Allow: "GET, POST" });
+        res.end("Method Not Allowed");
+    }
+});
+/**
+ * Sunucu, belirtilen portta dinlemeye başlar.
+ * @function
+ * @param {number} PORT - Sunucunun dinleyeceği port numarası.
+ */
+server.listen(PORT, () => {
+    console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
+});
+//# sourceMappingURL=http-server.js.map</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="CrudScreen%250AThis%2520module%2520provides%2520a%2520CRUD%2520interface%2520for%2520managing%2520users.module_.html">CrudScreen
+This module provides a CRUD interface for managing users.</a></li><li><a href="module-HomePage.html">HomePage</a></li><li><a href="module-Projects.html">Projects</a></li><li><a href="module-educationData.html">educationData</a></li><li><a href="module-navbar.html">navbar</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#ContactForm">ContactForm</a></li><li><a href="global.html#MainSections">MainSections</a></li><li><a href="global.html#PORT">PORT</a></li><li><a href="global.html#distDir">distDir</a></li><li><a href="global.html#handlePostRequest">handlePostRequest</a></li><li><a href="global.html#mimeTypes">mimeTypes</a></li><li><a href="global.html#parseRequestBody">parseRequestBody</a></li><li><a href="global.html#saveCSV">saveCSV</a></li><li><a href="global.html#saveNDJSON">saveNDJSON</a></li><li><a href="global.html#server">server</a></li><li><a href="global.html#services">services</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 28 2025 13:24:46 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

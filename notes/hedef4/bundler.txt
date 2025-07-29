@@ -1,0 +1,59 @@
+📦 Bundler Nedir?
+Bundler, JavaScript, TypeScript, CSS, resim, SVG, JSON gibi dosyaları:
+
+bağımlılık sırasına göre analiz eder,
+
+modülleri sıralar ve optimize eder,
+
+ve sonunda tek bir veya birkaç çıktı dosyası (bundle) üretir.
+
+Bu çıktı dosyası tarayıcıda veya Node.js'te çalışmaya hazırdır.
+
+🔍 Neden Bundler'a ihtiyaç duyarız?
+Biz .ts, .jsx, .scss gibi farklı uzantılarda, modüler yapıda onlarca/yüzlerce dosya yazarız.
+
+Ama tarayıcı sadece .js dosyasını ve tek dosya yüklemeyi sever.
+
+Bundler bu karmaşayı çözer:
+
+Kodları birleştirir,
+
+Gereksiz kodları çıkarır (tree shaking),
+
+Gerekiyorsa sıkıştırır (minify),
+
+Geliştirme ortamı sağlar (hot reload, dev server),
+
+Modern JS/TS’i eski tarayıcılara çevirir (transpile + polyfill)
+
+
+⚙️ En Popüler Bundler’lar
+
+| Bundler     | Açıklama                                                                                |
+| ----------- | --------------------------------------------------------------------------------------- |
+| **Webpack** | En yaygın ve esnek bundler’dır. Karmaşık projelerde kullanılır.                         |
+| **Vite**    | Modern ve çok hızlıdır. ESM temelli çalışır. Development'ta "bundle" bile yapmaz!       |
+| **Rollup**  | Kütüphane geliştirmek için optimize edilmiştir. Küçük, sade ve tree-shaking çok iyidir. |
+| **Parcel**  | Yapılandırmasız bundler. Plug’n’play deneyimi sunar.                                    |
+| **esbuild** | Çok hızlı Go tabanlı bundler. CLI, kitaplık geliştirme için birebir.                    |
+
+
+📄 Basit Örnek: Vite ile bir proje
+
+npm create vite@latest my-app --template react-ts
+cd my-app
+npm install
+npm run dev
+
+Vite burada:
+TypeScript’i derler
+import/export yapılarını çözer
+CSS/Assets'leri işler
+Development sunucusu başlatır
+
+| Özellik          | Açıklama                                              |
+| ---------------- | ----------------------------------------------------- |
+| Tanım            | Modülleri birleştiren, optimize eden araçtır          |
+| Kullanım amacı   | Kodu tarayıcı/Node için çalışabilir hale getirmek     |
+| Ne yapar?        | Transpile, minify, tree shake, hot reload, dev server |
+| Popüler örnekler | Webpack, Vite, Rollup, Parcel, esbuild                |
