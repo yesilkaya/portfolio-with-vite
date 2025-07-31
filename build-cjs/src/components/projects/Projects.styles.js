@@ -18,7 +18,7 @@ exports.ProjectsSection = styled_components_1.default.section `
   align-items: center;
   text-align: center;
 `;
-exports.ProjectCard = (0, styled_components_1.default)((0, framer_motion_1.motion)(antd_1.Card)) `
+exports.ProjectCard = (0, styled_components_1.default)(framer_motion_1.motion.create(antd_1.Card)) `
   background-color: var(--second-bg-color);
   color: var(--text-color);
   margin: 2rem 10%;
@@ -58,7 +58,7 @@ exports.GithubProjectsSection = styled_components_1.default.section `
   align-items: center;
   text-align: center;
 `;
-exports.GithubCard = (0, styled_components_1.default)((0, framer_motion_1.motion)(antd_1.Card)) `
+exports.GithubCard = (0, styled_components_1.default)(framer_motion_1.motion.create(antd_1.Card)) `
   background: var(--bg-color);
   color: var(--text-color);
   height: 100%;

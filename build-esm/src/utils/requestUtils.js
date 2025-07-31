@@ -1,5 +1,6 @@
 import { saveCSV, saveNDJSON } from "./fileUtils.js";
 import { sendJSONResponse } from "./responseUtils.js";
+import { insertContactToDB } from "./sqliteUtils.js";
 /**
  * @description POST isteklerini yöneten fonksiyondur.
  *
@@ -19,7 +20,10 @@ export async function handlePostRequest(req, res, endpoint) {
                 const data = JSON.parse(body);
                 await saveCSV(data);
                 await saveNDJSON(data);
+                const insertedId = await insertContactToDB(data);
                 sendJSONResponse(res, 200, {
+                    success: true,
+                    id: insertedId,
                     message: "Mesaj alındı ve kaydedildi.",
                 });
             }

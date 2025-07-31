@@ -45,8 +45,8 @@ export function Education() {
         {educationData.map((item: EducationItem, i: number) => {
           const isLeft = i % 2 === 0;
           return (
-            <TimelineItemWrapper key={i} isLeft={isLeft}>
-              <TimelineDotTitle isLeft={isLeft}>
+            <TimelineItemWrapper key={i} $isLeft={isLeft}>
+              <TimelineDotTitle $isLeft={isLeft}>
                 <TimelineDot />
                 <Text
                   style={{

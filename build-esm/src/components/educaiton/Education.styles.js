@@ -33,10 +33,10 @@ export const TimelineItemWrapper = styled.div `
   margin-bottom: 60px;
   display: flex;
   flex-direction: column;
-  text-align: ${({ isLeft }) => (isLeft ? "right" : "left")};
-  margin-left: ${({ isLeft }) => (isLeft ? "-30px" : "auto")};
-  margin-right: ${({ isLeft }) => (isLeft ? "auto" : "-30px")};
-  align-items: ${({ isLeft }) => (isLeft ? "flex-end" : "flex-start")};
+  text-align: ${({ $isLeft }) => ($isLeft ? "right" : "left")};
+  margin-left: ${({ $isLeft }) => ($isLeft ? "-30px" : "auto")};
+  margin-right: ${({ $isLeft }) => ($isLeft ? "auto" : "-30px")};
+  align-items: ${({ $isLeft }) => ($isLeft ? "flex-end" : "flex-start")};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -50,10 +50,10 @@ export const TimelineDotTitle = styled.div `
   flex-direction: row;
   align-items: center;
   margin-bottom: 20px;
-  margin-left: ${({ isLeft }) => (isLeft ? "0" : "-40px")};
-  margin-right: ${({ isLeft }) => (isLeft ? "-40px" : "0")};
+  margin-left: ${({ $isLeft }) => ($isLeft ? "0" : "-40px")};
+  margin-right: ${({ $isLeft }) => ($isLeft ? "-40px" : "0")};
   gap: 20px;
-  flex-direction: ${({ isLeft }) => (isLeft ? "row-reverse" : "row")};
+  flex-direction: ${({ $isLeft }) => ($isLeft ? "row-reverse" : "row")};
 
   @media (max-width: 768px) {
     margin-left: 0 !important;
@@ -69,7 +69,7 @@ export const TimelineDot = styled.div `
     0 0 30px var(--primary-color);
   z-index: 2;
 `;
-export const TimelineContent = styled(motion(Card)) `
+export const TimelineContent = styled(motion.create(Card)) `
   background: var(--bg-color);
   width: 100%;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);

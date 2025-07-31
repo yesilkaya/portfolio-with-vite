@@ -8,7 +8,7 @@ const styled_components_1 = __importDefault(require("styled-components"));
 const antd_1 = require("antd");
 const { Title, Paragraph } = antd_1.Typography;
 const framer_motion_1 = require("framer-motion");
-exports.ServiceCard = (0, styled_components_1.default)((0, framer_motion_1.motion)(antd_1.Card)) `
+exports.ServiceCard = (0, styled_components_1.default)(framer_motion_1.motion.create(antd_1.Card)) `
   background: var(--bg-color);
 `;
 // Styled Components

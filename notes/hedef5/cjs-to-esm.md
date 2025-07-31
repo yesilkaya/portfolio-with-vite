@@ -1,5 +1,5 @@
 
-✅ 1. CommonJS ve ESM Arasındaki Fark
+✅ CommonJS ve ESM Arasındaki Fark
 
 | Özellik        | CommonJS                     | ES Modules                               |
 | -------------- | ---------------------------- | ---------------------------------------- |
@@ -49,3 +49,18 @@ const __dirname = dirname(__filename);
 ✅ 6. Derleme ve Çalıştırma Testleri Yapıldı
 npm run server:build:esm   # → ESM derlemesi (./build-esm)
 npm run start:esm          # → ESM çıktısını çalıştırma
+
+
+✅ Özetle, CJS → ESM geçince:
+require → import
+
+module.exports → export
+
+__dirname artık otomatik değil, elle tanımlanmalı
+
+type: "module" eklendi
+
+JSON import formatı değişti
+
+Uzantılar zorunlu hale geldi (.js, .json)
+

@@ -12,7 +12,7 @@ export const ProjectsSection = styled.section `
   align-items: center;
   text-align: center;
 `;
-export const ProjectCard = styled(motion(Card)) `
+export const ProjectCard = styled(motion.create(Card)) `
   background-color: var(--second-bg-color);
   color: var(--text-color);
   margin: 2rem 10%;
@@ -52,7 +52,7 @@ export const GithubProjectsSection = styled.section `
   align-items: center;
   text-align: center;
 `;
-export const GithubCard = styled(motion(Card)) `
+export const GithubCard = styled(motion.create(Card)) `
   background: var(--bg-color);
   color: var(--text-color);
   height: 100%;

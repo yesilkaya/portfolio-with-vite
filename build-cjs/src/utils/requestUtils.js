@@ -4,6 +4,7 @@ exports.handlePostRequest = handlePostRequest;
 exports.parseRequestBody = parseRequestBody;
 const fileUtils_js_1 = require("./fileUtils.js");
 const responseUtils_js_1 = require("./responseUtils.js");
+const sqliteUtils_js_1 = require("./sqliteUtils.js");
 /**
  * @description POST isteklerini yöneten fonksiyondur.
  *
@@ -23,7 +24,10 @@ async function handlePostRequest(req, res, endpoint) {
                 const data = JSON.parse(body);
                 await (0, fileUtils_js_1.saveCSV)(data);
                 await (0, fileUtils_js_1.saveNDJSON)(data);
+                const insertedId = await (0, sqliteUtils_js_1.insertContactToDB)(data);
                 (0, responseUtils_js_1.sendJSONResponse)(res, 200, {
+                    success: true,
+                    id: insertedId,
                     message: "Mesaj alındı ve kaydedildi.",
                 });
             }

@@ -17,7 +17,7 @@ export function Education() {
                     color: "var(--text-color)",
                 }, children: "E\u011Fitim" }), _jsxs(TimelineWrapper, { children: [_jsx(TimelineLine, {}), educationData.map((item, i) => {
                         const isLeft = i % 2 === 0;
-                        return (_jsxs(TimelineItemWrapper, { isLeft: isLeft, children: [_jsxs(TimelineDotTitle, { isLeft: isLeft, children: [_jsx(TimelineDot, {}), _jsx(Text, { style: {
+                        return (_jsxs(TimelineItemWrapper, { "$isLeft": isLeft, children: [_jsxs(TimelineDotTitle, { "$isLeft": isLeft, children: [_jsx(TimelineDot, {}), _jsx(Text, { style: {
                                                 fontSize: "1.3rem",
                                                 fontWeight: 700,
                                                 color: "var(--text-color)",

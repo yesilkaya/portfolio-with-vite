@@ -5,7 +5,7 @@ const { Title, Paragraph } = Typography;
 import { motion } from "framer-motion";
 
 
-export const ServiceCard = styled(motion(Card))`
+export const ServiceCard = styled(motion.create(Card))`
   background: var(--bg-color);
 `;
 // Styled Components

@@ -3,10 +3,10 @@ export declare const TimelineWrapper: import("styled-components/dist/types").ISt
 export declare const TimelineLine: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, never>> & string;
 export declare const ItemDescription: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("antd/es/typography/Paragraph").ParagraphProps & import("react").RefAttributes<HTMLElement>, never>> & string & Omit<import("react").ForwardRefExoticComponent<import("antd/es/typography/Paragraph").ParagraphProps & import("react").RefAttributes<HTMLElement>>, keyof import("react").Component<any, {}, any>>;
 export declare const TimelineItemWrapper: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components/dist/types").Substitute<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, {
-    isLeft: boolean;
+    $isLeft: boolean;
 }>> & string;
 export declare const TimelineDotTitle: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components/dist/types").Substitute<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, {
-    isLeft: boolean;
+    $isLeft: boolean;
 }>> & string;
 export declare const TimelineDot: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, never>> & string;
 export declare const TimelineContent: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components/dist/types").Substitute<(Omit<{

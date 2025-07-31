@@ -39,10 +39,10 @@ exports.TimelineItemWrapper = styled_components_1.default.div `
   margin-bottom: 60px;
   display: flex;
   flex-direction: column;
-  text-align: ${({ isLeft }) => (isLeft ? "right" : "left")};
-  margin-left: ${({ isLeft }) => (isLeft ? "-30px" : "auto")};
-  margin-right: ${({ isLeft }) => (isLeft ? "auto" : "-30px")};
-  align-items: ${({ isLeft }) => (isLeft ? "flex-end" : "flex-start")};
+  text-align: ${({ $isLeft }) => ($isLeft ? "right" : "left")};
+  margin-left: ${({ $isLeft }) => ($isLeft ? "-30px" : "auto")};
+  margin-right: ${({ $isLeft }) => ($isLeft ? "auto" : "-30px")};
+  align-items: ${({ $isLeft }) => ($isLeft ? "flex-end" : "flex-start")};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -56,10 +56,10 @@ exports.TimelineDotTitle = styled_components_1.default.div `
   flex-direction: row;
   align-items: center;
   margin-bottom: 20px;
-  margin-left: ${({ isLeft }) => (isLeft ? "0" : "-40px")};
-  margin-right: ${({ isLeft }) => (isLeft ? "-40px" : "0")};
+  margin-left: ${({ $isLeft }) => ($isLeft ? "0" : "-40px")};
+  margin-right: ${({ $isLeft }) => ($isLeft ? "-40px" : "0")};
   gap: 20px;
-  flex-direction: ${({ isLeft }) => (isLeft ? "row-reverse" : "row")};
+  flex-direction: ${({ $isLeft }) => ($isLeft ? "row-reverse" : "row")};
 
   @media (max-width: 768px) {
     margin-left: 0 !important;
@@ -75,7 +75,7 @@ exports.TimelineDot = styled_components_1.default.div `
     0 0 30px var(--primary-color);
   z-index: 2;
 `;
-exports.TimelineContent = (0, styled_components_1.default)((0, framer_motion_1.motion)(antd_1.Card)) `
+exports.TimelineContent = (0, styled_components_1.default)(framer_motion_1.motion.create(antd_1.Card)) `
   background: var(--bg-color);
   width: 100%;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);

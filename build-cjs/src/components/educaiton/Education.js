@@ -20,7 +20,7 @@ function Education() {
                     color: "var(--text-color)",
                 }, children: "E\u011Fitim" }), (0, jsx_runtime_1.jsxs)(Education_styles_1.TimelineWrapper, { children: [(0, jsx_runtime_1.jsx)(Education_styles_1.TimelineLine, {}), educationData_1.educationData.map((item, i) => {
                         const isLeft = i % 2 === 0;
-                        return ((0, jsx_runtime_1.jsxs)(Education_styles_1.TimelineItemWrapper, { isLeft: isLeft, children: [(0, jsx_runtime_1.jsxs)(Education_styles_1.TimelineDotTitle, { isLeft: isLeft, children: [(0, jsx_runtime_1.jsx)(Education_styles_1.TimelineDot, {}), (0, jsx_runtime_1.jsx)(Text, { style: {
+                        return ((0, jsx_runtime_1.jsxs)(Education_styles_1.TimelineItemWrapper, { "$isLeft": isLeft, children: [(0, jsx_runtime_1.jsxs)(Education_styles_1.TimelineDotTitle, { "$isLeft": isLeft, children: [(0, jsx_runtime_1.jsx)(Education_styles_1.TimelineDot, {}), (0, jsx_runtime_1.jsx)(Text, { style: {
                                                 fontSize: "1.3rem",
                                                 fontWeight: 700,
                                                 color: "var(--text-color)",

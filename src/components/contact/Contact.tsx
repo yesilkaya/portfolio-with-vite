@@ -63,11 +63,13 @@ export const ContactForm: React.FC = () => {
         body: JSON.stringify(values),
       });
 
+      const text = await response.text();
+
       if (response.ok) {
         form.resetFields();
-        alert("Mesajınız başarıyla gönderildi!");
+        alert(`Mesaj başarıyla gönderildi!*: ${text} `);
       } else {
-        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+        alert(`Bir hata oluştu!*: ${text} `);
       }
     } catch (error) {
       console.error("İstek gönderilirken hata oluştu:", error);
@@ -81,7 +83,6 @@ export const ContactForm: React.FC = () => {
         Bana <span>Ulaş</span>
       </Title>
 
-      <StyledForm>
       <Form
         name="contact-us"
         layout="vertical"
@@ -150,7 +151,6 @@ export const ContactForm: React.FC = () => {
           </Col>
         </Row>
       </Form>
-        </StyledForm>
 
     </Container>
   );
