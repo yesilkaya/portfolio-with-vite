@@ -2,7 +2,7 @@ import {type  IncomingMessage, type ServerResponse } from "http";
 import { ContactData } from "../types/contact.js";
 import { saveCSV, saveNDJSON } from "./fileUtils.js";
 import { sendJSONResponse } from "./responseUtils.js";
-import { insertContactToDB } from "./sqliteUtils.js";
+import { postNewFeedback } from "./sqliteUtils.js";
 /**
  * Geçerli POST istek yollarını temsil eder.
  * 
@@ -65,10 +65,10 @@ export async function handlePostRequest(
       try {
         const data = JSON.parse(body) as ContactData;
 
-        await saveCSV(data);
-        await saveNDJSON(data);
+        //await saveCSV(data);
+        //await saveNDJSON(data);
 
-        const insertedId = await insertContactToDB(data);
+        const insertedId = await postNewFeedback(data);
 
        
         sendJSONResponse(res, 200, {

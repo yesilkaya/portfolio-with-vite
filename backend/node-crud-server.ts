@@ -2,9 +2,9 @@ import http from "http";
 import mysql from "mysql2";
 import { parse } from "url";
 
-import { User } from "../src/types/user";
-import { parseRequestBody } from "../src/utils/requestUtils";
-import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils";
+import { User } from "../src/types/user.js";
+import { parseRequestBody } from "../src/utils/requestUtils.js";
+import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 
 // DB bağlantısı
 const db = mysql.createConnection({

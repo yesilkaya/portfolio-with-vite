@@ -46,5 +46,12 @@ export const navbar = [
         type: "route",
         route: "/crud",
     },
+    {
+        key: "7",
+        id: "feedback",
+        label: "Feedback",
+        type: "route",
+        route: "/feedback",
+    },
 ];
 //# sourceMappingURL=navbar.js.map

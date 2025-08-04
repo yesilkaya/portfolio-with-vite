@@ -6,13 +6,7 @@
 
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
-import {
-  Container,
-  Title,
-  StyledForm,
-  StyledButton,
-  LabelSpan,
-} from "./Contact.styles";
+import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
 
 /**
  * @typedef {Object} ContactFormValues
@@ -55,27 +49,33 @@ export const ContactForm: React.FC = () => {
    */
   const onFinish = async (values: ContactFormValues) => {
     try {
-      const response = await fetch("http://localhost:3000/api/contact", {
+      const response = await fetch("http://localhost:4000/api/feedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          message: values.message,
+        }),
       });
-
-      const text = await response.text();
-
+  
+      const data = await response.json();
+  
       if (response.ok) {
         form.resetFields();
-        alert(`Mesaj başarıyla gönderildi!*: ${text} `);
+        alert(`Mesaj başarıyla gönderildi! ✉️\n${data.message}`);
       } else {
-        alert(`Bir hata oluştu!*: ${text} `);
+        alert(`❌ Hata: ${data.error}`);
       }
     } catch (error) {
       console.error("İstek gönderilirken hata oluştu:", error);
-      alert("Sunucuya bağlanılamadı.");
+      alert("⚠️ Sunucuya bağlanılamadı.");
     }
   };
+  
 
   return (
     <Container>
@@ -83,12 +83,7 @@ export const ContactForm: React.FC = () => {
         Bana <span>Ulaş</span>
       </Title>
 
-      <Form
-        name="contact-us"
-        layout="vertical"
-        form={form}
-        onFinish={onFinish}
-      >
+      <Form name="contact-us" layout="vertical" form={form} onFinish={onFinish}>
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item
@@ -129,7 +124,9 @@ export const ContactForm: React.FC = () => {
             <Form.Item
               label={<LabelSpan>Mesajınız</LabelSpan>}
               name="message"
-              rules={[{ required: true, message: "Lütfen mesajınızı yazınız!" }]}
+              rules={[
+                { required: true, message: "Lütfen mesajınızı yazınız!" },
+              ]}
             >
               <Input.TextArea
                 rows={5}
@@ -151,8 +148,6 @@ export const ContactForm: React.FC = () => {
           </Col>
         </Row>
       </Form>
-
     </Container>
   );
 };
-

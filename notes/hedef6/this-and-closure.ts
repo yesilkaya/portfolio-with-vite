@@ -30,15 +30,15 @@ const ev = {
   
   
   
-  function stopCharge(this: { model: string }, who: string){
+  function stopCharge(this: { model: string }, who: string, time: number) {
     console.log(`${this.model} şarjı ${who} tarafından durduruldu.`);
   }
   
   //stopCharge.call(ev2,"Seccad");
   const _stopCharge = stopCharge.bind(ev2);
   
-  stopCharge.call(ev2,"Yusuf");
-  stopCharge.apply(ev2,["Ahmet"]);
+  stopCharge.call(ev2,"Yusuf", 30);
+  stopCharge.apply(ev2,["Ahmet", 45]);
   _stopCharge("Veli");
   _stopCharge("Ali");
   

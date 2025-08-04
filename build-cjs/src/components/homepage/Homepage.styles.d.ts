@@ -1,7 +1,0 @@
-export declare const HomeSection: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLElement>, HTMLElement>, never>> & string;
-export declare const HomeContent: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, never>> & string;
-export declare const ProfileImageWrapper: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, never>> & string;
-export declare const SocialIcons: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("react").DetailedHTMLProps<import("react").HTMLAttributes<HTMLDivElement>, HTMLDivElement>, never>> & string;
-export declare const StyledButton: import("styled-components/dist/types").IStyledComponentBase<"web", import("styled-components").FastOmit<import("antd").ButtonProps & import("react").RefAttributes<HTMLAnchorElement | HTMLButtonElement>, never>> & string & Omit<import("react").ForwardRefExoticComponent<import("antd").ButtonProps & import("react").RefAttributes<HTMLAnchorElement | HTMLButtonElement>> & {
-    Group: import("react").FC<import("antd/es/button").ButtonGroupProps>;
-}, keyof import("react").Component<any, {}, any>>;

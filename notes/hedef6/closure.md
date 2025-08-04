@@ -30,6 +30,9 @@ function dışFonksiyon() {
 }
 
 const sayaç = dışFonksiyon(); // dışFonksiyon çalıştı ve içFonksiyon döndü
+const sayaç2 = dışFonksiyon(); // dışFonksiyon çalıştı ve içFonksiyon döndü
+const sayaç3 = dışFonksiyon(); // dışFonksiyon çalıştı ve içFonksiyon döndü
+
 sayaç(); // "Sayı: 1"
 sayaç(); // "Sayı: 2"
 ```

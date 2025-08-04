@@ -1,8 +1,4 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-/**
- * @module CrudScreen
- * This module provides a CRUD interface for managing users.
- */
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Form, Input, Button, List, Typography, message, Space, Divider, Card, } from 'antd';

@@ -1,6 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import React from "react";
 
 import {Home} from "../components/homepage/HomePage";
 import {Education} from "../components/educaiton/Education";
@@ -8,6 +7,7 @@ import {Services} from "../components/services/Services";
 import {Projects} from "../components/projects/Projects";
 import {ContactForm} from "../components/contact/Contact";
 import {CrudScreen} from "../components/crud/Crud";
+import { FeedbackScreen } from "../components/feedback/Feedback";
 import type { JSX } from "react";
 
 import { navbar } from "../data/navbar";
@@ -84,6 +84,7 @@ export default function AppRoutes(): JSX.Element {
       <Route path="/" element={<MainSections />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/crud" element={<CrudScreen />} />
+      <Route path="/feedback" element={<FeedbackScreen />} />
     </Routes>
   );
 }

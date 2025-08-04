@@ -72,4 +72,11 @@ export const navbar: NavbarItem[] = [
     type: "route",
     route: "/crud",
   },
+  {
+    key: "7",
+    id: "feedback",
+    label: "Feedback",
+    type: "route",
+    route: "/feedback",
+  },
 ];

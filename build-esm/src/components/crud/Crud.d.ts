@@ -1,8 +1,4 @@
 /**
- * @module CrudScreen
- * This module provides a CRUD interface for managing users.
- */
-/**
  * `CrudScreen` bileşeni, kullanıcı CRUD işlemlerini gerçekleştiren bir arayüz sağlar.
  * Kullanıcılar ekleyebilir, güncelleyebilir ve silebilir.
  *

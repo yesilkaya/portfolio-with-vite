@@ -1,4 +1,4 @@
-import sqlite3 from "sqlite3";
+/*import sqlite3 from "sqlite3";
 import path from "path";
 import { ROOT_DIR } from "../config/paths.js";
 
@@ -20,3 +20,4 @@ CREATE TABLE IF NOT EXISTS contact (
     message TEXT
   )
 `);
+*/

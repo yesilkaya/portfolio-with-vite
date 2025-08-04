@@ -1,8 +1,8 @@
 import http from "http";
 import mysql from "mysql2";
 import { parse } from "url";
-import { parseRequestBody } from "../src/utils/requestUtils";
-import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils";
+import { parseRequestBody } from "../src/utils/requestUtils.js";
+import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 // DB bağlantısı
 const db = mysql.createConnection({
     host: "localhost",

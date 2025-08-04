@@ -9,7 +9,10 @@ const user = {
     console.log(this.name);
   },
 };
+const obj = {"name":"Ahmet"};
 user.greet(); // "Seccad" → this = user
+ const tempFunction = user.greet;
+ tempFunction();
 
 ```
 

@@ -36,9 +36,12 @@ if (true) {
   let yas = 25;
   const ad = "Ali";
   console.log(yas, ad); // çalışır
+
 }
 // console.log(yas); // HATA!
 // console.log(ad);  // HATA!
+// console.log(a);  // HATA!
+
 ```
 
 ### 4. Lexical Scope (Söz Dizimsel Kapsam)
