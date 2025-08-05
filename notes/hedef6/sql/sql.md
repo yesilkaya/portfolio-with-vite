@@ -129,17 +129,13 @@ Verinin tekrarını engelleyen özel index türüdür.
 
 ## 📚 9. SQL Komut Türleri
 
-### 🔹 DDL (Data Definition Language)
-- `CREATE`, `ALTER`, `DROP`, `TRUNCATE`
-
-### 🔹 DML (Data Manipulation Language)
-- `SELECT`, `INSERT`, `UPDATE`, `DELETE`
-
-### 🔹 DCL (Data Control Language)
-- `GRANT`, `REVOKE`
-
-### 🔹 TCL (Transaction Control Language)
-- `COMMIT`, `ROLLBACK`, `SAVEPOINT`
+| Kategori | Açılımı                      | Örnek Komutlar                | Açıklama                            |
+| -------- | ---------------------------- | ----------------------------- | ----------------------------------- |
+| **DQL**  | Data Query Language          | `SELECT`                      | Veritabanından veri sorgulamak için |
+| **DML**  | Data Manipulation Language   | `INSERT`, `UPDATE`, `DELETE`  | Veriler üzerinde işlem yapmak için  |
+| **DDL**  | Data Definition Language     | `CREATE`, `ALTER`, `DROP`     | Veritabanı yapısını tanımlamak için |
+| **DCL**  | Data Control Language        | `GRANT`, `REVOKE`             | Erişim yetkilerini ayarlamak için   |
+| **TCL**  | Transaction Control Language | `BEGIN`, `COMMIT`, `ROLLBACK` | İşlem (transaction) kontrolü için   |
 
 ---
 

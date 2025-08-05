@@ -3,6 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
+import { message as antdMessage } from "antd";
 export function FeedbackScreen() {
     const [contacts, setContacts] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -10,7 +11,7 @@ export function FeedbackScreen() {
         first_name: "",
         last_name: "",
         email: "",
-        message: "",
+        messages: [],
     });
     useEffect(() => {
         fetchContacts();
@@ -26,10 +27,10 @@ export function FeedbackScreen() {
         });
         if (res.ok) {
             fetchContacts();
-            alert("🗑️ Başarıyla silindi");
+            antdMessage.success("🗑️ Başarıyla silindi");
         }
         else {
-            alert("❌ Silme hatası");
+            antdMessage.error("🗑️ Silme Hatası");
         }
     };
     const handleUpdateClick = (user) => {
@@ -46,13 +47,14 @@ export function FeedbackScreen() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
+        const data = await res.json();
         if (res.ok) {
             setEditId(null);
             fetchContacts();
             alert("✅ Güncelleme başarılı");
         }
         else {
-            alert("❌ Güncelleme hatası");
+            alert(`❌ Güncelleme hatası: ${data.error}`);
         }
     };
     return (_jsxs("div", { style: {
@@ -70,9 +72,9 @@ export function FeedbackScreen() {
                                 display: "flex",
                                 flexDirection: "column",
                                 gap: "0.5rem",
-                            }, children: [_jsx("input", { name: "first_name", value: formData.first_name, onChange: handleInputChange, placeholder: "\u0130sim" }), _jsx("input", { name: "last_name", value: formData.last_name, onChange: handleInputChange, placeholder: "Soyisim" }), _jsx("input", { name: "email", value: formData.email, onChange: handleInputChange, placeholder: "E-posta" }), _jsx("input", { name: "message", value: formData.message, onChange: handleInputChange, placeholder: "Mesaj\u0131n\u0131z\u0131 giriniz" }), _jsx("button", { onClick: handleSubmitUpdate, style: {
+                            }, children: [_jsx("input", { name: "first_name", value: formData.first_name, onChange: handleInputChange, placeholder: "\u0130sim" }), _jsx("input", { name: "last_name", value: formData.last_name, onChange: handleInputChange, placeholder: "Soyisim" }), _jsx("input", { name: "email", value: formData.email, onChange: handleInputChange, placeholder: "E-posta" }), _jsx("button", { onClick: handleSubmitUpdate, style: {
                                         marginTop: "0.5rem",
-                                        backgroundColor: "#52c41a",
+                                        backgroundColor: "var(--primary-color)",
                                         color: "white",
                                         border: "none",
                                         padding: "0.5rem",
@@ -83,7 +85,13 @@ export function FeedbackScreen() {
                                         top: 10,
                                         display: "flex",
                                         gap: "0.5rem",
-                                    }, children: [_jsx("button", { onClick: () => handleUpdateClick(c), children: "\uD83D\uDCDD" }), _jsx("button", { onClick: () => handleDelete(c.id), children: "\uD83D\uDDD1\uFE0F" })] }), _jsx("div", { children: _jsx("p", { style: { margin: "0.5rem 0" }, children: c.message || "Mesaj yok" }) })] })) }, c.id))), _jsx(Divider, { style: { backgroundColor: "white" } }), _jsx(Link, { to: `/#${"contact"}`, style: {
+                                    }, children: [_jsx("button", { onClick: () => handleUpdateClick(c), children: "\uD83D\uDCDD" }), _jsx("button", { onClick: () => handleDelete(c.id), children: "\uD83D\uDDD1\uFE0F" })] }), _jsx("div", { style: { marginTop: "0.5rem" }, children: (c.messages || []).length > 0 ? ((c.messages || []).map((msg) => (_jsxs("p", { style: {
+                                            marginBottom: "0.5rem",
+                                            backgroundColor: "#f5f5f5",
+                                            padding: "0.5rem",
+                                            borderRadius: "4px",
+                                            fontSize: "0.95rem",
+                                        }, children: ["\uD83D\uDCE9 ", msg.content, _jsx("br", {}), _jsx("span", { style: { fontSize: "0.75rem", color: "#888" }, children: new Date(msg.created_at).toLocaleString("tr-TR") })] }, msg.id)))) : (_jsx("p", { style: { color: "#888" }, children: "Hen\u00FCz mesaj yok." })) })] })) }, c.id))), _jsx(Divider, { style: { backgroundColor: "white" } }), _jsx(Link, { to: `/#${"contact"}`, style: {
                             marginTop: "0.5rem",
                             backgroundColor: "var(--primary-color)",
                             color: "white",

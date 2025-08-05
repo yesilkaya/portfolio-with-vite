@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ContactUser } from "../../types/user";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
+import { message as antdMessage } from "antd";
 
 export function FeedbackScreen() {
   const [contacts, setContacts] = useState<ContactUser[]>([]);
@@ -12,7 +13,7 @@ export function FeedbackScreen() {
     first_name: "",
     last_name: "",
     email: "",
-    message: "",
+    messages: [],
   });
 
   useEffect(() => {
@@ -31,9 +32,9 @@ export function FeedbackScreen() {
     });
     if (res.ok) {
       fetchContacts();
-      alert("🗑️ Başarıyla silindi");
+      antdMessage.success("🗑️ Başarıyla silindi");
     } else {
-      alert("❌ Silme hatası");
+      antdMessage.error("🗑️ Silme Hatası");
     }
   };
 
@@ -63,7 +64,6 @@ export function FeedbackScreen() {
       alert("✅ Güncelleme başarılı");
     } else {
       alert(`❌ Güncelleme hatası: ${data.error}`);
-
     }
   };
 
@@ -120,17 +120,11 @@ export function FeedbackScreen() {
                   onChange={handleInputChange}
                   placeholder="E-posta"
                 />
-                <input
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Mesajınızı giriniz"
-                />
                 <button
                   onClick={handleSubmitUpdate}
                   style={{
                     marginTop: "0.5rem",
-                    backgroundColor: "#52c41a",
+                    backgroundColor: "var(--primary-color)",
                     color: "white",
                     border: "none",
                     padding: "0.5rem",
@@ -158,10 +152,29 @@ export function FeedbackScreen() {
                   <button onClick={() => handleUpdateClick(c)}>📝</button>
                   <button onClick={() => handleDelete(c.id!)}>🗑️</button>
                 </div>
-                <div>
-                  <p style={{ margin: "0.5rem 0" }}>
-                    {c.message || "Mesaj yok"}
-                  </p>
+                <div style={{ marginTop: "0.5rem" }}>
+                  {(c.messages || []).length > 0 ? (
+                    (c.messages || []).map((msg) => (
+                      <p
+                        key={msg.id}
+                        style={{
+                          marginBottom: "0.5rem",
+                          backgroundColor: "#f5f5f5",
+                          padding: "0.5rem",
+                          borderRadius: "4px",
+                          fontSize: "0.95rem",
+                        }}
+                      >
+                        📩 {msg.content}
+                        <br />
+                        <span style={{ fontSize: "0.75rem", color: "#888" }}>
+                          {new Date(msg.created_at).toLocaleString("tr-TR")}
+                        </span>
+                      </p>
+                    ))
+                  ) : (
+                    <p style={{ color: "#888" }}>Henüz mesaj yok.</p>
+                  )}
                 </div>
               </>
             )}

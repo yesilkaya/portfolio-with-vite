@@ -1,25 +1,74 @@
-| Özellik               | `db.exec(...)`                                  | `db.run(...)`                                         |
-| --------------------- | ----------------------------------------------- | ----------------------------------------------------- |
-| 🎯 Amaç               | Çoklu SQL komutlarını bir arada çalıştırmak     | Tek bir SQL komutunu çalıştırmak (parametre destekli) |
-| 🔁 Geri dönüş değeri  | ❌ Yok — hiçbir metadata dönmez                  | ✅ `RunResult` metadata’sı (callback içindeki `this`)  |
-| ⚠️ Hata kontrolü      | `try/catch` ile yapılır (hata varsa throw eder) | `callback` içinde `err` parametresiyle yakalanır      |
-| 📌 Metadata’ya erişim | ❌ Mümkün değil                                  | ✅ `this.lastID`, `this.changes` ile erişilir          |
-| ❓ Parametre desteği   | ❌ Yok                                           | ✅ `?` parametrelerini destekler                       |
-| 🧱 Çoklu SQL desteği  | ✅ Var                                           | ❌ Yok (tek sorgu çalıştırabilir)                      |
 
+# 📘 SQLite `database` Metotları Karşılaştırması
 
-Bu satırda db bir veritabanı nesnesidir 
-db.serialize(() => {
-  db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)");
-  db.run("INSERT INTO users (name) VALUES ('Seccad')");
-  db.close();
-});
+## 🧠 GENEL TABLO
 
--> **exec** bir geri dönüş değeri içermez sadece hata olma durumunda hata fırlatır ama **run** komutu geriye RunResult tipinde metadata dönderir ve bunlara run da tanımlanana callbak fonk içinde this ifadesiyle erişebiliriz **(this.lastID, this.changes)**
+| Metot       | Amaç                              | Geri Dönüş Değeri                   | Ne için kullanılır?                  |
+|-------------|-----------------------------------|-------------------------------------|--------------------------------------|
+| `run`       | Değişiklik yapan sorgular         | `{ lastID, changes }`               | INSERT, UPDATE, DELETE               |
+| `exec`      | Çoklu SQL komutu çalıştırma       | `void`                              | CREATE TABLE, PRAGMA, çoklu sorgular |
+| `get`       | Tek satır döndüren sorgular       | `{...}` tek nesne veya `undefined`  | SELECT ama sadece 1 satır isteniyorsa|
+| `all`       | Çok satır döndüren sorgular       | `Array<{...}>`                      | SELECT ile tüm eşleşen kayıtlar      |
+| `prepare`   | Parametreli ve tekrar tekrar çalıştırılacak sorgular | `Statement` nesnesi     | performanslı tekrar sorgular         |
 
-| Metot  | Amaç                  | Döndürdüğü veri               | Kullanım örneği                   |
-| ------ | --------------------- | ----------------------------- | --------------------------------- |
-| `all`  | Çoklu veri çekme      | Array of rows                 | `SELECT * FROM ...`               |
-| `get`  | Tek satır çekme       | Row object                    | `SELECT * FROM ... WHERE id = ?`  |
-| `run`  | Veri değiştirme       | `RunResult` (lastID, changes) | `INSERT`, `UPDATE`, `DELETE`      |
-| `exec` | SQL komutu çalıştırma | `void`                        | `CREATE TABLE`, `BEGIN`, `COMMIT` |
+---
+
+## 🧪 Detaylı Açıklamalar ve Örnekler
+
+### 1. `run`
+
+Veritabanında kayıt **ekleme, silme veya güncelleme** işlemleri için:
+
+```ts
+const result = await db.run("INSERT INTO contact (first_name, email) VALUES (?, ?)", ["Ali", "ali@example.com"]);
+console.log(result.lastID);     // Eklenen kaydın ID'si
+console.log(result.changes);    // Etkilenen satır sayısı
+```
+
+### 2. `exec`
+
+**Çoklu SQL komutunu** bir seferde çalıştırmak için (transaction, tablo oluşturma vb.):
+
+```ts
+await db.exec(`
+  BEGIN TRANSACTION;
+  CREATE TABLE IF NOT EXISTS contact (...);
+  PRAGMA foreign_keys = ON;
+  COMMIT;
+`);
+```
+
+### 3. `get`
+
+SELECT ile **tek bir satır** almak için:
+
+```ts
+const user = await db.get("SELECT * FROM contact WHERE id = ?", [1]);
+console.log(user?.email);
+```
+
+### 4. `all`
+
+SELECT ile **birden fazla satır** almak için:
+
+```ts
+const users = await db.all("SELECT * FROM contact WHERE email LIKE ?", ["%@gmail.com"]);
+console.log(users.length); // Tüm Gmail kullanıcıları
+```
+
+### 5. `prepare`
+
+Aynı sorguyu farklı parametrelerle **çok kez çalıştırmak** için:
+
+```ts
+const stmt = await db.prepare("SELECT * FROM contact WHERE id = ?");
+for (let i = 1; i <= 10; i++) {
+  const row = await stmt.get(i);
+  console.log(row);
+}
+await stmt.finalize();
+```
+
+---
+
+💡 Not: `prepare` ile birlikte `.get()`, `.run()`, `.all()` gibi alt metotlar kullanılabilir.
