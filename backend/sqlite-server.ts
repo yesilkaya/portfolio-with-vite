@@ -11,6 +11,11 @@ import { ROOT_DIR } from "../src/config/paths.js";
 import path from "path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
+import {
+  postBodySchema,
+  idSchema,
+  putBodySchema,
+} from "../src/utils/form-validation.js";
 
 const dbPath = path.join(ROOT_DIR, "contact.db");
 
@@ -80,23 +85,33 @@ const server = http.createServer((req, res) => {
   (async () => {
     if (req.method === "GET" && pathname === "/api/feedback") {
       try {
-        const contacts = await db.all("SELECT * FROM contact");
+        const rows = await db.all(`
+        SELECT
+          c.id,
+          c.first_name,
+          c.last_name,
+          c.email,
+          COALESCE(
+            json_group_array(
+              json_object(
+                'id', m.id,
+                'content', m.content,
+                'created_at', m.created_at
+              )
+            ) FILTER (WHERE m.id IS NOT NULL),
+            '[]'
+          ) AS messages
+        FROM contact c
+        LEFT JOIN messages m ON c.id = m.contact_id
+        GROUP BY c.id;
+      `);
 
-        const contactsWithMessages = await Promise.all(
-          contacts.map(async (contact) => {
-            const messages = await db.all(
-              `SELECT id, content, created_at FROM messages WHERE contact_id = ? ORDER BY created_at DESC`,
-              [contact.id]
-            );
+        const contacts = rows.map((row) => ({
+          ...row,
+          messages: JSON.parse(row.messages),
+        }));
 
-            return {
-              ...contact,
-              messages: messages,
-            };
-          })
-        );
-
-        sendJSONResponse(res, 200, contactsWithMessages);
+        sendJSONResponse(res, 200, contacts);
       } catch (err) {
         console.error("GET Hatası:", err);
         sendErrorResponse(res, "Veriler alınamadı");
@@ -106,10 +121,16 @@ const server = http.createServer((req, res) => {
     // POST: Yeni kayıt
     else if (req.method === "POST" && pathname === "/api/feedback") {
       try {
-        const { first_name, last_name, email, message } =
-          await parseRequestBody<FormData>(req);
+        const body = await parseRequestBody<FormData>(req);
+        const { error } = postBodySchema.validate(body, {
+          abortEarly: false,
+        });
+        if (error) {
+          const messages = error.details.map((err) => err.message);
+          sendErrorResponse(res, messages[0], 400);
+        }
 
-        // E-posta ile kullanıcı var mı kontrol et
+        const { first_name, last_name, email, message } = body;
         const existing = await db.get(
           "SELECT id FROM contact WHERE email = ?",
           [email]
@@ -133,10 +154,6 @@ const server = http.createServer((req, res) => {
           id: contactId,
         });
       } catch (err: any) {
-        if (err?.message?.includes("UNIQUE constraint failed")) {
-          console.error("Ekleme hatası: E-posta zaten kayıtlı");
-          return sendErrorResponse(res, "Bu e-posta zaten kayıtlı", 409);
-        }
         console.error("Ekleme hatası:", err);
         sendErrorResponse(res, "Kayıt eklenemedi");
       }
@@ -144,12 +161,28 @@ const server = http.createServer((req, res) => {
 
     // PUT: Güncelle
     else if (req.method === "PUT" && pathname.startsWith("/api/feedback/")) {
-      const id = Number(pathname.split("/")[3]);
-      if (isNaN(id)) return sendErrorResponse(res, "Geçersiz ID", 400);
-
       try {
+        const id = Number(pathname.split("/")[3]);
+        const { error } = idSchema.validate(id, { abortEarly: false });
+
+        if (error) {
+          const messages = error.details.map((err) => err.message);
+          return sendErrorResponse(res, messages[0], 400);
+        }
+
+        // Body validasyonu
         const { first_name, last_name, email } =
           await parseRequestBody<FormData>(req);
+        const body = { first_name, last_name, email, id };
+
+        const { error: bodyError } = putBodySchema.validate(body, {
+          abortEarly: false,
+        });
+        if (bodyError) {
+          const messages = bodyError.details.map((err) => err.message);
+          return sendErrorResponse(res, messages[0], 400);
+        }
+
         const result = await db.run(
           `UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`,
           [first_name, last_name, email, id]
@@ -173,10 +206,16 @@ const server = http.createServer((req, res) => {
     }
     // DELETE: Sil
     else if (req.method === "DELETE" && pathname.startsWith("/api/feedback/")) {
-      const id = Number(pathname.split("/")[3]);
-      if (isNaN(id)) return sendErrorResponse(res, "Geçersiz ID", 400);
-
       try {
+        const id = Number(pathname.split("/")[3]);
+        const { error } = idSchema.validate(id, {
+          abortEarly: false,
+        });
+        if (error) {
+          const messages = error.details.map((err) => err.message);
+          sendErrorResponse(res, messages[0], 400);
+        }
+
         const result = await db.run(`DELETE FROM contact WHERE id = ?`, [id]);
         if (result.changes === 0) {
           return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);

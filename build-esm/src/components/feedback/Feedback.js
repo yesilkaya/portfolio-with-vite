@@ -11,7 +11,6 @@ export function FeedbackScreen() {
         first_name: "",
         last_name: "",
         email: "",
-        messages: [],
     });
     useEffect(() => {
         fetchContacts();

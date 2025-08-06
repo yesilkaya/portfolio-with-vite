@@ -23,3 +23,13 @@ export interface FormData {
   email?: string;
   message?: string;
 }
+
+interface ContactsWithMessages {
+  contact_id: number;
+  first_name: string | null;
+  last_name: string;
+  email: string;
+  message_id: number | null;
+  content: string | null;
+  created_at: string | null;
+}
