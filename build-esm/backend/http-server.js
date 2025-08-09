@@ -2,13 +2,8 @@ import { createServer } from "http";
 import { readFile, access } from "fs";
 import { constants } from "fs";
 import path from "path";
-import { handlePostRequest } from "../src/utils/requestUtils.js";
 import { ROOT_DIR } from "../src/config/paths.js";
-/**
- * Sunucunun çalışacağı port numarası.
- * @constant {number}
- */
-const PORT = 3000;
+import { HTTP_PORT } from "../src/types/urls.js";
 /**
  * Dağıtım dizini, statik dosyaların bulunduğu klasör.
  * @constant {string}
@@ -63,9 +58,6 @@ const server = createServer((req, res) => {
             });
         });
     }
-    else if (req.method === "POST" && req.url === "/api/contact") {
-        handlePostRequest(req, res, req.url);
-    }
     else {
         res.writeHead(405, { Allow: "GET, POST" });
         res.end("Method Not Allowed");
@@ -76,7 +68,7 @@ const server = createServer((req, res) => {
  * @function
  * @param {number} PORT - Sunucunun dinleyeceği port numarası.
  */
-server.listen(PORT, () => {
-    console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
+server.listen(HTTP_PORT, () => {
+    console.log(`Sunucu çalışıyor: http://localhost:${HTTP_PORT}`);
 });
 //# sourceMappingURL=http-server.js.map

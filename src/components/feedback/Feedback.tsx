@@ -5,6 +5,7 @@ import { ContactUser } from "../../types/user";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
 import { message as antdMessage } from "antd";
+import { CONTACTS_URL, FEEDBACK_URL } from "../../types/urls";
 
 export function FeedbackScreen() {
   const [contacts, setContacts] = useState<ContactUser[]>([]);
@@ -20,13 +21,13 @@ export function FeedbackScreen() {
   }, []);
 
   const fetchContacts = async () => {
-    const res = await fetch("http://localhost:4000/api/feedback");
+    const res = await fetch(CONTACTS_URL);
     const data = await res.json();
     setContacts(data);
   };
 
   const handleDelete = async (id: number) => {
-    const res = await fetch(`http://localhost:4000/api/feedback/${id}`, {
+    const res = await fetch(`${CONTACTS_URL}/${id}`, {
       method: "DELETE",
     });
     if (res.ok) {
@@ -42,15 +43,13 @@ export function FeedbackScreen() {
     setFormData({ ...user });
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmitUpdate = async () => {
-    const res = await fetch(`http://localhost:4000/api/feedback/${editId}`, {
+    const res = await fetch(`${CONTACTS_URL}/${editId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -76,9 +75,7 @@ export function FeedbackScreen() {
     >
       <h2 style={{ textAlign: "center", color: "white" }}>Sizden Gelenler</h2>
 
-      <ul
-        style={{ listStyle: "none", padding: 0, maxWidth: 600, margin: "auto" }}
-      >
+      <ul style={{ listStyle: "none", padding: 0, maxWidth: 600, margin: "auto" }}>
         <Divider style={{ backgroundColor: "white" }} />
 
         {contacts.map((c) => (
@@ -101,24 +98,9 @@ export function FeedbackScreen() {
                   gap: "0.5rem",
                 }}
               >
-                <input
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleInputChange}
-                  placeholder="İsim"
-                />
-                <input
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleInputChange}
-                  placeholder="Soyisim"
-                />
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="E-posta"
-                />
+                <input name="first_name" value={formData.first_name} onChange={handleInputChange} placeholder="İsim" />
+                <input name="last_name" value={formData.last_name} onChange={handleInputChange} placeholder="Soyisim" />
+                <input name="email" value={formData.email} onChange={handleInputChange} placeholder="E-posta" />
                 <button
                   onClick={handleSubmitUpdate}
                   style={{
@@ -166,9 +148,7 @@ export function FeedbackScreen() {
                       >
                         📩 {msg.content}
                         <br />
-                        <span style={{ fontSize: "0.75rem", color: "#888" }}>
-                          {new Date(msg.created_at).toLocaleString("tr-TR")}
-                        </span>
+                        <span style={{ fontSize: "0.75rem", color: "#888" }}>{new Date(msg.created_at).toLocaleString("tr-TR")}</span>
                       </p>
                     ))
                   ) : (

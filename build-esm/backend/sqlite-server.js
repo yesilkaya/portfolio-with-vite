@@ -1,13 +1,16 @@
 // backend/sqlite-crud-server.ts
 import http from "http";
 import { parse } from "url";
-import { sendJSONResponse, sendErrorResponse, } from "../src/utils/responseUtils.js";
+import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 import { parseRequestBody } from "../src/utils/requestUtils.js";
 import { ROOT_DIR } from "../src/config/paths.js";
 import path from "path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import { postBodySchema, idSchema, putBodySchema, } from "../src/utils/form-validation.js";
+import { API_PORT } from "../src/types/urls.js";
+import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
+import { FEEDBACK_PATH } from "../src/types/urls.js";
+import { handleCors } from "../src/utils/cors.js";
 const dbPath = path.join(ROOT_DIR, "contact.db");
 //open fonksiyonu ile SQLite veritabanını açıyoruz. Bu fonksiyon geriye bir Database nesnesi döndürüyor.
 // Bu nesne üzerinden veri tabanı işlemlerini gerçekleştirebiliyoruz.
@@ -54,17 +57,11 @@ const server = http.createServer((req, res) => {
     const parsedUrl = parse(req.url || "", true);
     const pathname = parsedUrl.pathname || "";
     // 🌐 CORS Ayarları
-    const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.includes(origin)) {
-        res.setHeader("Access-Control-Allow-Origin", origin);
-    }
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    if (req.method === "OPTIONS")
-        return res.end();
+    const shouldStop = handleCors(req, res);
+    if (shouldStop)
+        return;
     (async () => {
-        if (req.method === "GET" && pathname === "/api/feedback") {
+        if (req.method === "GET" && pathname === FEEDBACK_PATH) {
             try {
                 const rows = await db.all(`
         SELECT
@@ -85,8 +82,6 @@ const server = http.createServer((req, res) => {
         FROM contact c
         LEFT JOIN messages m ON c.id = m.contact_id
         GROUP BY c.id;
-
-      
       `);
                 const contacts = rows.map((row) => ({
                     ...row,
@@ -100,7 +95,7 @@ const server = http.createServer((req, res) => {
             }
         }
         // POST: Yeni kayıt
-        else if (req.method === "POST" && pathname === "/api/feedback") {
+        else if (req.method === "POST" && pathname === FEEDBACK_PATH) {
             try {
                 const body = await parseRequestBody(req);
                 const { error } = postBodySchema.validate(body, {
@@ -117,7 +112,11 @@ const server = http.createServer((req, res) => {
                     contactId = existing.id;
                 }
                 else {
-                    const result = await db.run(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [first_name, last_name, email]);
+                    const result = await db.run(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [
+                        first_name,
+                        last_name,
+                        email,
+                    ]);
                     contactId = result.lastID;
                 }
                 await db.run("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
@@ -132,7 +131,7 @@ const server = http.createServer((req, res) => {
             }
         }
         // PUT: Güncelle
-        else if (req.method === "PUT" && pathname.startsWith("/api/feedback/")) {
+        else if (req.method === "PUT" && pathname.startsWith(FEEDBACK_PATH)) {
             try {
                 const id = Number(pathname.split("/")[3]);
                 const { error } = idSchema.validate(id, { abortEarly: false });
@@ -150,7 +149,12 @@ const server = http.createServer((req, res) => {
                     const messages = bodyError.details.map((err) => err.message);
                     return sendErrorResponse(res, messages[0], 400);
                 }
-                const result = await db.run(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [first_name, last_name, email, id]);
+                const result = await db.run(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [
+                    first_name,
+                    last_name,
+                    email,
+                    id,
+                ]);
                 if (result.changes === 0) {
                     return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
                 }
@@ -165,7 +169,7 @@ const server = http.createServer((req, res) => {
             }
         }
         // DELETE: Sil
-        else if (req.method === "DELETE" && pathname.startsWith("/api/feedback/")) {
+        else if (req.method === "DELETE" && pathname.startsWith(FEEDBACK_PATH)) {
             try {
                 const id = Number(pathname.split("/")[3]);
                 const { error } = idSchema.validate(id, {
@@ -192,7 +196,7 @@ const server = http.createServer((req, res) => {
         }
     })(); // immediately invoked async fn
 });
-server.listen(4000, () => {
-    console.log("🚀 Sunucu http://localhost:4000 üzerinde çalışıyor.");
+server.listen(API_PORT, () => {
+    console.log(`Sunucu http://localhost:${API_PORT} üzerinde çalışıyor.`);
 });
 //# sourceMappingURL=sqlite-server.js.map

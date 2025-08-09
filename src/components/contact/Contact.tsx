@@ -7,6 +7,7 @@
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
+import { CONTACTS_URL,FEEDBACK_URL } from "../../types/urls";
 
 /**
  * @typedef {Object} ContactFormValues
@@ -48,8 +49,9 @@ export const ContactForm: React.FC = () => {
    * @returns {Promise<void>}
    */
   const onFinish = async (values: ContactFormValues) => {
+    
     try {
-      const response = await fetch("http://localhost:4000/api/feedback", {
+      const response = await fetch(CONTACTS_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

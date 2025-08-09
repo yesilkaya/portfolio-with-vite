@@ -1,21 +1,17 @@
 // backend/sqlite-crud-server.ts
 import http from "http";
 import { parse } from "url";
-import {
-  sendJSONResponse,
-  sendErrorResponse,
-} from "../src/utils/responseUtils.js";
+import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 import { parseRequestBody } from "../src/utils/requestUtils.js";
 import { FormData } from "../src/types/user.js";
 import { ROOT_DIR } from "../src/config/paths.js";
 import path from "path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import {
-  postBodySchema,
-  idSchema,
-  putBodySchema,
-} from "../src/utils/form-validation.js";
+import { API_PORT } from "../src/types/urls.js";
+import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
+import { FEEDBACK_PATH } from "../src/types/urls.js";
+import { handleCors } from "../src/utils/cors.js";
 
 const dbPath = path.join(ROOT_DIR, "contact.db");
 
@@ -70,20 +66,11 @@ const server = http.createServer((req, res) => {
   const pathname = parsedUrl.pathname || "";
 
   // 🌐 CORS Ayarları
-  const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  if (req.method === "OPTIONS") return res.end();
+  const shouldStop = handleCors(req, res);
+  if (shouldStop) return;
 
   (async () => {
-    if (req.method === "GET" && pathname === "/api/feedback") {
+    if (req.method === "GET" && pathname === FEEDBACK_PATH) {
       try {
         const rows = await db.all(`
         SELECT
@@ -119,7 +106,7 @@ const server = http.createServer((req, res) => {
     }
 
     // POST: Yeni kayıt
-    else if (req.method === "POST" && pathname === "/api/feedback") {
+    else if (req.method === "POST" && pathname === FEEDBACK_PATH) {
       try {
         const body = await parseRequestBody<FormData>(req);
         const { error } = postBodySchema.validate(body, {
@@ -131,24 +118,19 @@ const server = http.createServer((req, res) => {
         }
 
         const { first_name, last_name, email, message } = body;
-        const existing = await db.get(
-          "SELECT id FROM contact WHERE email = ?",
-          [email]
-        );
+        const existing = await db.get("SELECT id FROM contact WHERE email = ?", [email]);
         let contactId: number;
         if (existing) {
           contactId = existing.id;
         } else {
-          const result = await db.run(
-            `INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`,
-            [first_name, last_name, email]
-          );
+          const result = await db.run(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [
+            first_name,
+            last_name,
+            email,
+          ]);
           contactId = result.lastID!;
         }
-        await db.run(
-          "INSERT INTO messages (contact_id, content) VALUES (?, ?)",
-          [contactId, message]
-        );
+        await db.run("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
         sendJSONResponse(res, 201, {
           message: "Kayıt başarılı",
           id: contactId,
@@ -160,7 +142,7 @@ const server = http.createServer((req, res) => {
     }
 
     // PUT: Güncelle
-    else if (req.method === "PUT" && pathname.startsWith("/api/feedback/")) {
+    else if (req.method === "PUT" && pathname.startsWith(FEEDBACK_PATH)) {
       try {
         const id = Number(pathname.split("/")[3]);
         const { error } = idSchema.validate(id, { abortEarly: false });
@@ -171,8 +153,7 @@ const server = http.createServer((req, res) => {
         }
 
         // Body validasyonu
-        const { first_name, last_name, email } =
-          await parseRequestBody<FormData>(req);
+        const { first_name, last_name, email } = await parseRequestBody<FormData>(req);
         const body = { first_name, last_name, email, id };
 
         const { error: bodyError } = putBodySchema.validate(body, {
@@ -183,10 +164,12 @@ const server = http.createServer((req, res) => {
           return sendErrorResponse(res, messages[0], 400);
         }
 
-        const result = await db.run(
-          `UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`,
-          [first_name, last_name, email, id]
-        );
+        const result = await db.run(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [
+          first_name,
+          last_name,
+          email,
+          id,
+        ]);
 
         if (result.changes === 0) {
           return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
@@ -194,18 +177,14 @@ const server = http.createServer((req, res) => {
         sendJSONResponse(res, 200, { message: "Kullanıcı güncellendi" });
       } catch (err: any) {
         if (err?.message?.includes("UNIQUE constraint failed")) {
-          return sendErrorResponse(
-            res,
-            "Bu e-posta başka kullanıcıda kayıtlı",
-            409
-          );
+          return sendErrorResponse(res, "Bu e-posta başka kullanıcıda kayıtlı", 409);
         }
         console.error("Güncelleme hatası:", err);
         sendErrorResponse(res, "Güncelleme başarısız");
       }
     }
     // DELETE: Sil
-    else if (req.method === "DELETE" && pathname.startsWith("/api/feedback/")) {
+    else if (req.method === "DELETE" && pathname.startsWith(FEEDBACK_PATH)) {
       try {
         const id = Number(pathname.split("/")[3]);
         const { error } = idSchema.validate(id, {
@@ -234,6 +213,6 @@ const server = http.createServer((req, res) => {
   })(); // immediately invoked async fn
 });
 
-server.listen(4000, () => {
-  console.log("🚀 Sunucu http://localhost:4000 üzerinde çalışıyor.");
+server.listen(API_PORT, () => {
+  console.log(`Sunucu http://localhost:${API_PORT} üzerinde çalışıyor.`);
 });

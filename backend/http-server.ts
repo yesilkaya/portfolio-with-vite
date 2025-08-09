@@ -1,16 +1,10 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "http";
-import { readFile ,access} from "fs";   
-import {  constants} from "fs";   
+import { readFile, access } from "fs";
+import { constants } from "fs";
 import path from "path";
-import { handlePostRequest } from "../src/utils/requestUtils.js";
 import { ROOT_DIR } from "../src/config/paths.js";
+import { HTTP_PORT } from "../src/types/urls.js";
 
-
-/**
- * Sunucunun çalışacağı port numarası.
- * @constant {number}
- */
-const PORT = 3000;
 /**
  * Dağıtım dizini, statik dosyaların bulunduğu klasör.
  * @constant {string}
@@ -35,7 +29,6 @@ const mimeTypes = {
   ".pdf": "application/pdf",
 } as const;
 
-  
 /**
  * HTTP sunucusu, gelen istekleri dinler ve uygun yanıtları gönderir.
  * @function
@@ -46,10 +39,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   console.log(`${req.method} ${req.url}`);
 
   if (req.method === "GET") {
-    let filePath = path.join(
-      distDir,
-      req.url === "/" ? "index.html" : decodeURIComponent(req.url || "")
-    );
+    let filePath = path.join(distDir, req.url === "/" ? "index.html" : decodeURIComponent(req.url || ""));
 
     const ext = path.extname(filePath);
 
@@ -69,15 +59,12 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
           return;
         }
 
-        const contentType =
-          mimeTypes[ext as keyof typeof mimeTypes] || "text/html";
+        const contentType = mimeTypes[ext as keyof typeof mimeTypes] || "text/html";
         res.writeHead(200, { "Content-Type": contentType });
         res.end(data);
         console.log(`Gönderilen dosya: ${filePath}`);
       });
     });
-  } else if (req.method === "POST" && req.url === "/api/contact") {
-    handlePostRequest(req, res, req.url);
   } else {
     res.writeHead(405, { Allow: "GET, POST" });
     res.end("Method Not Allowed");
@@ -89,6 +76,6 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
  * @function
  * @param {number} PORT - Sunucunun dinleyeceği port numarası.
  */
-server.listen(PORT, () => {
-  console.log(`Sunucu çalışıyor: http://localhost:${PORT}`);
+server.listen(HTTP_PORT, () => {
+  console.log(`Sunucu çalışıyor: http://localhost:${HTTP_PORT}`);
 });

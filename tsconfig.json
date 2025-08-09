@@ -13,14 +13,15 @@
     "esModuleInterop": true,
     "sourceMap": true,
     // Global ortam tanımlamaları: "node" tipi sayesinde `require`, `process`, `__dirname` gibi kavramlar tanınır
-    "types": ["node"],
+    "types": ["node", "react", "react-dom"],
 
     // node_modules içindeki .d.ts dosyaları taranırken hataları atla
     "skipLibCheck": true,
+    
+    "jsx": "react-jsx",
     // Dosya adlarında büyük/küçük harf duyarlılığı zorunlu kılınır (Linux'ta önemlidir)
     "forceConsistentCasingInFileNames": true,
 
-    "jsx": "react-jsx"
   },
 
   // Derlenecek dosyalar ( backend klasöründeki her şey + env.d.ts gibi özel tanımlar)

@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
+import { CONTACTS_URL } from "../../types/urls";
 /**
  * `ContactForm` bileşeni, kullanıcıdan iletişim bilgilerini alıp
  * belirtilen API endpoint'ine (http://localhost:3000/api/contact) POST isteği gönderen bir formdur.
@@ -25,7 +26,7 @@ export const ContactForm = () => {
      */
     const onFinish = async (values) => {
         try {
-            const response = await fetch("http://localhost:4000/api/feedback", {
+            const response = await fetch(CONTACTS_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

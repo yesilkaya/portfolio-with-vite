@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Divider } from "antd";
 import { message as antdMessage } from "antd";
+import { CONTACTS_URL } from "../../types/urls";
 export function FeedbackScreen() {
     const [contacts, setContacts] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -16,12 +17,12 @@ export function FeedbackScreen() {
         fetchContacts();
     }, []);
     const fetchContacts = async () => {
-        const res = await fetch("http://localhost:4000/api/feedback");
+        const res = await fetch(CONTACTS_URL);
         const data = await res.json();
         setContacts(data);
     };
     const handleDelete = async (id) => {
-        const res = await fetch(`http://localhost:4000/api/feedback/${id}`, {
+        const res = await fetch(`${CONTACTS_URL}/${id}`, {
             method: "DELETE",
         });
         if (res.ok) {
@@ -41,7 +42,7 @@ export function FeedbackScreen() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
     const handleSubmitUpdate = async () => {
-        const res = await fetch(`http://localhost:4000/api/feedback/${editId}`, {
+        const res = await fetch(`${CONTACTS_URL}/${editId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),

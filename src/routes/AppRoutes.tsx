@@ -6,7 +6,6 @@ import {Education} from "../components/educaiton/Education";
 import {Services} from "../components/services/Services";
 import {Projects} from "../components/projects/Projects";
 import {ContactForm} from "../components/contact/Contact";
-import {CrudScreen} from "../components/crud/Crud";
 import { FeedbackScreen } from "../components/feedback/Feedback";
 import type { JSX } from "react";
 
@@ -83,7 +82,6 @@ export default function AppRoutes(): JSX.Element {
     <Routes>
       <Route path="/" element={<MainSections />} />
       <Route path="/projects" element={<Projects />} />
-      <Route path="/crud" element={<CrudScreen />} />
       <Route path="/feedback" element={<FeedbackScreen />} />
     </Routes>
   );

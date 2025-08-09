@@ -6,7 +6,6 @@ import { Education } from "../components/educaiton/Education";
 import { Services } from "../components/services/Services";
 import { Projects } from "../components/projects/Projects";
 import { ContactForm } from "../components/contact/Contact";
-import { CrudScreen } from "../components/crud/Crud";
 import { FeedbackScreen } from "../components/feedback/Feedback";
 import { navbar } from "../data/navbar";
 /**
@@ -58,6 +57,6 @@ function MainSections() {
  * @returns {JSX.Element} React Router tarafından yönetilen rota bileşenleri
  */
 export default function AppRoutes() {
-    return (_jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(MainSections, {}) }), _jsx(Route, { path: "/projects", element: _jsx(Projects, {}) }), _jsx(Route, { path: "/crud", element: _jsx(CrudScreen, {}) }), _jsx(Route, { path: "/feedback", element: _jsx(FeedbackScreen, {}) })] }));
+    return (_jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(MainSections, {}) }), _jsx(Route, { path: "/projects", element: _jsx(Projects, {}) }), _jsx(Route, { path: "/feedback", element: _jsx(FeedbackScreen, {}) })] }));
 }
 //# sourceMappingURL=AppRoutes.js.map
