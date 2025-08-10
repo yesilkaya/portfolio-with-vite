@@ -4,6 +4,8 @@ import { constants } from "fs";
 import path from "path";
 import { ROOT_DIR } from "../src/config/paths.js";
 import { HTTP_PORT } from "../src/types/urls.js";
+import { messages } from "../src/messages/Messages.js";
+
 
 /**
  * Dağıtım dizini, statik dosyaların bulunduğu klasör.
@@ -36,7 +38,6 @@ const mimeTypes = {
  * @param {ServerResponse} res - Sunucunun vereceği yanıt.
  */
 const server = createServer((req: IncomingMessage, res: ServerResponse) => {
-  console.log(`${req.method} ${req.url}`);
 
   if (req.method === "GET") {
     let filePath = path.join(distDir, req.url === "/" ? "index.html" : decodeURIComponent(req.url || ""));
@@ -46,7 +47,7 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
     access(filePath, constants.F_OK | constants.R_OK, (err) => {
       if (err && !(ext === ".html" || ext === "")) {
         res.writeHead(404, { "Content-Type": "text/plain" });
-        res.end("404 Not Found");
+        res.end(messages.common.not_found);
         return;
       }
 
@@ -55,19 +56,18 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
       readFile(filePath, (readErr, data) => {
         if (readErr) {
           res.writeHead(500);
-          res.end("Internal Server Error");
+          res.end(messages.common.server_error);
           return;
         }
 
         const contentType = mimeTypes[ext as keyof typeof mimeTypes] || "text/html";
         res.writeHead(200, { "Content-Type": contentType });
         res.end(data);
-        console.log(`Gönderilen dosya: ${filePath}`);
       });
     });
   } else {
     res.writeHead(405, { Allow: "GET, POST" });
-    res.end("Method Not Allowed");
+    res.end(messages.common.not_found);
   }
 });
 

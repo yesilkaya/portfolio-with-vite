@@ -1,11 +1,9 @@
-// frontend/ContactList.tsx
-
 import React, { useState, useEffect } from "react";
 import { ContactUser } from "../../types/user";
 import { Link } from "react-router-dom";
-import { Divider } from "antd";
-import { message as antdMessage } from "antd";
-import { CONTACTS_URL, FEEDBACK_URL } from "../../types/urls";
+import { Divider, message as antdMessage } from "antd";
+import { CONTACTS_URL } from "../../types/urls";
+import { messages } from "../../messages/Messages";
 
 export function FeedbackScreen() {
   const [contacts, setContacts] = useState<ContactUser[]>([]);
@@ -32,9 +30,9 @@ export function FeedbackScreen() {
     });
     if (res.ok) {
       fetchContacts();
-      antdMessage.success("🗑️ Başarıyla silindi");
+      antdMessage.success(messages.feedback.delete_success);
     } else {
-      antdMessage.error("🗑️ Silme Hatası");
+      antdMessage.error(messages.feedback.delete_error);
     }
   };
 
@@ -59,21 +57,15 @@ export function FeedbackScreen() {
     if (res.ok) {
       setEditId(null);
       fetchContacts();
-      alert("✅ Güncelleme başarılı");
+      alert(messages.feedback.update_success);
     } else {
-      alert(`❌ Güncelleme hatası: ${data.error}`);
+      alert(messages.feedback.update_error(data.error));
     }
   };
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        margin: "4rem",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <h2 style={{ textAlign: "center", color: "white" }}>Sizden Gelenler</h2>
+    <div style={{ padding: "2rem", margin: "4rem", fontFamily: "Arial, sans-serif" }}>
+      <h2 style={{ textAlign: "center", color: "white" }}>{messages.feedback.title}</h2>
 
       <ul style={{ listStyle: "none", padding: 0, maxWidth: 600, margin: "auto" }}>
         <Divider style={{ backgroundColor: "white" }} />
@@ -91,16 +83,10 @@ export function FeedbackScreen() {
             }}
           >
             {editId === c.id ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.5rem",
-                }}
-              >
-                <input name="first_name" value={formData.first_name} onChange={handleInputChange} placeholder="İsim" />
-                <input name="last_name" value={formData.last_name} onChange={handleInputChange} placeholder="Soyisim" />
-                <input name="email" value={formData.email} onChange={handleInputChange} placeholder="E-posta" />
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <input name="first_name" value={formData.first_name} onChange={handleInputChange} placeholder={messages.feedback.placeholder_first_name} />
+                <input name="last_name" value={formData.last_name} onChange={handleInputChange} placeholder={messages.feedback.placeholder_last_name} />
+                <input name="email" value={formData.email} onChange={handleInputChange} placeholder={messages.feedback.placeholder_email} />
                 <button
                   onClick={handleSubmitUpdate}
                   style={{
@@ -112,7 +98,7 @@ export function FeedbackScreen() {
                     borderRadius: "4px",
                   }}
                 >
-                  Gönder
+                  {messages.feedback.send_button}
                 </button>
               </div>
             ) : (
@@ -121,15 +107,7 @@ export function FeedbackScreen() {
                   {c.first_name} {c.last_name}
                 </strong>{" "}
                 — <span>{c.email}</span>
-                <div
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    top: 10,
-                    display: "flex",
-                    gap: "0.5rem",
-                  }}
-                >
+                <div style={{ position: "absolute", right: 10, top: 10, display: "flex", gap: "0.5rem" }}>
                   <button onClick={() => handleUpdateClick(c)}>📝</button>
                   <button onClick={() => handleDelete(c.id!)}>🗑️</button>
                 </div>
@@ -148,11 +126,13 @@ export function FeedbackScreen() {
                       >
                         📩 {msg.content}
                         <br />
-                        <span style={{ fontSize: "0.75rem", color: "#888" }}>{new Date(msg.created_at).toLocaleString("tr-TR")}</span>
+                        <span style={{ fontSize: "0.75rem", color: "#888" }}>
+                          {new Date(msg.created_at).toLocaleString("tr-TR")}
+                        </span>
                       </p>
                     ))
                   ) : (
-                    <p style={{ color: "#888" }}>Henüz mesaj yok.</p>
+                    <p style={{ color: "#888" }}>{messages.feedback.no_messages}</p>
                   )}
                 </div>
               </>
@@ -172,7 +152,7 @@ export function FeedbackScreen() {
             marginLeft: "14rem",
           }}
         >
-          {"Yeni Mesaj Gönder"}
+          {messages.feedback.new_message_button}
         </Link>
       </ul>
     </div>

@@ -9,23 +9,20 @@ import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.
 import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
 import { handleCors } from "../src/utils/cors.js";
 import { CONTACTS_PATH, API_PORT, DB_NAME } from "../src/types/urls.js";
+import { messages } from "../src/messages/Messages.js";
 
 const db = await (async () => {
   try {
-    // 1. MySQL sunucusuna bağlan(Database ismi vermediğimiz için sadece mysql sunucusuna bağlanır)
     const serverConn = await mysql.createConnection({
       host: "localhost",
       user: "root",
       password: "",
     });
 
-    // 2. Veritabanı yoksa oluştur
     await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-    // Veritabanı oluşturulduktan sonra bağlantıyı kapat. Çünkü tablo oluşturmak için kuracağımız bağlantıda veritabanı ismi de belirtmemiz gerekiyor. Bu  bağlantıda veritabanı ismi olmadığı için kapatıyoruz.
     await serverConn.end();
-    console.log(`✅ Veritabanı '${DB_NAME}' yoksa oluşturuldu.`);
+    console.log(messages.db.created(DB_NAME));
 
-    // 3. Veritabanına bağlan
     const conn = await mysql.createConnection({
       host: "localhost",
       user: "root",
@@ -33,7 +30,6 @@ const db = await (async () => {
       database: DB_NAME,
     });
 
-    // 4. Tabloları oluştur
     await conn.beginTransaction();
 
     await conn.execute(`
@@ -56,14 +52,13 @@ const db = await (async () => {
     `);
 
     await conn.commit();
-    console.log("✅ Tablolar başarıyla oluşturuldu");
+    console.log(messages.db.tables_created);
     return conn;
   } catch (err) {
-    console.error("❌ Veritabanı kurulurken hata:", err);
+    console.error(messages.db.error, err);
     process.exit(1);
   }
 })();
-
 
 const server = http.createServer(async (req, res) => {
   const parsedUrl = parse(req.url || "", true);
@@ -91,9 +86,10 @@ const server = http.createServer(async (req, res) => {
       sendJSONResponse(res, 200, rows);
     } catch (err) {
       console.error("GET /contacts hatası:", err);
-      return sendErrorResponse(res, "Kullanıcılar alınamadı");
+      return sendErrorResponse(res, messages.get.contacts_error);
     }
   }
+
   // POST: Yeni kayıt
   else if (req.method === "POST" && pathname === CONTACTS_PATH) {
     try {
@@ -102,9 +98,9 @@ const server = http.createServer(async (req, res) => {
         abortEarly: false,
       });
       if (error) {
-        const messages = error.details.map((err) => err.message);
-        return sendErrorResponse(res, messages[0], 400);
-      }
+        const errMsg = error.details.map((err) => err.message);
+        return sendErrorResponse(res, errMsg[0], 400);
+        }
 
       const { first_name, last_name, email, message } = body;
 
@@ -129,13 +125,13 @@ const server = http.createServer(async (req, res) => {
       if (!existing) await db.commit();
 
       sendJSONResponse(res, 201, {
-        message: "Kayıt başarılı",
+        message: messages.post.create_success,
         id: contactId,
       });
     } catch (err: any) {
       await db.rollback();
       console.error("Ekleme hatası:", err);
-      sendErrorResponse(res, "Kayıt eklenemedi");
+      sendErrorResponse(res, messages.post.create_error);
     }
   }
 
@@ -146,8 +142,8 @@ const server = http.createServer(async (req, res) => {
       const { error } = idSchema.validate(id, { abortEarly: false });
 
       if (error) {
-        const messages = error.details.map((err) => err.message);
-        return sendErrorResponse(res, messages[0], 400);
+        const errMsg = error.details.map((err) => err.message);
+        return sendErrorResponse(res, errMsg[0], 400);
       }
 
       // Body validasyonu
@@ -158,8 +154,8 @@ const server = http.createServer(async (req, res) => {
         abortEarly: false,
       });
       if (bodyError) {
-        const messages = bodyError.details.map((err) => err.message);
-        return sendErrorResponse(res, messages[0], 400);
+        const errMsg = bodyError.details.map((err) => err.message);
+        return sendErrorResponse(res, errMsg[0], 400);
       }
 
       const [result] = (await db.execute(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [
@@ -170,16 +166,16 @@ const server = http.createServer(async (req, res) => {
       ])) as [mysql.ResultSetHeader, any];
 
       if (result.affectedRows === 0) {
-        return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
+        return sendErrorResponse(res, messages.common.not_found, 404);
       }
 
-      return sendJSONResponse(res, 200, { message: "Kullanıcı güncellendi" });
+      return sendJSONResponse(res, 200, { message: messages.put.update_success });
     } catch (err: any) {
       if (err?.message?.includes("UNIQUE constraint failed")) {
-        return sendErrorResponse(res, "Bu e-posta başka kullanıcıda kayıtlı", 409);
+        return sendErrorResponse(res, messages.put.update_conflict, 409);
       }
       console.error("Güncelleme hatası:", err);
-      return sendErrorResponse(res, "Güncelleme başarısız");
+      return sendErrorResponse(res, messages.put.update_error);
     }
   }
 
@@ -191,23 +187,24 @@ const server = http.createServer(async (req, res) => {
         abortEarly: false,
       });
       if (error) {
-        const messages = error.details.map((err) => err.message);
-        return sendErrorResponse(res, messages[0], 400);
+        const errMsg = error.details.map((err) => err.message);
+        return sendErrorResponse(res, errMsg[0], 400);
       }
 
       const [result] = (await db.execute(`DELETE FROM contact WHERE id = ?`, [id])) as [mysql.ResultSetHeader, any];
       if (result.affectedRows === 0) {
-        return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
+        return sendErrorResponse(res, messages.common.not_found, 404);
       }
-      return sendJSONResponse(res, 200, { message: "Kullanıcı silindi" });
+      return sendJSONResponse(res, 200, { message: messages.delete.delete_success });
     } catch (err) {
       console.error("Silme hatası:", err);
-      return sendErrorResponse(res, "Silme hatası");
+      return sendErrorResponse(res, messages.delete.delete_error);
     }
   }
+
   // 404: Bilinmeyen endpoint
   else {
-    return sendErrorResponse(res, "Böyle bir endpoint yok", 404);
+    return sendErrorResponse(res, messages.http.endpoint_not_found, 404);
   }
 });
 

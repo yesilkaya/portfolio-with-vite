@@ -1,21 +1,8 @@
-/**
- * @file ContactForm.tsx
- * @description Kullanıcıların ad, soyad, email ve mesaj bilgilerini girerek iletişim kurabileceği form bileşeni.
- * Form `antd` kütüphanesi ile oluşturulmuş olup, başarılı gönderim sonrası form temizlenir.
- */
-
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
-import { CONTACTS_URL,FEEDBACK_URL } from "../../types/urls";
-
-/**
- * @typedef {Object} ContactFormValues
- * @property {string} firstName - Kullanıcının adı.
- * @property {string} lastName - Kullanıcının soyadı.
- * @property {string} email - Kullanıcının email adresi.
- * @property {string} message - Kullanıcının gönderdiği mesaj içeriği.
- */
+import { CONTACTS_URL } from "../../types/urls";
+import { messages } from "../../messages/Messages";
 
 interface ContactFormValues {
   firstName: string;
@@ -24,32 +11,10 @@ interface ContactFormValues {
   message: string;
 }
 
-/**
- * `ContactForm` bileşeni, kullanıcıdan iletişim bilgilerini alıp
- * belirtilen API endpoint'ine (http://localhost:3000/api/contact) POST isteği gönderen bir formdur.
- *
- * Özellikler:
- * - Tüm alanlar zorunludur.
- * - Email alanı geçerli formatta olmalıdır.
- * - Gönderim başarılıysa form sıfırlanır ve kullanıcıya bilgi verilir.
- * - Hata durumunda kullanıcı bilgilendirilir.
- *
- * @component
- * @returns {JSX.Element} İletişim formunu içeren React bileşeni.
- */
-
 export const ContactForm: React.FC = () => {
   const [form] = Form.useForm<ContactFormValues>();
 
-  /**
-   * Form başarıyla gönderildiğinde çağrılır.
-   *
-   * @async
-   * @param {ContactFormValues} values - Formdan gelen değerler.
-   * @returns {Promise<void>}
-   */
   const onFinish = async (values: ContactFormValues) => {
-    
     try {
       const response = await fetch(CONTACTS_URL, {
         method: "POST",
@@ -63,21 +28,20 @@ export const ContactForm: React.FC = () => {
           message: values.message,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         form.resetFields();
-        alert(`Mesaj başarıyla gönderildi! ✉️\n${data.message}`);
+        alert(messages.contact.send_success(data.message));
       } else {
-        alert(`❌ Hata: ${data.error}`);
+        alert(messages.contact.send_error(data.error));
       }
     } catch (error) {
-      console.error("İstek gönderilirken hata oluştu:", error);
-      alert("⚠️ Sunucuya bağlanılamadı.");
+      console.error(messages.common.action_error, error);
+      alert(messages.contact.send_error);
     }
   };
-  
 
   return (
     <Container>
@@ -91,7 +55,7 @@ export const ContactForm: React.FC = () => {
             <Form.Item
               label={<LabelSpan>Ad</LabelSpan>}
               name="firstName"
-              rules={[{ required: true, message: "Adınızı giriniz!" }]}
+              rules={[{ required: true, message: messages.contact.first_name_required }]}
             >
               <Input size="large" placeholder="Adınız" />
             </Form.Item>
@@ -101,7 +65,7 @@ export const ContactForm: React.FC = () => {
             <Form.Item
               label={<LabelSpan>Soyad</LabelSpan>}
               name="lastName"
-              rules={[{ required: true, message: "Soyadınızı giriniz!" }]}
+              rules={[{ required: true, message: messages.contact.last_name_required }]}
             >
               <Input size="large" placeholder="Soyadınız" />
             </Form.Item>
@@ -112,8 +76,8 @@ export const ContactForm: React.FC = () => {
               label={<LabelSpan>Email</LabelSpan>}
               name="email"
               rules={[
-                { required: true, message: "Email adresinizi giriniz!" },
-                { type: "email", message: "Geçerli bir email giriniz!" },
+                { required: true, message: messages.contact.email_required },
+                { type: "email", message: messages.contact.email_invalid },
               ]}
             >
               <Input size="large" placeholder="ornek@mail.com" />
@@ -126,9 +90,7 @@ export const ContactForm: React.FC = () => {
             <Form.Item
               label={<LabelSpan>Mesajınız</LabelSpan>}
               name="message"
-              rules={[
-                { required: true, message: "Lütfen mesajınızı yazınız!" },
-              ]}
+              rules={[{ required: true, message: messages.contact.message_required }]}
             >
               <Input.TextArea
                 rows={5}
