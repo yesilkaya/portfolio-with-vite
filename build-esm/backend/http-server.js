@@ -1,9 +1,10 @@
+import "dotenv/config";
 import { createServer } from "http";
 import { readFile, access } from "fs";
 import { constants } from "fs";
 import path from "path";
 import { ROOT_DIR } from "../src/config/paths.js";
-import { HTTP_PORT } from "../src/types/urls.js";
+import { messages } from "../src/messages/Messages.js";
 /**
  * Dağıtım dizini, statik dosyaların bulunduğu klasör.
  * @constant {string}
@@ -33,14 +34,13 @@ const mimeTypes = {
  * @param {ServerResponse} res - Sunucunun vereceği yanıt.
  */
 const server = createServer((req, res) => {
-    console.log(`${req.method} ${req.url}`);
     if (req.method === "GET") {
         let filePath = path.join(distDir, req.url === "/" ? "index.html" : decodeURIComponent(req.url || ""));
         const ext = path.extname(filePath);
         access(filePath, constants.F_OK | constants.R_OK, (err) => {
             if (err && !(ext === ".html" || ext === "")) {
                 res.writeHead(404, { "Content-Type": "text/plain" });
-                res.end("404 Not Found");
+                res.end(messages.common.not_found);
                 return;
             }
             if (err)
@@ -48,19 +48,18 @@ const server = createServer((req, res) => {
             readFile(filePath, (readErr, data) => {
                 if (readErr) {
                     res.writeHead(500);
-                    res.end("Internal Server Error");
+                    res.end(messages.common.server_error);
                     return;
                 }
                 const contentType = mimeTypes[ext] || "text/html";
                 res.writeHead(200, { "Content-Type": contentType });
                 res.end(data);
-                console.log(`Gönderilen dosya: ${filePath}`);
             });
         });
     }
     else {
         res.writeHead(405, { Allow: "GET, POST" });
-        res.end("Method Not Allowed");
+        res.end(messages.common.not_found);
     }
 });
 /**
@@ -68,7 +67,7 @@ const server = createServer((req, res) => {
  * @function
  * @param {number} PORT - Sunucunun dinleyeceği port numarası.
  */
-server.listen(HTTP_PORT, () => {
-    console.log(`Sunucu çalışıyor: http://localhost:${HTTP_PORT}`);
+server.listen(process.env.HTTP_PORT, () => {
+    console.log(`Sunucu çalışıyor: http://localhost:${process.env.HTTP_PORT}`);
 });
 //# sourceMappingURL=http-server.js.map

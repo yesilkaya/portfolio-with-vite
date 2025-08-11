@@ -1,4 +1,4 @@
-// src/server.ts
+import "dotenv/config";
 import http from "http";
 import mysql from "mysql2/promise";
 import { parse } from "url";
@@ -8,8 +8,9 @@ import { FormData } from "../src/types/user.js";
 import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
 import { handleCors } from "../src/utils/cors.js";
-import { CONTACTS_PATH, API_PORT, DB_NAME } from "../src/types/urls.js";
+import { CONTACTS_PATH } from "../src/types/urls.js";
 import { messages } from "../src/messages/Messages.js";
+import { requireAdmin, isAdmin } from "../src/auth/basic.js";
 
 const db = await (async () => {
   try {
@@ -19,15 +20,15 @@ const db = await (async () => {
       password: "",
     });
 
-    await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
+    await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
     await serverConn.end();
-    console.log(messages.db.created(DB_NAME));
+    console.log(messages.db.created(process.env.DB_NAME ?? ""));
 
     const conn = await mysql.createConnection({
       host: "localhost",
       user: "root",
       password: "",
-      database: DB_NAME,
+      database: process.env.DB_NAME,
     });
 
     await conn.beginTransaction();
@@ -66,9 +67,10 @@ const server = http.createServer(async (req, res) => {
 
   const shouldStop = handleCors(req, res);
   if (shouldStop) return;
-  
+
   // GET /contacts
-  if (req.method === "GET" && pathname === CONTACTS_PATH) {
+  else if (req.method === "GET" && pathname === CONTACTS_PATH) {
+    if (!(await requireAdmin(req, res))) return;
     try {
       const [rows] = await db.query(`
       SELECT c.*, 
@@ -76,12 +78,18 @@ const server = http.createServer(async (req, res) => {
         JSON_ARRAYAGG(
           JSON_OBJECT('id', m.id, 'content', m.content, 'created_at', m.created_at)
         ),
-        JSON_ARRAY()
-      ) AS messages
-      FROM contact c
-      LEFT JOIN messages m ON c.id = m.contact_id
-      GROUP BY c.id
-    `);
+                JSON_ARRAY()
+              ) AS messages
+              FROM contact c
+              LEFT JOIN messages m ON c.id = m.contact_id
+              GROUP BY c.id
+              ORDER BY c.id DESC
+            `);
+
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
+      res.setHeader("Vary", "Origin, Authorization");
 
       sendJSONResponse(res, 200, rows);
     } catch (err) {
@@ -92,6 +100,12 @@ const server = http.createServer(async (req, res) => {
 
   // POST: Yeni kayıt
   else if (req.method === "POST" && pathname === CONTACTS_PATH) {
+    if (await isAdmin(req)) {
+      res.statusCode = 403;
+      return res.end("Admin cannot create");
+    }
+    let txStarted = false;
+
     try {
       const body = await parseRequestBody<FormData>(req);
       const { error } = postBodySchema.validate(body, {
@@ -100,11 +114,11 @@ const server = http.createServer(async (req, res) => {
       if (error) {
         const errMsg = error.details.map((err) => err.message);
         return sendErrorResponse(res, errMsg[0], 400);
-        }
+      }
 
       const { first_name, last_name, email, message } = body;
 
-      const [rows] = await db.execute("SELECT * FROM contact WHERE email = ?", [email]);
+      const [rows] = await db.execute("SELECT id FROM contact WHERE email = ?", [email]);
       const existing = (rows as any[])[0];
 
       let contactId: number;
@@ -112,6 +126,7 @@ const server = http.createServer(async (req, res) => {
         contactId = existing.id;
       } else {
         await db.beginTransaction();
+        txStarted = true;
 
         const result = (await db.execute(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [
           first_name,
@@ -123,13 +138,19 @@ const server = http.createServer(async (req, res) => {
       await db.execute("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
 
       if (!existing) await db.commit();
+      txStarted = false;
 
       sendJSONResponse(res, 201, {
         message: messages.post.create_success,
         id: contactId,
       });
     } catch (err: any) {
-      await db.rollback();
+      if (txStarted) {
+        try {
+          await db.rollback();
+          txStarted = false;
+        } catch {}
+      }
       console.error("Ekleme hatası:", err);
       sendErrorResponse(res, messages.post.create_error);
     }
@@ -137,6 +158,8 @@ const server = http.createServer(async (req, res) => {
 
   // PUT /contacts/:id
   else if (req.method === "PUT" && pathname?.startsWith(CONTACTS_PATH + "/")) {
+    if (!(await requireAdmin(req, res))) return;
+
     try {
       const id = Number(pathname.split("/")[2]);
       const { error } = idSchema.validate(id, { abortEarly: false });
@@ -171,7 +194,7 @@ const server = http.createServer(async (req, res) => {
 
       return sendJSONResponse(res, 200, { message: messages.put.update_success });
     } catch (err: any) {
-      if (err?.message?.includes("UNIQUE constraint failed")) {
+      if (err?.code === "ER_DUP_ENTRY") {
         return sendErrorResponse(res, messages.put.update_conflict, 409);
       }
       console.error("Güncelleme hatası:", err);
@@ -181,6 +204,8 @@ const server = http.createServer(async (req, res) => {
 
   // DELETE: Sil
   else if (req.method === "DELETE" && pathname.startsWith(CONTACTS_PATH + "/")) {
+    if (!(await requireAdmin(req, res))) return;
+
     try {
       const id = Number(pathname.split("/")[2]);
       const { error } = idSchema.validate(id, {
@@ -208,6 +233,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(API_PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${API_PORT}`);
+server.listen(process.env.API_PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${process.env.API_PORT}`);
 });

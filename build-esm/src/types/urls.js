@@ -1,10 +1,6 @@
 export const CONTACTS_PATH = "/contacts";
 export const FEEDBACK_PATH = "/api/feedback";
-export const API_PORT = 4000;
-export const HTTP_PORT = 3000;
-export const DEBUG_PORT = 5173;
-export const DB_NAME = "esarj";
-export const BASE_URL = `http://localhost:${API_PORT}`;
+export const BASE_URL = `http://localhost:4000`;
 export const CONTACTS_URL = `${BASE_URL}${CONTACTS_PATH}`; // mysql-server'ın endpoint'i
 export const FEEDBACK_URL = `${BASE_URL}${FEEDBACK_PATH}`; // sqlite-server'ın endpoint'i
 //# sourceMappingURL=urls.js.map

@@ -1,9 +1,5 @@
 export declare const CONTACTS_PATH = "/contacts";
 export declare const FEEDBACK_PATH = "/api/feedback";
-export declare const API_PORT = 4000;
-export declare const HTTP_PORT = 3000;
-export declare const DEBUG_PORT = 5173;
-export declare const DB_NAME = "esarj";
 export declare const BASE_URL = "http://localhost:4000";
 export declare const CONTACTS_URL = "http://localhost:4000/contacts";
 export declare const FEEDBACK_URL = "http://localhost:4000/api/feedback";

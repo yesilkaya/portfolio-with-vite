@@ -1,9 +1,9 @@
+import "dotenv/config";
 import { createServer, type IncomingMessage, type ServerResponse } from "http";
 import { readFile, access } from "fs";
 import { constants } from "fs";
 import path from "path";
 import { ROOT_DIR } from "../src/config/paths.js";
-import { HTTP_PORT } from "../src/types/urls.js";
 import { messages } from "../src/messages/Messages.js";
 
 
@@ -76,6 +76,6 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
  * @function
  * @param {number} PORT - Sunucunun dinleyeceği port numarası.
  */
-server.listen(HTTP_PORT, () => {
-  console.log(`Sunucu çalışıyor: http://localhost:${HTTP_PORT}`);
+server.listen(process.env.HTTP_PORT, () => {
+  console.log(`Sunucu çalışıyor: http://localhost:${process.env.HTTP_PORT}`);
 });

@@ -1,4 +1,4 @@
-// src/server.ts
+import "dotenv/config";
 import http from "http";
 import mysql from "mysql2/promise";
 import { parse } from "url";
@@ -6,28 +6,25 @@ import { parseRequestBody } from "../src/utils/requestUtils.js";
 import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
 import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
 import { handleCors } from "../src/utils/cors.js";
-import { CONTACTS_PATH, API_PORT, DB_NAME } from "../src/types/urls.js";
+import { CONTACTS_PATH } from "../src/types/urls.js";
+import { messages } from "../src/messages/Messages.js";
+import { requireAdmin, isAdmin } from "../src/auth/basic.js";
 const db = await (async () => {
     try {
-        // 1. MySQL sunucusuna bağlan(Database ismi vermediğimiz için sadece mysql sunucusuna bağlanır)
         const serverConn = await mysql.createConnection({
             host: "localhost",
             user: "root",
             password: "",
         });
-        // 2. Veritabanı yoksa oluştur
-        await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-        // Veritabanı oluşturulduktan sonra bağlantıyı kapat. Çünkü tablo oluşturmak için kuracağımız bağlantıda veritabanı ismi de belirtmemiz gerekiyor. Bu  bağlantıda veritabanı ismi olmadığı için kapatıyoruz.
+        await serverConn.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
         await serverConn.end();
-        console.log(`✅ Veritabanı '${DB_NAME}' yoksa oluşturuldu.`);
-        // 3. Veritabanına bağlan
+        console.log(messages.db.created(process.env.DB_NAME ?? ""));
         const conn = await mysql.createConnection({
             host: "localhost",
             user: "root",
             password: "",
-            database: DB_NAME,
+            database: process.env.DB_NAME,
         });
-        // 4. Tabloları oluştur
         await conn.beginTransaction();
         await conn.execute(`
       CREATE TABLE IF NOT EXISTS contact (
@@ -46,25 +43,12 @@ const db = await (async () => {
         FOREIGN KEY (contact_id) REFERENCES contact(id) ON DELETE CASCADE
       );
     `);
-        try {
-            await conn.execute(`
-        CREATE INDEX idx_messages_contact_id ON messages(contact_id);
-      `);
-        }
-        catch (err) {
-            if (err.code === "ER_DUP_KEYNAME") {
-                console.log("ℹ️ Index zaten var, atlandı.");
-            }
-            else {
-                throw err;
-            }
-        }
         await conn.commit();
-        console.log("✅ Tablolar başarıyla oluşturuldu");
+        console.log(messages.db.tables_created);
         return conn;
     }
     catch (err) {
-        console.error("❌ Veritabanı kurulurken hata:", err);
+        console.error(messages.db.error, err);
         process.exit(1);
     }
 })();
@@ -75,7 +59,9 @@ const server = http.createServer(async (req, res) => {
     if (shouldStop)
         return;
     // GET /contacts
-    if (req.method === "GET" && pathname === CONTACTS_PATH) {
+    else if (req.method === "GET" && pathname === CONTACTS_PATH) {
+        if (!(await requireAdmin(req, res)))
+            return;
         try {
             const [rows] = await db.query(`
       SELECT c.*, 
@@ -83,32 +69,42 @@ const server = http.createServer(async (req, res) => {
         JSON_ARRAYAGG(
           JSON_OBJECT('id', m.id, 'content', m.content, 'created_at', m.created_at)
         ),
-        JSON_ARRAY()
-      ) AS messages
-      FROM contact c
-      LEFT JOIN messages m ON c.id = m.contact_id
-      GROUP BY c.id
-    `);
+                JSON_ARRAY()
+              ) AS messages
+              FROM contact c
+              LEFT JOIN messages m ON c.id = m.contact_id
+              GROUP BY c.id
+              ORDER BY c.id DESC
+            `);
+            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+            res.setHeader("Pragma", "no-cache");
+            res.setHeader("Expires", "0");
+            res.setHeader("Vary", "Origin, Authorization");
             sendJSONResponse(res, 200, rows);
         }
         catch (err) {
             console.error("GET /contacts hatası:", err);
-            return sendErrorResponse(res, "Kullanıcılar alınamadı");
+            return sendErrorResponse(res, messages.get.contacts_error);
         }
     }
     // POST: Yeni kayıt
     else if (req.method === "POST" && pathname === CONTACTS_PATH) {
+        if (await isAdmin(req)) {
+            res.statusCode = 403;
+            return res.end("Admin cannot create");
+        }
+        let txStarted = false;
         try {
             const body = await parseRequestBody(req);
             const { error } = postBodySchema.validate(body, {
                 abortEarly: false,
             });
             if (error) {
-                const messages = error.details.map((err) => err.message);
-                return sendErrorResponse(res, messages[0], 400);
+                const errMsg = error.details.map((err) => err.message);
+                return sendErrorResponse(res, errMsg[0], 400);
             }
             const { first_name, last_name, email, message } = body;
-            const [rows] = await db.execute("SELECT * FROM contact WHERE email = ?", [email]);
+            const [rows] = await db.execute("SELECT id FROM contact WHERE email = ?", [email]);
             const existing = rows[0];
             let contactId;
             if (existing) {
@@ -116,6 +112,7 @@ const server = http.createServer(async (req, res) => {
             }
             else {
                 await db.beginTransaction();
+                txStarted = true;
                 const result = (await db.execute(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [
                     first_name,
                     last_name,
@@ -126,25 +123,34 @@ const server = http.createServer(async (req, res) => {
             await db.execute("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
             if (!existing)
                 await db.commit();
+            txStarted = false;
             sendJSONResponse(res, 201, {
-                message: "Kayıt başarılı",
+                message: messages.post.create_success,
                 id: contactId,
             });
         }
         catch (err) {
-            await db.rollback();
+            if (txStarted) {
+                try {
+                    await db.rollback();
+                    txStarted = false;
+                }
+                catch { }
+            }
             console.error("Ekleme hatası:", err);
-            sendErrorResponse(res, "Kayıt eklenemedi");
+            sendErrorResponse(res, messages.post.create_error);
         }
     }
     // PUT /contacts/:id
     else if (req.method === "PUT" && pathname?.startsWith(CONTACTS_PATH + "/")) {
+        if (!(await requireAdmin(req, res)))
+            return;
         try {
             const id = Number(pathname.split("/")[2]);
             const { error } = idSchema.validate(id, { abortEarly: false });
             if (error) {
-                const messages = error.details.map((err) => err.message);
-                return sendErrorResponse(res, messages[0], 400);
+                const errMsg = error.details.map((err) => err.message);
+                return sendErrorResponse(res, errMsg[0], 400);
             }
             // Body validasyonu
             const { first_name, last_name, email } = await parseRequestBody(req);
@@ -153,8 +159,8 @@ const server = http.createServer(async (req, res) => {
                 abortEarly: false,
             });
             if (bodyError) {
-                const messages = bodyError.details.map((err) => err.message);
-                return sendErrorResponse(res, messages[0], 400);
+                const errMsg = bodyError.details.map((err) => err.message);
+                return sendErrorResponse(res, errMsg[0], 400);
             }
             const [result] = (await db.execute(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [
                 first_name,
@@ -163,46 +169,48 @@ const server = http.createServer(async (req, res) => {
                 id,
             ]));
             if (result.affectedRows === 0) {
-                return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
+                return sendErrorResponse(res, messages.common.not_found, 404);
             }
-            return sendJSONResponse(res, 200, { message: "Kullanıcı güncellendi" });
+            return sendJSONResponse(res, 200, { message: messages.put.update_success });
         }
         catch (err) {
-            if (err?.message?.includes("UNIQUE constraint failed")) {
-                return sendErrorResponse(res, "Bu e-posta başka kullanıcıda kayıtlı", 409);
+            if (err?.code === "ER_DUP_ENTRY") {
+                return sendErrorResponse(res, messages.put.update_conflict, 409);
             }
             console.error("Güncelleme hatası:", err);
-            return sendErrorResponse(res, "Güncelleme başarısız");
+            return sendErrorResponse(res, messages.put.update_error);
         }
     }
     // DELETE: Sil
     else if (req.method === "DELETE" && pathname.startsWith(CONTACTS_PATH + "/")) {
+        if (!(await requireAdmin(req, res)))
+            return;
         try {
             const id = Number(pathname.split("/")[2]);
             const { error } = idSchema.validate(id, {
                 abortEarly: false,
             });
             if (error) {
-                const messages = error.details.map((err) => err.message);
-                return sendErrorResponse(res, messages[0], 400);
+                const errMsg = error.details.map((err) => err.message);
+                return sendErrorResponse(res, errMsg[0], 400);
             }
             const [result] = (await db.execute(`DELETE FROM contact WHERE id = ?`, [id]));
             if (result.affectedRows === 0) {
-                return sendErrorResponse(res, "Kullanıcı bulunamadı", 404);
+                return sendErrorResponse(res, messages.common.not_found, 404);
             }
-            return sendJSONResponse(res, 200, { message: "Kullanıcı silindi" });
+            return sendJSONResponse(res, 200, { message: messages.delete.delete_success });
         }
         catch (err) {
             console.error("Silme hatası:", err);
-            return sendErrorResponse(res, "Silme hatası");
+            return sendErrorResponse(res, messages.delete.delete_error);
         }
     }
     // 404: Bilinmeyen endpoint
     else {
-        return sendErrorResponse(res, "Böyle bir endpoint yok", 404);
+        return sendErrorResponse(res, messages.http.endpoint_not_found, 404);
     }
 });
-server.listen(API_PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${API_PORT}`);
+server.listen(process.env.API_PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${process.env.API_PORT}`);
 });
 //# sourceMappingURL=mysql-server.js.map

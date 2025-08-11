@@ -3,6 +3,7 @@ import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
 import { CONTACTS_URL } from "../../types/urls";
 import { messages } from "../../messages/Messages";
+import { getAuthHeader } from "../../auth/credentials";
 
 interface ContactFormValues {
   firstName: string;
@@ -13,33 +14,71 @@ interface ContactFormValues {
 
 export const ContactForm: React.FC = () => {
   const [form] = Form.useForm<ContactFormValues>();
+  const [submitting, setSubmitting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (getAuthHeader().Authorization) {
+      alert("Admin girişinde yeni mesaj oluşturma kapalı.");
+    }
+  }, []); 
+  
+  const isAdmin = !!getAuthHeader().Authorization;
 
   const onFinish = async (values: ContactFormValues) => {
+
+    if (isAdmin) {
+      alert
+      return;
+    }
+    
+    // Trim ve basic kurallar
+    const payload = {
+      first_name: values.firstName.trim(),
+      last_name: (values.lastName ?? "").trim(),
+      email: values.email.trim(),
+      message: values.message.trim(),
+    };
+
+    // Uzunluk sınırları (DB ile uyum)
+    if (payload.first_name.length > 100) return alert("Ad en fazla 100 karakter olabilir.");
+    if (payload.last_name.length > 100) return alert("Soyad en fazla 100 karakter olabilir.");
+    if (payload.email.length > 255) return alert("E-posta en fazla 255 karakter olabilir.");
+
+    setSubmitting(true);
     try {
       const response = await fetch(CONTACTS_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: values.firstName,
-          last_name: values.lastName,
-          email: values.email,
-          message: values.message,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "omit",   
+        cache: "no-store",    
       });
+      // 403: Admin modunda yeni oluşturma kapalı
+      if (response.status === 403) {
+        alert("Admin girişinde yeni mesaj oluşturma kapalı.");
+        return;
+      }
 
-      const data = await response.json();
+      // JSON güvenli parse
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch {
+        // metin dönebilir
+      }
 
       if (response.ok) {
         form.resetFields();
-        alert(messages.contact.send_success(data.message));
+        alert(messages.contact.send_success(data?.message ?? "Gönderildi"));
       } else {
-        alert(messages.contact.send_error(data.error));
+        const errText = data?.error ?? "Gönderilemedi";
+        alert(messages.contact.send_error(errText));
       }
     } catch (error) {
       console.error(messages.common.action_error, error);
-      alert(messages.contact.send_error);
+      alert(messages.contact.send_error("Beklenmeyen bir hata oluştu"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -49,15 +88,18 @@ export const ContactForm: React.FC = () => {
         Bana <span>Ulaş</span>
       </Title>
 
-      <Form name="contact-us" layout="vertical" form={form} onFinish={onFinish}>
+      <Form name="contact-us" layout="vertical" form={form} onFinish={onFinish} disabled={isAdmin}>
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item
               label={<LabelSpan>Ad</LabelSpan>}
               name="firstName"
-              rules={[{ required: true, message: messages.contact.first_name_required }]}
+              rules={[
+                { required: true, message: messages.contact.first_name_required },
+                { max: 100, message: "Ad en fazla 100 karakter olabilir." },
+              ]}
             >
-              <Input size="large" placeholder="Adınız" />
+              <Input size="large" placeholder="Adınız" autoComplete="given-name" />
             </Form.Item>
           </Col>
 
@@ -65,7 +107,7 @@ export const ContactForm: React.FC = () => {
             <Form.Item
               label={<LabelSpan>Soyad</LabelSpan>}
               name="lastName"
-              rules={[{ required: true, message: messages.contact.last_name_required }]}
+              rules={[{ max: 100, message: "Soyad en fazla 100 karakter olabilir." }]} // ← required: false
             >
               <Input size="large" placeholder="Soyadınız" />
             </Form.Item>
@@ -78,9 +120,10 @@ export const ContactForm: React.FC = () => {
               rules={[
                 { required: true, message: messages.contact.email_required },
                 { type: "email", message: messages.contact.email_invalid },
+                { max: 255, message: "E-posta en fazla 255 karakter olabilir." },
               ]}
             >
-              <Input size="large" placeholder="ornek@mail.com" />
+              <Input size="large" placeholder="ornek@mail.com" type="email" inputMode="email" autoComplete="email" />
             </Form.Item>
           </Col>
         </Row>
@@ -105,7 +148,7 @@ export const ContactForm: React.FC = () => {
         <Row>
           <Col span={24} style={{ textAlign: "center" }}>
             <Form.Item>
-              <StyledButton type="primary" htmlType="submit" size="large">
+              <StyledButton type="primary" htmlType="submit" size="large" loading={submitting} disabled={submitting}>
                 Gönder
               </StyledButton>
             </Form.Item>

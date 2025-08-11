@@ -1,4 +1,5 @@
 // backend/sqlite-crud-server.ts
+import "dotenv/config";
 import http from "http";
 import { parse } from "url";
 import { sendJSONResponse, sendErrorResponse } from "../src/utils/responseUtils.js";
@@ -8,7 +9,6 @@ import { ROOT_DIR } from "../src/config/paths.js";
 import path from "path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import { API_PORT } from "../src/types/urls.js";
 import { postBodySchema, idSchema, putBodySchema } from "../src/utils/form-validation.js";
 import { FEEDBACK_PATH } from "../src/types/urls.js";
 import { handleCors } from "../src/utils/cors.js";
@@ -213,6 +213,6 @@ const server = http.createServer((req, res) => {
   })(); // immediately invoked async fn
 });
 
-server.listen(API_PORT, () => {
-  console.log(`Sunucu http://localhost:${API_PORT} üzerinde çalışıyor.`);
+server.listen(process.env.API_PORT, () => {
+  console.log(`Sunucu http://localhost:${process.env.API_PORT} üzerinde çalışıyor.`);
 });
