@@ -4,22 +4,14 @@ import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
 import { CONTACTS_URL } from "../../types/urls";
 import { messages } from "../../messages/Messages";
-import { message } from "antd";
 import { getAuthHeader } from "../../auth/credentials";
 export const ContactForm = () => {
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = React.useState(false);
-    React.useEffect(() => {
-        if (getAuthHeader().Authorization) {
-            message.warning("Admin girişinde yeni mesaj oluşturma kapalı.");
-        }
-    }, []);
     const isAdmin = !!getAuthHeader().Authorization;
     const onFinish = async (values) => {
-        if (isAdmin) {
-            message.warning("Admin girişinde yeni mesaj oluşturma kapalı.");
+        if (isAdmin)
             return;
-        }
         // Trim ve basic kurallar
         const payload = {
             first_name: values.firstName.trim(),
@@ -29,11 +21,11 @@ export const ContactForm = () => {
         };
         // Uzunluk sınırları (DB ile uyum)
         if (payload.first_name.length > 100)
-            return message.error("Ad en fazla 100 karakter olabilir.");
+            return alert("Ad en fazla 100 karakter olabilir.");
         if (payload.last_name.length > 100)
-            return message.error("Soyad en fazla 100 karakter olabilir.");
+            return alert("Soyad en fazla 100 karakter olabilir.");
         if (payload.email.length > 255)
-            return message.error("E-posta en fazla 255 karakter olabilir.");
+            return alert("E-posta en fazla 255 karakter olabilir.");
         setSubmitting(true);
         try {
             const response = await fetch(CONTACTS_URL, {
@@ -45,7 +37,6 @@ export const ContactForm = () => {
             });
             // 403: Admin modunda yeni oluşturma kapalı
             if (response.status === 403) {
-                message.warning("Admin girişinde yeni mesaj oluşturma kapalı.");
                 return;
             }
             // JSON güvenli parse
@@ -58,16 +49,16 @@ export const ContactForm = () => {
             }
             if (response.ok) {
                 form.resetFields();
-                message.success(messages.contact.send_success(data?.message ?? "Gönderildi"));
+                alert(messages.contact.send_success(data?.message ?? "Gönderildi"));
             }
             else {
                 const errText = data?.error ?? "Gönderilemedi";
-                message.error(messages.contact.send_error(errText));
+                alert(messages.contact.send_error(errText));
             }
         }
         catch (error) {
             console.error(messages.common.action_error, error);
-            message.error(messages.contact.send_error("Beklenmeyen bir hata oluştu"));
+            alert(messages.contact.send_error("Beklenmeyen bir hata oluştu"));
         }
         finally {
             setSubmitting(false);

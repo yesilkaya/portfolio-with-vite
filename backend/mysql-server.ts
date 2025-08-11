@@ -1,5 +1,5 @@
 import "dotenv/config";
-import http from "http";
+import https from "https";
 import mysql from "mysql2/promise";
 import { parse } from "url";
 import { parseRequestBody } from "../src/utils/requestUtils.js";
@@ -11,6 +11,17 @@ import { handleCors } from "../src/utils/cors.js";
 import { CONTACTS_PATH } from "../src/types/urls.js";
 import { messages } from "../src/messages/Messages.js";
 import { requireAdmin, isAdmin } from "../src/auth/basic.js";
+
+import fs from "fs";
+import path from "path";
+
+
+import { ROOT_DIR } from "../src/config/paths.js";
+
+const sslOptions = {
+  key: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mykey.key")),
+  cert: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mycert.crt")),
+};
 
 const db = await (async () => {
   try {
@@ -61,7 +72,7 @@ const db = await (async () => {
   }
 })();
 
-const server = http.createServer(async (req, res) => {
+const server = https.createServer(sslOptions, async (req, res) => {
   const parsedUrl = parse(req.url || "", true);
   const pathname = parsedUrl.pathname || "";
 
@@ -234,5 +245,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(process.env.API_PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${process.env.API_PORT}`);
+  console.log(`🚀 Server running on https://localhost:${process.env.API_PORT}`);
 });

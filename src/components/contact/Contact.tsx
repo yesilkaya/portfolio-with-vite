@@ -15,21 +15,12 @@ interface ContactFormValues {
 export const ContactForm: React.FC = () => {
   const [form] = Form.useForm<ContactFormValues>();
   const [submitting, setSubmitting] = React.useState(false);
-
-  React.useEffect(() => {
-    if (getAuthHeader().Authorization) {
-      alert("Admin girişinde yeni mesaj oluşturma kapalı.");
-    }
-  }, []); 
   
   const isAdmin = !!getAuthHeader().Authorization;
 
   const onFinish = async (values: ContactFormValues) => {
 
-    if (isAdmin) {
-      alert
-      return;
-    }
+    if (isAdmin) return;
     
     // Trim ve basic kurallar
     const payload = {
@@ -55,7 +46,6 @@ export const ContactForm: React.FC = () => {
       });
       // 403: Admin modunda yeni oluşturma kapalı
       if (response.status === 403) {
-        alert("Admin girişinde yeni mesaj oluşturma kapalı.");
         return;
       }
 

@@ -2,7 +2,7 @@
 import { IncomingMessage, ServerResponse } from "http";
 
 export function handleCors(req: IncomingMessage, res: ServerResponse): boolean {
-  const allowedOrigins = [`http://localhost:${process.env.HTTP_PORT}`, `http://localhost:${process.env.DEBUG_PORT}`];
+  const allowedOrigins = [`https://localhost:${process.env.HTTP_PORT}`, `https://localhost:${process.env.DEBUG_PORT}`];
   const origin = req.headers.origin;
 
   if (origin && allowedOrigins.includes(origin)) {

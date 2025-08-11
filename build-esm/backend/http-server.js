@@ -68,6 +68,6 @@ const server = createServer((req, res) => {
  * @param {number} PORT - Sunucunun dinleyeceği port numarası.
  */
 server.listen(process.env.HTTP_PORT, () => {
-    console.log(`Sunucu çalışıyor: http://localhost:${process.env.HTTP_PORT}`);
+    console.log(`Sunucu çalışıyor: https://localhost:${process.env.HTTP_PORT}`);
 });
 //# sourceMappingURL=http-server.js.map

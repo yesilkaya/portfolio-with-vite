@@ -35,10 +35,8 @@ export function FeedbackScreen() {
         setLoginLoading(false);
     };
     useEffect(() => {
-        if (adminMode) {
-            fetchContacts();
-        }
-    }, [adminMode]);
+        fetchContacts();
+    }, []);
     const handleAdminLogin = () => {
         setLoginOpen(true);
     };
