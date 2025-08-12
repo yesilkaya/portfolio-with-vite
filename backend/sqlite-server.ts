@@ -214,5 +214,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(process.env.API_PORT, () => {
-  console.log(`Sunucu http://localhost:${process.env.API_PORT} üzerinde çalışıyor.`);
+  console.log(`Sunucu https://localhost:${process.env.API_PORT} üzerinde çalışıyor.`);
 });

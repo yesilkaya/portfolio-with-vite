@@ -197,6 +197,6 @@ const server = http.createServer((req, res) => {
     })(); // immediately invoked async fn
 });
 server.listen(process.env.API_PORT, () => {
-    console.log(`Sunucu http://localhost:${process.env.API_PORT} üzerinde çalışıyor.`);
+    console.log(`Sunucu https://localhost:${process.env.API_PORT} üzerinde çalışıyor.`);
 });
 //# sourceMappingURL=sqlite-server.js.map

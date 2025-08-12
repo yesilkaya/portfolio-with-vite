@@ -27,7 +27,8 @@ export default defineConfig({
       cert: fs.readFileSync(path.resolve(__dirname, 'certs/mycert.crt')),
     },
     host: 'localhost',
-    port: 5173
+    port: 5173,
+    open: 'https://localhost:5173'
   }
 });
 

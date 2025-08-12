@@ -13,18 +13,26 @@ export async function doLoginRequest(username, password) {
             credentials: "omit",
             cache: "no-store",
         });
-        const text = await res.text().catch(() => "");
+        let message = "";
+        try {
+            const data = await res.json();
+            message = data?.error || data?.message || "";
+        }
+        catch {
+            // JSON değilse text olarak oku
+            message = await res.text().catch(() => "");
+        }
         if (res.ok) {
             return { success: true };
         }
         else {
             clearAuthHeader();
-            return { success: false, message: `Giriş başarısız: ${res.status} ${text || ""}` };
+            return { success: false, message: `Giriş başarısız: ${res.status} ${message}` };
         }
     }
     catch (err) {
         clearAuthHeader();
-        return { success: false, message: "Sunucuya ulaşılamadı" };
+        return { success: false, message: "Giriş isteği başarısız" };
     }
 }
 //# sourceMappingURL=db-login.js.map

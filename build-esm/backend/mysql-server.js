@@ -1,5 +1,7 @@
 import "dotenv/config";
 import https from "https";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import mysql from "mysql2/promise";
 import { parse } from "url";
 import { parseRequestBody } from "../src/utils/requestUtils.js";
@@ -9,12 +11,11 @@ import { handleCors } from "../src/utils/cors.js";
 import { CONTACTS_PATH } from "../src/types/urls.js";
 import { messages } from "../src/messages/Messages.js";
 import { requireAdmin, isAdmin } from "../src/auth/basic.js";
-import fs from "fs";
-import path from "path";
 import { ROOT_DIR } from "../src/config/paths.js";
+import { rateLimit } from "../src/auth/rate-limit.js";
 const sslOptions = {
-    key: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mykey.key")),
-    cert: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mycert.crt")),
+    key: readFileSync(resolve(ROOT_DIR, "certs/mykey.key")),
+    cert: readFileSync(resolve(ROOT_DIR, "certs/mycert.crt")),
 };
 const db = await (async () => {
     try {
@@ -64,6 +65,8 @@ const server = https.createServer(sslOptions, async (req, res) => {
     const pathname = parsedUrl.pathname || "";
     const shouldStop = handleCors(req, res);
     if (shouldStop)
+        return;
+    if (!rateLimit(req, res, 10, 60 * 1000))
         return;
     // GET /contacts
     else if (req.method === "GET" && pathname === CONTACTS_PATH) {

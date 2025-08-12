@@ -1,6 +1,8 @@
 import "dotenv/config";
-import https from "https";
-import mysql from "mysql2/promise";
+import {createServer} from "https";
+import {readFileSync} from "fs";
+import {resolve} from "path";
+import {createConnection,ResultSetHeader} from "mysql2/promise";
 import { parse } from "url";
 import { parseRequestBody } from "../src/utils/requestUtils.js";
 import { FormData } from "../src/types/user.js";
@@ -11,21 +13,17 @@ import { handleCors } from "../src/utils/cors.js";
 import { CONTACTS_PATH } from "../src/types/urls.js";
 import { messages } from "../src/messages/Messages.js";
 import { requireAdmin, isAdmin } from "../src/auth/basic.js";
-
-import fs from "fs";
-import path from "path";
-
-
 import { ROOT_DIR } from "../src/config/paths.js";
+import { rateLimit } from "../src/auth/rate-limit.js";
 
 const sslOptions = {
-  key: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mykey.key")),
-  cert: fs.readFileSync(path.resolve(ROOT_DIR, "certs/mycert.crt")),
+  key: readFileSync(resolve(ROOT_DIR, "certs/mykey.key")),
+  cert: readFileSync(resolve(ROOT_DIR, "certs/mycert.crt")),
 };
 
 const db = await (async () => {
   try {
-    const serverConn = await mysql.createConnection({
+    const serverConn = await createConnection({
       host: "localhost",
       user: "root",
       password: "",
@@ -35,7 +33,7 @@ const db = await (async () => {
     await serverConn.end();
     console.log(messages.db.created(process.env.DB_NAME ?? ""));
 
-    const conn = await mysql.createConnection({
+    const conn = await createConnection({
       host: "localhost",
       user: "root",
       password: "",
@@ -72,12 +70,17 @@ const db = await (async () => {
   }
 })();
 
-const server = https.createServer(sslOptions, async (req, res) => {
+const server = createServer(sslOptions, async (req, res) => {
+
+
   const parsedUrl = parse(req.url || "", true);
   const pathname = parsedUrl.pathname || "";
 
   const shouldStop = handleCors(req, res);
   if (shouldStop) return;
+
+  if (!rateLimit(req, res, 10, 60 * 1000)) return;
+
 
   // GET /contacts
   else if (req.method === "GET" && pathname === CONTACTS_PATH) {
@@ -143,7 +146,7 @@ const server = https.createServer(sslOptions, async (req, res) => {
           first_name,
           last_name,
           email,
-        ])) as [mysql.ResultSetHeader, any];
+        ])) as [ResultSetHeader, any];
         contactId = result[0].insertId;
       }
       await db.execute("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
@@ -197,7 +200,7 @@ const server = https.createServer(sslOptions, async (req, res) => {
         last_name,
         email,
         id,
-      ])) as [mysql.ResultSetHeader, any];
+      ])) as [ResultSetHeader, any];
 
       if (result.affectedRows === 0) {
         return sendErrorResponse(res, messages.common.not_found, 404);
@@ -227,7 +230,7 @@ const server = https.createServer(sslOptions, async (req, res) => {
         return sendErrorResponse(res, errMsg[0], 400);
       }
 
-      const [result] = (await db.execute(`DELETE FROM contact WHERE id = ?`, [id])) as [mysql.ResultSetHeader, any];
+      const [result] = (await db.execute(`DELETE FROM contact WHERE id = ?`, [id])) as [ResultSetHeader, any];
       if (result.affectedRows === 0) {
         return sendErrorResponse(res, messages.common.not_found, 404);
       }
