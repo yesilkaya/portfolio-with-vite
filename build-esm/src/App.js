@@ -5,7 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { HeaderBar } from "./components/header/Header";
 import { Footer } from "./components/footer/Footer";
-import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from "./routes/app-routes";
 const { Content } = Layout;
 function App() {
     return (_jsx(BrowserRouter, { children: _jsxs(Layout, { style: { minHeight: "100vh", width: "100vw" }, children: [_jsx(HeaderBar, {}), _jsx(Content, { style: { backgroundColor: "var(--second-bg-color)" }, children: _jsx(AppRoutes, {}) }), _jsx(Footer, {})] }) }));

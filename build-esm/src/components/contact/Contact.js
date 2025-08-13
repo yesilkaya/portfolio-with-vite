@@ -39,13 +39,11 @@ export const ContactForm = () => {
             if (response.status === 403) {
                 return;
             }
-            // JSON güvenli parse
             let data = null;
             try {
                 data = await response.json();
             }
             catch {
-                // metin dönebilir
             }
             if (response.ok) {
                 form.resetFields();

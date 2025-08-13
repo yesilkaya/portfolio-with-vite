@@ -18,7 +18,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import {HeaderBar} from "./components/header/Header";
 import {Footer} from "./components/footer/Footer";
-import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from "./routes/app-routes";
 
 const { Content } = Layout;
 

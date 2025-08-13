@@ -24,6 +24,7 @@ export function FeedbackScreen() {
         setLoginLoading(true);
         const result = await doLoginRequest(username, password);
         if (result.success) {
+            setAdminMode(true); // ✅ Önce adminMode aç
             setLoginOpen(false);
             setUsername("");
             setPassword("");
@@ -69,12 +70,16 @@ export function FeedbackScreen() {
             const list = Array.isArray(raw) ? raw : [];
             const normalized = list.map((c) => ({
                 ...c,
-                messages: typeof c.messages === "string" ? JSON.parse(c.messages) : Array.isArray(c.messages) ? c.messages : [],
+                messages: typeof c.messages === "string"
+                    ? JSON.parse(c.messages)
+                    : Array.isArray(c.messages)
+                        ? c.messages
+                        : [],
             }));
             setContacts(normalized);
-            setAdminMode(true);
+            setAdminMode(true); // ✅ Burada da aç
         }
-        catch (e) {
+        catch {
             setAdminMode(false);
             setContacts([]);
         }
@@ -103,7 +108,11 @@ export function FeedbackScreen() {
     };
     const handleUpdateClick = (user) => {
         setEditId(user.id);
-        setFormData({ ...user });
+        setFormData({
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+        });
     };
     const handleInputChange = (e) => {
         const { name, value } = e.target;

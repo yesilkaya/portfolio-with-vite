@@ -49,12 +49,10 @@ export const ContactForm: React.FC = () => {
         return;
       }
 
-      // JSON güvenli parse
       let data: any = null;
       try {
         data = await response.json();
       } catch {
-        // metin dönebilir
       }
 
       if (response.ok) {

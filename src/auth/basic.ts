@@ -1,10 +1,11 @@
+// src/auth/require-admin-express.ts
 import "dotenv/config";
-import { IncomingMessage, ServerResponse } from "http";
 import crypto from "crypto";
+import { Request, Response, NextFunction } from "express";
 
 const hash = (s: string) => crypto.createHash("sha256").update(s).digest();
 
-function parseBasicAuth(req: IncomingMessage) {
+function parseBasicAuth(req: Request) {
   const h = req.headers.authorization;
   if (!h || Array.isArray(h)) return null;
   const [scheme, token] = h.split(" ");
@@ -14,7 +15,7 @@ function parseBasicAuth(req: IncomingMessage) {
   return { username, password };
 }
 
-export async function isAdmin(req: IncomingMessage): Promise<boolean> {
+async function isAdmin(req: Request): Promise<boolean> {
   const creds = parseBasicAuth(req);
   if (!creds) return false;
 
@@ -23,14 +24,34 @@ export async function isAdmin(req: IncomingMessage): Promise<boolean> {
   if (!username || !password) {
     throw new Error("Admin credentials are not set in environment variables.");
   }
-  const uOk = crypto.timingSafeEqual(hash(creds.username), hash(username));
-  const pOk = crypto.timingSafeEqual(hash(creds.password), hash(password));
+
+  const userHash = hash(creds.username);
+  const passHash = hash(creds.password);
+
+  // timingSafeEqual öncesi uzunluk kontrolü
+  if (userHash.length !== hash(username).length || passHash.length !== hash(password).length) {
+    return false;
+  }
+
+  const uOk = crypto.timingSafeEqual(userHash, hash(username));
+  const pOk = crypto.timingSafeEqual(passHash, hash(password));
+
   return uOk && pOk;
 }
-export async function requireAdmin(req: IncomingMessage, res: ServerResponse) {
-  if (await isAdmin(req)) return true;
-  res.statusCode = 401;
-  res.setHeader("Cache-Control", "no-store");
-  res.end("Authentication required");
-  return false;
+
+export function requireAdmin(options?: { challenge?: boolean }) {
+  const challenge = options?.challenge ?? true;
+
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (await isAdmin(req)) {
+      return next();
+    }
+
+    res.status(401);
+    if (challenge) {
+      res.setHeader("WWW-Authenticate", 'Basic realm="Admin Area", charset="UTF-8"');
+    }
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ error: "Authentication required" });
+  };
 }

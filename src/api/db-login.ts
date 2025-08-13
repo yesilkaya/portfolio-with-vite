@@ -7,7 +7,7 @@ export async function doLoginRequest(username: string, password: string) {
   }
 
   const token = buildBasicToken(username, password);
-  setAuthHeader(token);
+  setAuthHeader(token); // localStorage gibi kalıcı
 
   try {
     const res = await fetch(CONTACTS_URL, {
@@ -16,23 +16,23 @@ export async function doLoginRequest(username: string, password: string) {
       credentials: "omit",
       cache: "no-store",
     });
-  
+
+    if (res.ok) {
+      return { success: true };
+    }
+
+    // JSON veya text hata mesajı
     let message = "";
     try {
       const data = await res.json();
       message = data?.error || data?.message || "";
     } catch {
-      // JSON değilse text olarak oku
       message = await res.text().catch(() => "");
     }
-  
-    if (res.ok) {
-      return { success: true };
-    } else {
-      clearAuthHeader();
-      return { success: false, message: `Giriş başarısız: ${res.status} ${message}` };
-    }
-  } catch (err: any) {
+
+    clearAuthHeader();
+    return { success: false, message: `Giriş başarısız: ${res.status} ${message}` };
+  } catch (err) {
     clearAuthHeader();
     return { success: false, message: "Giriş isteği başarısız" };
   }

@@ -25,5 +25,5 @@
   },
 
   // Derlenecek dosyalar ( backend klasöründeki her şey + env.d.ts gibi özel tanımlar)
-  "include": ["src/**/*","backend/**/*","certs/**/*", "images.d.ts"]
+  "include": ["src/**/*","backend/**/*", "images.d.ts"]
 }

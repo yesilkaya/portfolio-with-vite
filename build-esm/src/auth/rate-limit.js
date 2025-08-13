@@ -1,5 +1,5 @@
 const rateLimitMap = new Map();
-export function rateLimit(req, res, limit = 3, windowMs = 60 * 1000) {
+export function rateLimit(req, res, limit = 10, windowMs = 60 * 1000) {
     const ip = (req.socket.remoteAddress || "unknown").replace(/^::ffff:/, "");
     const now = Date.now();
     const timestamps = (rateLimitMap.get(ip) || []).filter((ts) => now - ts < windowMs);

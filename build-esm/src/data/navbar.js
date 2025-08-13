@@ -40,13 +40,6 @@ export const navbar = [
         route: "/projects",
     },
     {
-        key: "6",
-        id: "crud",
-        label: "Crud",
-        type: "route",
-        route: "/crud",
-    },
-    {
         key: "7",
         id: "feedback",
         label: "Feedback",

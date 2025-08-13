@@ -30,6 +30,7 @@ export function FeedbackScreen() {
     const result = await doLoginRequest(username, password);
   
     if (result.success) {
+      setAdminMode(true); // ✅ Önce adminMode aç
       setLoginOpen(false);
       setUsername("");
       setPassword("");
@@ -40,6 +41,7 @@ export function FeedbackScreen() {
   
     setLoginLoading(false);
   };
+  
 
   useEffect(() => {
     fetchContacts();
@@ -58,38 +60,46 @@ export function FeedbackScreen() {
     } catch {}
   };
 
-  const fetchContacts = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(CONTACTS_URL, {
-        headers: { ...getAuthHeader() },
-        credentials: "omit",
-        cache: "no-store",
-      });
-      if (res.status === 401) {
+    const fetchContacts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(CONTACTS_URL, {
+          headers: { ...getAuthHeader() },
+          credentials: "omit",
+          cache: "no-store",
+        });
+    
+        if (res.status === 401) {
+          setAdminMode(false);
+          setContacts([]);
+          return;
+        }
+    
+        if (!res.ok) {
+          throw new Error("List fetch failed");
+        }
+    
+        const raw = await res.json();
+        const list = Array.isArray(raw) ? raw : [];
+        const normalized = list.map((c) => ({
+          ...c,
+          messages: typeof c.messages === "string"
+            ? JSON.parse(c.messages)
+            : Array.isArray(c.messages)
+            ? c.messages
+            : [],
+        }));
+    
+        setContacts(normalized);
+        setAdminMode(true); // ✅ Burada da aç
+      } catch {
         setAdminMode(false);
         setContacts([]);
-        return;
+      } finally {
+        setLoading(false);
       }
-      if (!res.ok) {
-        throw new Error("List fetch failed");
-      }
-      const raw = await res.json();
-      const list = Array.isArray(raw) ? raw : [];
-      const normalized = list.map((c) => ({
-        ...c,
-        messages: typeof c.messages === "string" ? JSON.parse(c.messages) : Array.isArray(c.messages) ? c.messages : [],
-      }));
-      setContacts(normalized);
-      setAdminMode(true);
-    } catch (e) {
-      setAdminMode(false);
-      setContacts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    };
+    
   const handleDelete = async (id: number) => {
     const res = await fetch(`${CONTACTS_URL}/${id}`, {
       method: "DELETE",
@@ -111,7 +121,11 @@ export function FeedbackScreen() {
 
   const handleUpdateClick = (user: ContactUser) => {
     setEditId(user.id!);
-    setFormData({ ...user });
+    setFormData({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -141,7 +155,7 @@ export function FeedbackScreen() {
       fetchContacts();
       alert(messages.feedback.update_success);
     } else {
-      alert(messages.feedback.update_error(data?.error || ""));
+      alert(messages.feedback.  update_error(data?.error || ""));
     }
   };
 

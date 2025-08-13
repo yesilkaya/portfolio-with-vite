@@ -1,3 +1,4 @@
+// src/auth/require-admin-express.ts
 import "dotenv/config";
 import crypto from "crypto";
 const hash = (s) => crypto.createHash("sha256").update(s).digest();
@@ -13,7 +14,7 @@ function parseBasicAuth(req) {
         return null;
     return { username, password };
 }
-export async function isAdmin(req) {
+async function isAdmin(req) {
     const creds = parseBasicAuth(req);
     if (!creds)
         return false;
@@ -22,16 +23,28 @@ export async function isAdmin(req) {
     if (!username || !password) {
         throw new Error("Admin credentials are not set in environment variables.");
     }
-    const uOk = crypto.timingSafeEqual(hash(creds.username), hash(username));
-    const pOk = crypto.timingSafeEqual(hash(creds.password), hash(password));
+    const userHash = hash(creds.username);
+    const passHash = hash(creds.password);
+    // timingSafeEqual öncesi uzunluk kontrolü
+    if (userHash.length !== hash(username).length || passHash.length !== hash(password).length) {
+        return false;
+    }
+    const uOk = crypto.timingSafeEqual(userHash, hash(username));
+    const pOk = crypto.timingSafeEqual(passHash, hash(password));
     return uOk && pOk;
 }
-export async function requireAdmin(req, res) {
-    if (await isAdmin(req))
-        return true;
-    res.statusCode = 401;
-    res.setHeader("Cache-Control", "no-store");
-    res.end("Authentication required");
-    return false;
+export function requireAdmin(options) {
+    const challenge = options?.challenge ?? true;
+    return async (req, res, next) => {
+        if (await isAdmin(req)) {
+            return next();
+        }
+        res.status(401);
+        if (challenge) {
+            res.setHeader("WWW-Authenticate", 'Basic realm="Admin Area", charset="UTF-8"');
+        }
+        res.setHeader("Cache-Control", "no-store");
+        res.json({ error: "Authentication required" });
+    };
 }
 //# sourceMappingURL=basic.js.map
