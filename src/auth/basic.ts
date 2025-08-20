@@ -28,7 +28,6 @@ async function isAdmin(req: Request): Promise<boolean> {
   const userHash = hash(creds.username);
   const passHash = hash(creds.password);
 
-  // timingSafeEqual öncesi uzunluk kontrolü
   if (userHash.length !== hash(username).length || passHash.length !== hash(password).length) {
     return false;
   }
@@ -53,5 +52,14 @@ export function requireAdmin(options?: { challenge?: boolean }) {
     }
     res.setHeader("Cache-Control", "no-store");
     res.json({ error: "Authentication required" });
+  };
+}
+
+export function forbidAdminOnPost() {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (req.method === "POST" && await isAdmin(req)) {
+      return res.status(403).json({ error: "Admins cannot perform POST requests" });
+    }
+    next();
   };
 }

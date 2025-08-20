@@ -1,9 +1,8 @@
 // src/routes/api-routes.ts
 import { Router, json } from "express";
-import { requireAdmin } from "../auth/basic.js";
+import { requireAdmin, forbidAdminOnPost } from "../auth/basic.js";
 import * as contactController from "../controllers/contact.controller.js";
 import { validatePost, validatePut, validateDelete } from "../middlewares/validate-body.js";
-import { valid } from "joi";
 
 const apiRouter = Router();
 apiRouter.use(json());
@@ -12,9 +11,9 @@ apiRouter.use(json());
 apiRouter.get("/contacts", requireAdmin({ challenge: true }), contactController.getContacts);
 
 // POST → validation middleware, admin zorunlu değil
-apiRouter.post("/contacts", validatePost, contactController.createContact);
+apiRouter.post("/contacts", forbidAdminOnPost(), validatePost, contactController.createContact);
 
-// PUT → validation middleware, admin zorunlu değil
+// PUT → validation middleware, admin korumalı
 apiRouter.put("/contacts/:id", requireAdmin({ challenge: true }), validatePut, contactController.updateContact);
 
 // DELETE → admin korumalı

@@ -1,15 +1,12 @@
+import "dotenv/config";
 import express from "express";
 import { join } from "path";
 import { ROOT_DIR } from "../src/config/paths.js";
 import apiRouter from "../src/routes/api-routes.js";
 import { handleCors } from "../src/utils/cors-express.js";
 import { errorHandler } from "../src/middlewares/error-handler.js";
-import "dotenv/config";
 const app = express();
-app.use(handleCors({
-    httpPort: process.env.HTTP_PORT,
-    debugPort: process.env.DEBUG_PORT
-}));
+app.use(handleCors());
 app.use("/api", apiRouter);
 app.use(express.static(join(ROOT_DIR, "dist")));
 app.get("/{*splat}", (req, res) => {

@@ -17,7 +17,7 @@
   --second-bg-color:#393E46;
   --text-color:#EEEEEE;
   --primary-color:#00ADB5;
-  --menu-selected-bg: #00ADB5; /* İstediğin rengi tanımla */
+  --menu-selected-bg: #1adce6; /* İstediğin rengi tanımla */
   
 
 }
@@ -44,13 +44,13 @@ body {
 
 /* Başlıklar */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
+  font-weight: 300;
 }
 
 /* Linkler */
 a {
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 /* Menü responsive davranışı */

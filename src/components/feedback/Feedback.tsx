@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { ContactUser } from "../../types/user";
-import { Link } from "react-router-dom";
-import { Divider, Modal, Input,  Card } from "antd";
+import { Divider, Modal, Input } from "antd";
 import { CONTACTS_URL } from "../../types/urls";
 import { messages } from "../../messages/Messages";
 import { getAuthHeader, clearAuthHeader } from "../../auth/credentials";
 import { doLoginRequest } from "../../api/db-login";
-
+import {
+  ScreenWrapper,
+  Title,
+  LoginCard,
+  LoginButton,
+  LoadingText,
+  ContactList,
+  ContactItem,
+  EditForm,
+  ActionButtons,
+  MessageBox,
+  NoMessage,
+  NewMessageLink,
+  LogoutButton,
+} from "./Feedback.styles";
 
 export function FeedbackScreen() {
   const [contacts, setContacts] = useState<ContactUser[]>([]);
@@ -19,18 +32,19 @@ export function FeedbackScreen() {
 
   const [adminMode, setAdminMode] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // 🔹 Modal kontrolü ve giriş formu state'leri
   const [loginOpen, setLoginOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  
   const doLogin = async () => {
     setLoginLoading(true);
     const result = await doLoginRequest(username, password);
-  
+
     if (result.success) {
-      setAdminMode(true); // ✅ Önce adminMode aç
+      setAdminMode(true); // Önce adminMode aç
       setLoginOpen(false);
       setUsername("");
       setPassword("");
@@ -38,10 +52,9 @@ export function FeedbackScreen() {
     } else {
       alert(result.message);
     }
-  
+
     setLoginLoading(false);
   };
-  
 
   useEffect(() => {
     fetchContacts();
@@ -60,46 +73,42 @@ export function FeedbackScreen() {
     } catch {}
   };
 
-    const fetchContacts = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(CONTACTS_URL, {
-          headers: { ...getAuthHeader() },
-          credentials: "omit",
-          cache: "no-store",
-        });
-    
-        if (res.status === 401) {
-          setAdminMode(false);
-          setContacts([]);
-          return;
-        }
-    
-        if (!res.ok) {
-          throw new Error("List fetch failed");
-        }
-    
-        const raw = await res.json();
-        const list = Array.isArray(raw) ? raw : [];
-        const normalized = list.map((c) => ({
-          ...c,
-          messages: typeof c.messages === "string"
-            ? JSON.parse(c.messages)
-            : Array.isArray(c.messages)
-            ? c.messages
-            : [],
-        }));
-    
-        setContacts(normalized);
-        setAdminMode(true); // ✅ Burada da aç
-      } catch {
+  const fetchContacts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(CONTACTS_URL, {
+        headers: { ...getAuthHeader() },
+        credentials: "omit",
+        cache: "no-store",
+      });
+
+      if (res.status === 401) {
         setAdminMode(false);
         setContacts([]);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
-    
+
+      if (!res.ok) {
+        throw new Error("List fetch failed");
+      }
+
+      const raw = await res.json();
+      const list = Array.isArray(raw) ? raw : [];
+      const normalized = list.map((c) => ({
+        ...c,
+        messages: typeof c.messages === "string" ? JSON.parse(c.messages) : Array.isArray(c.messages) ? c.messages : [],
+      }));
+
+      setContacts(normalized);
+      setAdminMode(true); // ✅ Burada da aç
+    } catch {
+      setAdminMode(false);
+      setContacts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (id: number) => {
     const res = await fetch(`${CONTACTS_URL}/${id}`, {
       method: "DELETE",
@@ -124,7 +133,7 @@ export function FeedbackScreen() {
     setFormData({
       first_name: user.first_name,
       last_name: user.last_name,
-      email: user.email
+      email: user.email,
     });
   };
 
@@ -155,13 +164,13 @@ export function FeedbackScreen() {
       fetchContacts();
       alert(messages.feedback.update_success);
     } else {
-      alert(messages.feedback.  update_error(data?.error || ""));
+      alert(messages.feedback.update_error(data?.error || ""));
     }
   };
 
   return (
-    <div style={{ padding: "2rem", margin: "4rem", fontFamily: "Arial, sans-serif" }}>
-      <h2 style={{ textAlign: "center", color: "white" }}>{messages.feedback.title}</h2>
+    <ScreenWrapper>
+      <Title>{messages.feedback.title}</Title>
       <Modal
         title="Admin Girişi"
         open={loginOpen}
@@ -181,153 +190,63 @@ export function FeedbackScreen() {
         </div>
       </Modal>
 
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        {!adminMode && (
-          <div style={{ maxWidth: 400, margin: "0 auto 1rem auto" }}>
-            <Card style={{ textAlign: "center", borderRadius: 8 }}>
-              <p style={{ marginBottom: 0 }}>📩 Mesajları görmek için giriş yapınız.</p>
-              <button
-                onClick={handleAdminLogin}
-                style={{
-                  marginTop: "2rem",
-                  padding: "0.5rem 1rem",
-                  borderRadius: 6,
-                  cursor: "pointer",
-                  backgroundColor: "var(--primary-color)",
-                  color: "white",
-                }}
-              >
-                Giriş Yap
-              </button>{" "}
-            </Card>
-          </div>
-        )}
-      </div>
-      {loading && <p style={{ textAlign: "center", color: "white" }}>Yükleniyor…</p>}
+      {!adminMode && (
+        <div style={{ maxWidth: 400, margin: "0 auto 1rem auto" }}>
+          <LoginCard>
+            <p style={{ marginBottom: 0 }}>📩 Mesajları görmek için giriş yapınız.</p>
+            <LoginButton onClick={handleAdminLogin}>Giriş Yap</LoginButton>
+          </LoginCard>
+        </div>
+      )}
 
-      <ul style={{ listStyle: "none", padding: 0, maxWidth: 600, margin: "auto" }}>
+      {loading && <LoadingText>Yükleniyor…</LoadingText>}
+
+      <ContactList>
         {adminMode && (
           <>
             <Divider style={{ backgroundColor: "white" }} />
-
             {contacts.map((c) => (
-              <li
-                key={c.id}
-                style={{
-                  backgroundColor: "white",
-                  padding: "1rem",
-                  marginBottom: "1rem",
-                  borderRadius: "6px",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                  position: "relative",
-                }}
-              >
+              <ContactItem key={c.id}>
                 {editId === c.id ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    <input
-                      name="first_name"
-                      value={formData.first_name}
-                      onChange={handleInputChange}
-                      placeholder={messages.feedback.placeholder_first_name}
-                    />
-                    <input
-                      name="last_name"
-                      value={formData.last_name}
-                      onChange={handleInputChange}
-                      placeholder={messages.feedback.placeholder_last_name}
-                    />
-                    <input
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder={messages.feedback.placeholder_email}
-                    />
-                    <button
-                      onClick={handleSubmitUpdate}
-                      style={{
-                        marginTop: "0.5rem",
-                        backgroundColor: "var(--primary-color)",
-                        color: "white",
-                        border: "none",
-                        padding: "0.5rem",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      {messages.feedback.send_button}
-                    </button>
-                  </div>
+                  <EditForm>
+                    <input name="first_name" value={formData.first_name} onChange={handleInputChange} />
+                    <input name="last_name" value={formData.last_name} onChange={handleInputChange} />
+                    <input name="email" value={formData.email} onChange={handleInputChange} />
+                    <button onClick={handleSubmitUpdate}>{messages.feedback.send_button}</button>
+                  </EditForm>
                 ) : (
                   <>
                     <strong>
                       {c.first_name} {c.last_name}
                     </strong>{" "}
                     — <span>{c.email}</span>
-                    <div style={{ position: "absolute", right: 10, top: 10, display: "flex", gap: "0.5rem" }}>
+                    <ActionButtons>
                       <button onClick={() => handleUpdateClick(c)}>📝</button>
                       <button onClick={() => handleDelete(c.id!)}>🗑️</button>
-                    </div>
+                    </ActionButtons>
                     <div style={{ marginTop: "0.5rem" }}>
-                      {(c.messages || []).length > 0 ? (
-                        (c.messages || []).map((msg) => (
-                          <p
-                            key={msg.id}
-                            style={{
-                              marginBottom: "0.5rem",
-                              backgroundColor: "#f5f5f5",
-                              padding: "0.5rem",
-                              borderRadius: "4px",
-                              fontSize: "0.95rem",
-                            }}
-                          >
+                      {c.messages?.length ? (
+                        c.messages.map((msg) => (
+                          <MessageBox key={msg.id}>
                             📩 {msg.content}
                             <br />
-                            <span style={{ fontSize: "0.75rem", color: "#888" }}>{new Date(msg.created_at).toLocaleString("tr-TR")}</span>
-                          </p>
+                            <span>{new Date(msg.created_at).toLocaleString("tr-TR")}</span>
+                          </MessageBox>
                         ))
                       ) : (
-                        <p style={{ color: "#888" }}>{messages.feedback.no_messages}</p>
+                        <NoMessage>{messages.feedback.no_messages}</NoMessage>
                       )}
                     </div>
                   </>
                 )}
-              </li>
+              </ContactItem>
             ))}
             <Divider style={{ backgroundColor: "white" }} />
           </>
         )}
-        {!adminMode && (
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <Link
-              to={`/#${"contact"}`}
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "white",
-                border: "none",
-                padding: "0.5rem",
-                borderRadius: "4px",
-              }}
-            >
-              {messages.feedback.new_message_button}
-            </Link>
-          </div>
-        )}
-        {adminMode && (
-          <div style={{ textAlign: "center", marginBottom: 8 }}>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 6,
-                cursor: "pointer",
-                backgroundColor: "var(--primary-color)",
-                color: "white",
-              }}
-            >
-              Çıkış Yap
-            </button>
-          </div>
-        )}
-      </ul>
-    </div>
+      </ContactList>
+      {!adminMode && <NewMessageLink to="/#contact">{messages.feedback.new_message_button}</NewMessageLink>}
+      {adminMode && <LogoutButton onClick={handleLogout}>Çıkış Yap </LogoutButton>}
+    </ScreenWrapper>
   );
 }

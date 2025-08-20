@@ -1,11 +1,8 @@
-export function handleCors(allowedPorts) {
-    // .env'den gelen ek origin'leri ayıkla
-    const extraOrigins = process.env.FRONTEND_ORIGINS?.split(",").map(o => o.trim()) || [];
+export function handleCors() {
     // Varsayılan localhost origin'leri + ekstra origin'ler
     const allowedOrigins = [
-        `http://localhost:${allowedPorts?.httpPort || process.env.HTTP_PORT}`,
-        `http://localhost:${allowedPorts?.debugPort || process.env.DEBUG_PORT}`,
-        ...extraOrigins
+        `http://localhost:${process.env.HTTP_PORT}`,
+        `http://localhost:${process.env.DEBUG_PORT}`,
     ].filter(Boolean);
     return (req, res, next) => {
         const origin = req.headers.origin;

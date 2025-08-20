@@ -25,7 +25,6 @@ async function isAdmin(req) {
     }
     const userHash = hash(creds.username);
     const passHash = hash(creds.password);
-    // timingSafeEqual öncesi uzunluk kontrolü
     if (userHash.length !== hash(username).length || passHash.length !== hash(password).length) {
         return false;
     }
