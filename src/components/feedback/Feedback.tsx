@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ContactUser } from "../../types/user";
+import { ContactUser } from "../../../shared/types/user";
 import { Divider, Modal, Input } from "antd";
-import { CONTACTS_URL } from "../../types/urls";
-import { messages } from "../../messages/Messages";
-import { getAuthHeader, clearAuthHeader } from "../../auth/credentials";
-import { doLoginRequest } from "../../api/db-login";
+import { CONTACTS_URL } from "../../../shared/types/urls";
+import { messages } from "../../../shared/messages/Messages";
+import { getAuthHeader, clearAuthHeader } from "../../client/credentials";
+import { doLoginRequest } from "../../client/db-login";
 import {
   ScreenWrapper,
   Title,
@@ -33,18 +33,17 @@ export function FeedbackScreen() {
   const [adminMode, setAdminMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Modal kontrolü ve giriş formu state'leri
   const [loginOpen, setLoginOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const doLogin = async () => {
+  const login = async () => {
     setLoginLoading(true);
     const result = await doLoginRequest(username, password);
 
     if (result.success) {
-      setAdminMode(true); // Önce adminMode aç
+      setAdminMode(true);
       setLoginOpen(false);
       setUsername("");
       setPassword("");
@@ -69,12 +68,12 @@ export function FeedbackScreen() {
       clearAuthHeader();
       setAdminMode(false);
       setContacts([]);
-      window.location.replace("/feedback");
     } catch {}
   };
 
   const fetchContacts = async () => {
     setLoading(true);
+    //await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       const res = await fetch(CONTACTS_URL, {
         headers: { ...getAuthHeader() },
@@ -100,7 +99,7 @@ export function FeedbackScreen() {
       }));
 
       setContacts(normalized);
-      setAdminMode(true); // ✅ Burada da aç
+      setAdminMode(true);
     } catch {
       setAdminMode(false);
       setContacts([]);
@@ -174,7 +173,7 @@ export function FeedbackScreen() {
       <Modal
         title="Admin Girişi"
         open={loginOpen}
-        onOk={doLogin}
+        onOk={login}
         confirmLoading={loginLoading}
         onCancel={() => {
           setLoginOpen(false);

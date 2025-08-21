@@ -1,1 +1,0 @@
-{"version":3,"file":"navbar.js","sourceRoot":"","sources":["../../../src/types/navbar.ts"],"names":[],"mappings":"","sourcesContent":["export type NavbarItem = {\n    key: string;\n    label: string;\n    type: \"route\" | \"anchor\";\n    route?: string;\n    id?: string;\n  };"]}

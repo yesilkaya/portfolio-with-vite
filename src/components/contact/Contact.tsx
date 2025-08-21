@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
-import { CONTACTS_URL } from "../../types/urls";
-import { messages } from "../../messages/Messages";
-import { getAuthHeader } from "../../auth/credentials";
+import { CONTACTS_URL } from "../../../shared/types/urls";
+import { messages } from "../../../shared/messages/Messages";
+import { getAuthHeader } from "../../client/credentials";
 
 interface ContactFormValues {
   firstName: string;
@@ -15,13 +15,12 @@ interface ContactFormValues {
 export const ContactForm: React.FC = () => {
   const [form] = Form.useForm<ContactFormValues>();
   const [submitting, setSubmitting] = React.useState(false);
-  
+
   const isAdmin = !!getAuthHeader().Authorization;
 
   const onFinish = async (values: ContactFormValues) => {
-
     if (isAdmin) return;
-    
+
     // Trim ve basic kurallar
     const payload = {
       first_name: values.firstName.trim(),
@@ -41,8 +40,8 @@ export const ContactForm: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        credentials: "omit",   
-        cache: "no-store",    
+        credentials: "omit",
+        cache: "no-store",
       });
       // 403: Admin modunda yeni oluşturma kapalı
       if (response.status === 403) {
@@ -52,8 +51,7 @@ export const ContactForm: React.FC = () => {
       let data: any = null;
       try {
         data = await response.json();
-      } catch {
-      }
+      } catch {}
 
       if (response.ok) {
         form.resetFields();

@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { Divider, Modal, Input } from "antd";
-import { CONTACTS_URL } from "../../types/urls";
-import { messages } from "../../messages/Messages";
-import { getAuthHeader, clearAuthHeader } from "../../auth/credentials";
-import { doLoginRequest } from "../../api/db-login";
+import { CONTACTS_URL } from "../../../shared/types/urls";
+import { messages } from "../../../shared/messages/Messages";
+import { getAuthHeader, clearAuthHeader } from "../../client/credentials";
+import { doLoginRequest } from "../../client/db-login";
 import { ScreenWrapper, Title, LoginCard, LoginButton, LoadingText, ContactList, ContactItem, EditForm, ActionButtons, MessageBox, NoMessage, NewMessageLink, LogoutButton, } from "./Feedback.styles";
 export function FeedbackScreen() {
     const [contacts, setContacts] = useState([]);
@@ -16,16 +16,15 @@ export function FeedbackScreen() {
     });
     const [adminMode, setAdminMode] = useState(false);
     const [loading, setLoading] = useState(true);
-    // 🔹 Modal kontrolü ve giriş formu state'leri
     const [loginOpen, setLoginOpen] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginLoading, setLoginLoading] = useState(false);
-    const doLogin = async () => {
+    const login = async () => {
         setLoginLoading(true);
         const result = await doLoginRequest(username, password);
         if (result.success) {
-            setAdminMode(true); // Önce adminMode aç
+            setAdminMode(true);
             setLoginOpen(false);
             setUsername("");
             setPassword("");
@@ -47,12 +46,12 @@ export function FeedbackScreen() {
             clearAuthHeader();
             setAdminMode(false);
             setContacts([]);
-            window.location.replace("/feedback");
         }
         catch { }
     };
     const fetchContacts = async () => {
         setLoading(true);
+        //await new Promise((resolve) => setTimeout(resolve, 1000));
         try {
             const res = await fetch(CONTACTS_URL, {
                 headers: { ...getAuthHeader() },
@@ -74,7 +73,7 @@ export function FeedbackScreen() {
                 messages: typeof c.messages === "string" ? JSON.parse(c.messages) : Array.isArray(c.messages) ? c.messages : [],
             }));
             setContacts(normalized);
-            setAdminMode(true); // ✅ Burada da aç
+            setAdminMode(true);
         }
         catch {
             setAdminMode(false);
@@ -139,7 +138,7 @@ export function FeedbackScreen() {
             alert(messages.feedback.update_error(data?.error || ""));
         }
     };
-    return (_jsxs(ScreenWrapper, { children: [_jsx(Title, { children: messages.feedback.title }), _jsx(Modal, { title: "Admin Giri\u015Fi", open: loginOpen, onOk: doLogin, confirmLoading: loginLoading, onCancel: () => {
+    return (_jsxs(ScreenWrapper, { children: [_jsx(Title, { children: messages.feedback.title }), _jsx(Modal, { title: "Admin Giri\u015Fi", open: loginOpen, onOk: login, confirmLoading: loginLoading, onCancel: () => {
                     setLoginOpen(false);
                     setUsername("");
                     setPassword("");

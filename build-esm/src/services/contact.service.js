@@ -1,5 +1,5 @@
 // src/services/contact.service.ts
-import { db } from "../api/db.js";
+import { db } from "../../backend/config/db.js";
 export async function getAllContacts() {
     const [rows] = await db.query(`
     SELECT c.*, 
@@ -29,7 +29,11 @@ export async function createContact(data) {
         else {
             await db.beginTransaction();
             txStarted = true;
-            const result = (await db.execute(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [first_name, last_name, email]));
+            const result = (await db.execute(`INSERT INTO contact (first_name, last_name, email) VALUES (?, ?, ?)`, [
+                first_name,
+                last_name,
+                email,
+            ]));
             contactId = result[0].insertId;
         }
         await db.execute("INSERT INTO messages (contact_id, content) VALUES (?, ?)", [contactId, message]);
@@ -49,7 +53,12 @@ export async function createContact(data) {
     }
 }
 export async function updateContact(id, first_name, last_name, email) {
-    const [result] = (await db.execute(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [first_name, last_name, email, id]));
+    const [result] = (await db.execute(`UPDATE contact SET first_name = ?, last_name = ?, email = ? WHERE id = ?`, [
+        first_name,
+        last_name,
+        email,
+        id,
+    ]));
     return result.affectedRows;
 }
 export async function deleteContact(id) {

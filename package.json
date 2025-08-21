@@ -14,7 +14,9 @@
     "start:cjs": "node ./build-cjs/backend/http-server.js",
     "start:esm": "node ./build-esm/backend/http-server.js",
     "start:esm:sqlite": "node ./build-esm/backend/sqlite-server.js",
-    "start:express": "node ./build-esm/backend/express-server.js"
+    "start:express": "node ./build-esm/backend/express-server.js",
+    "start": "nodemon ./build-esm/backend/express-server.js"
+
   },
   "dependencies": {
     "antd": "^5.26.4",
@@ -40,6 +42,7 @@
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^4.5.2",
+    "concurrently": "^9.2.0",
     "dotenv": "^17.2.1",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",

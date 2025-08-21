@@ -7,6 +7,7 @@ import { Services } from "../components/services/Services";
 import { Projects } from "../components/projects/Projects";
 import { ContactForm } from "../components/contact/Contact";
 import { FeedbackScreen } from "../components/feedback/Feedback";
+import { NotFoundScreen } from "../components/notFound/NotFound";
 import { navbar } from "../data/navbar";
 /**
  * `MainSections` bileşeni, navbar öğelerine göre belirli bölümleri (Home, Education, Services, Contact) oluşturur.
@@ -47,16 +48,7 @@ function MainSections() {
                 alignItems: "center",
             }, children: sectionComponents[section.id] || null }, section.key))) }));
 }
-/**
- * `AppRoutes` bileşeni uygulamanın tüm rotalarını tanımlar.
- *
- * - `/`: Ana sayfa scrollable bölümlerle (`MainSections`) gösterilir.
- * - `/projects`: Projeler sayfası (`Projects`) gösterilir.
- * - `/crud`: CRUD işlemleri için özel sayfa (`CrudScreen`) gösterilir.
- *
- * @returns {JSX.Element} React Router tarafından yönetilen rota bileşenleri
- */
 export default function AppRoutes() {
-    return (_jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(MainSections, {}) }), _jsx(Route, { path: "/projects", element: _jsx(Projects, {}) }), _jsx(Route, { path: "/feedback", element: _jsx(FeedbackScreen, {}) })] }));
+    return (_jsxs(Routes, { children: [_jsx(Route, { path: "/", element: _jsx(MainSections, {}) }), _jsx(Route, { path: "/projects", element: _jsx(Projects, {}) }), _jsx(Route, { path: "/feedback", element: _jsx(FeedbackScreen, {}) }), _jsx(Route, { path: "*", element: _jsx(NotFoundScreen, {}) })] }));
 }
 //# sourceMappingURL=app-routes.js.map

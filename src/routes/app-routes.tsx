@@ -7,6 +7,7 @@ import {Services} from "../components/services/Services";
 import {Projects} from "../components/projects/Projects";
 import {ContactForm} from "../components/contact/Contact";
 import { FeedbackScreen } from "../components/feedback/Feedback";
+import { NotFoundScreen } from "../components/notFound/NotFound";
 import type { JSX } from "react";
 
 import { navbar } from "../data/navbar";
@@ -68,21 +69,14 @@ function MainSections(): JSX.Element {
   );
 }
 
-/**
- * `AppRoutes` bileşeni uygulamanın tüm rotalarını tanımlar.
- *
- * - `/`: Ana sayfa scrollable bölümlerle (`MainSections`) gösterilir.
- * - `/projects`: Projeler sayfası (`Projects`) gösterilir.
- * - `/crud`: CRUD işlemleri için özel sayfa (`CrudScreen`) gösterilir.
- *
- * @returns {JSX.Element} React Router tarafından yönetilen rota bileşenleri
- */
 export default function AppRoutes(): JSX.Element {
   return (
     <Routes>
       <Route path="/" element={<MainSections />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/feedback" element={<FeedbackScreen />} />
+      <Route path="*" element={<NotFoundScreen />} />
+
     </Routes>
   );
 }

@@ -2,9 +2,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { Form, Input, Row, Col } from "antd";
 import { Container, Title, StyledButton, LabelSpan } from "./Contact.styles";
-import { CONTACTS_URL } from "../../types/urls";
-import { messages } from "../../messages/Messages";
-import { getAuthHeader } from "../../auth/credentials";
+import { CONTACTS_URL } from "../../../shared/types/urls";
+import { messages } from "../../../shared/messages/Messages";
+import { getAuthHeader } from "../../client/credentials";
 export const ContactForm = () => {
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = React.useState(false);
@@ -43,8 +43,7 @@ export const ContactForm = () => {
             try {
                 data = await response.json();
             }
-            catch {
-            }
+            catch { }
             if (response.ok) {
                 form.resetFields();
                 alert(messages.contact.send_success(data?.message ?? "Gönderildi"));

@@ -1,4 +1,4 @@
-import { ContactData } from "../types/contact.js";
+import { ContactData } from "../../shared/types/contact.js";
 /**
  * Verilen iletişim verisini CSV formatında `iletisim_kayitlari.csv` dosyasına ekler.
  *

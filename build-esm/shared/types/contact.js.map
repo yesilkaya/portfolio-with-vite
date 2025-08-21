@@ -1,0 +1,1 @@
+{"version":3,"file":"contact.js","sourceRoot":"","sources":["../../../shared/types/contact.ts"],"names":[],"mappings":"","sourcesContent":["export interface ContactData {\n  firstName: string;\n  lastName: string;\n  email: string;\n  message: string;\n}\n"]}

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ESNext", 
+    "module": "ESNext",
     // Hedef JavaScript sürümü (en güncel ES çıktısı üretir)
     "target": "ESNext",
     // import path çözümleme sistemi, Node kurallarına göre çalışır
@@ -17,13 +17,12 @@
 
     // node_modules içindeki .d.ts dosyaları taranırken hataları atla
     "skipLibCheck": true,
-    
+
     "jsx": "react-jsx",
     // Dosya adlarında büyük/küçük harf duyarlılığı zorunlu kılınır (Linux'ta önemlidir)
-    "forceConsistentCasingInFileNames": true,
-
+    "forceConsistentCasingInFileNames": true
   },
 
   // Derlenecek dosyalar ( backend klasöründeki her şey + env.d.ts gibi özel tanımlar)
-  "include": ["src/**/*","backend/**/*", "images.d.ts"]
+  "include": ["src/**/*", "backend/**/*", "images.d.ts", "shared/**/*"]
 }

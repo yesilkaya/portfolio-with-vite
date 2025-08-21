@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { CSV_PATH, NDJSON_PATH } from "../config/paths.js";
+import { CSV_PATH, NDJSON_PATH } from "../../backend/config/paths.js";
 /**
  * Verilen iletişim verisini CSV formatında `iletisim_kayitlari.csv` dosyasına ekler.
  *

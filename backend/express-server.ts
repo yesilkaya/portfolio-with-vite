@@ -1,10 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import { join } from "path";
-import { ROOT_DIR } from "../src/config/paths.js";
-import apiRouter from "../src/routes/api-routes.js";
-import { handleCors } from "../src/utils/cors-express.js";
-import { errorHandler } from "../src/middlewares/error-handler.js";
+import { ROOT_DIR } from "./config/paths.js";
+import apiRouter from "./routes/api-routes.js";
+import { handleCors } from "./middlewares/cors-express.js";
+import { errorHandler } from "./middlewares/error-handler.js";
 
 const app = express();
 
@@ -12,7 +12,10 @@ app.use(handleCors());
 
 app.use("/api", apiRouter);
 app.use(express.static(join(ROOT_DIR, "dist")));
-app.get("/{*splat}", (req, res) => {
+app.get("/*splat", (req, res, next) => {
+  if (req.path.startsWith("/api")) {
+    return next();
+  }
   res.sendFile(join(ROOT_DIR, "dist", "index.html"));
 });
 

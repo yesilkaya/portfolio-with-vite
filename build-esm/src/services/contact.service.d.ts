@@ -1,4 +1,4 @@
-import { FormData } from "../types/user.js";
+import { FormData } from "../../shared/types/user.js";
 export declare function getAllContacts(): Promise<import("mysql2/promise").QueryResult>;
 export declare function createContact(data: FormData): Promise<{
     id: number;
